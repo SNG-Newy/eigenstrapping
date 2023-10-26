@@ -31,3 +31,12 @@ print(f'p-value: ${pval:0.3f}')
 plt.hist(perms, bins=50)
 plt.axvline(stat, color='k', linestyle='dashed')
 ```
+
+You can also construct surrogate data parcellations:
+```python
+from utils import parcellate
+orig_graph = parcellate(data, atlas='schaefer', density='400')
+graphs = parcellate(surrs, atlas='schaefer', density='400')
+# compute features like modularity or degree etc.
+```
+
