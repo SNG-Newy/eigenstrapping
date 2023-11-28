@@ -1,0 +1,137 @@
+.. _tutorial_cortex:
+
+Tutorial 1: Generating surrogate maps on the cortex
+===================================================
+
+In this first example, we will derive a set of surrogates for the gradient data
+we covered in the :ref:`Getting Started <getting_started>` section. We will
+use this set of surrogate data to statistically compare two brain maps. This
+process will give us a correlation metric and a means by which to test the
+significance of the association between them.
+
+.. _tutorial_surface:
+
+.. _tutorial_nonparc:
+
+Nulls with non-parcellated data
+-------------------------------
+
+We'll first start by (re)loading the gradient data, another brain maps
+(the Allen Human Brain Atlas gene PC1) and everything we need to
+compute the surrogates:
+
+.. code-block:: py
+
+    >>> from eigenstrapping import datasets, fit
+    >>> gradient_lh, gradient_rh, emodes_lh, emodes_rh, evals_lh, evals_rh = datasets.load_fslr()
+    >>> genepc_lh, genepc_rh = datasets.load_genepc()
+    >>> distmat, index = datasets.load_distmat('fsaverage', hemi='lh')
+    >>> surrs_lh = fit.surface_fit(
+                        x=gradient_lh,
+                        D=distmat,
+                        index=index,
+                        emodes=emodes_lh,
+                        evals=evals_lh,
+                        num_modes=100,
+                        nsurrs=100,
+                        resample=True,
+                        return_data=True,
+                        )
+    No surface given, expecting precomputed eigenvalues and eigenmodes
+    IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION TO WORK
+    Surrogates computed, computing stats...
+    
+    >>> surrs_lh.shape
+    (10242, 100)
+
+Those who've completed the :ref:`Getting Started <getting_started>` section might
+notice that we're not using the :class:`eigenstrapping.SurfaceEigenstrapping` class
+anymore, but the :mod:`eigenstrapping.fit` module now. This module allows us the same
+control over the parameters as before, but it also gives us an output variogram
+and other helpful info. The above code will give you a figure: 
+
+.. image:: ./_static/examples/tutorial_cortex1.png
+   :scale: 70%
+   :align: center
+
+We can see that the variogram of the surrogates doesn't match up with the empirical
+data (they're too smooth, hence a lower variogram curve). To form a proper null, 
+the surrogates should line up with the empirical variogram. This is also why the
+histogram of correlations with the original map is also slightly too narrow. We 
+need to increase the number of modes that we use:
+
+.. code-block:: py
+
+    >>> surrs_lh = fit.surface_fit(
+    ...                    x=gradient_lh,
+    ...                    D=distmat,
+    ...                    index=index,
+    ...                    emodes=emodes_lh,
+    ...                    evals=evals_lh,
+    ...                    num_modes=1000,
+    ...                    nsurrs=100,
+    ...                    resample=True,
+    ...                    return_data=True,
+    ...                    )
+    No surface given, expecting precomputed eigenvalues and eigenmodes
+    IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION TO WORK
+    Surrogates computed, computing stats...
+                    
+.. image:: ./_static/examples/tutorial_cortex2.png
+   :scale: 70%
+   :align: center
+
+1000 modes seems to be a better fit for the gradient data. You may notice that
+the surrogate distribution is now wider - this is what we want, though not always. 
+Let's compare the two brain maps, now that we've generated the null distribution:
+
+.. code-block::
+    >>> from eigenstrapping import stats
+    >>> corr, pval = stats.compare_maps(gradient_lh, genepc_lh, surrs=surrs_lh)
+    >>> print(f'r = {corr:.3f}, p = {pval:.3f}')
+    r = -0.521, p = 0.059
+    
+Make sure that the first argument of the ``stats.compare_maps`` function is the
+map that the surrogate array ``surrs_lh`` were computed on, otherwise you can
+get very strange behavior.
+
+.. _tutorial_parc:
+
+Nulls with parcellated data
+---------------------------
+
+The functions in ``eigenstrapping.fit`` can also handle parcellated data, and 
+do so by accepting an optional parameter: ``parcellation``. If this is provided,
+the functions assume this is either a left or right hemisphere array that is in 
+the same space as ``data``. For our purposes, let's fetch one of the parcellations
+that is available for the 10k `fsaverage` surface:
+
+.. code-block:: py
+
+    >>> from eigenstrapping import utils
+    >>> hcpmmp01 = utils.get_hcpmmp01()
+    >>> print(hcpmmp01)
+    Surface(lh='/mnt/nnt-data/atl-schaefer2018/fsaverage5/atl-Schaefer2018_space-fsaverage5_hemi-L_desc-400Parcels7Networks_deterministic.annot', rh='/mnt/nnt-data/atl-schaefer2018/fsaverage5/atl-Schaefer2018_space-fsaverage5_hemi-R_desc-400Parcels7Networks_deterministic.annot')
+
+We just want the left hemisphere parcellation, and to relabel our data
+with that. As with all of the above functions, if you want to repeat this tutorial
+with the right hemisphere, just switch "lh" for "rh". Let's proceed:
+
+.. code-block:: py
+
+    >>> parcellation = schaefer[0]
+    >>> gradient_parc = utils.calc_parcellate(parcellation, gradient_lh)
+    >>> genepc_parc = utils.calc_parcellate(parcellation, genepc_lh)
+    >>> print(gradient_parc.shape, genepc_parc.shape)
+    (200,) (200,)
+    
+Now we'll parcellate our null maps:
+
+.. code-block:: py
+
+    >>> surrs_parc = utils.calc_parcellate(parcellation, surrs_lh.T)
+    >>> print(surrs_parc.shape)
+    (200, 100)
+    
+Nulls generated from data that has been pre-parcellated (i.e., on a downsampled
+surface) are a future implementation.
