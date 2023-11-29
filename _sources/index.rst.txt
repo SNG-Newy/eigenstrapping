@@ -6,7 +6,6 @@ Contents
 .. toctree::
    :maxdepth: 2
    
-   install
    getting_started
    usage
    references
