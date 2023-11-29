@@ -23,9 +23,10 @@ compute the surrogates:
 .. code-block:: py
 
     >>> from eigenstrapping import datasets, fit
-    >>> gradient_lh, gradient_rh, emodes_lh, emodes_rh, evals_lh, evals_rh = datasets.load_fslr()
+    >>> gradient_lh, gradient_rh, emodes_lh, emodes_rh, evals_lh, evals_rh = datasets.load_surface_examples()
     >>> genepc_lh, genepc_rh = datasets.load_genepc()
     >>> distmat, index = datasets.load_distmat('fsaverage', hemi='lh')
+    >>> # note: this download may take a while
     >>> surrs_lh = fit.surface_fit(
                         x=gradient_lh,
                         D=distmat,

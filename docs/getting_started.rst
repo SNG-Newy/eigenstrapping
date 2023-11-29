@@ -55,25 +55,12 @@ a few moments):
 
 .. code-block:: py
 
-    >>> from eigenstrapping.datasets import load_files
+    >>> from eigenstrapping.datasets import load_surface_examples
         
     >>> # load left and right hemispheres
-    >>> surf_lh, surf_rh, data_lh, data_rh, emodes_lh, emodes_rh, evals_lh, evals_rh = load_files(surface=True)
+    >>> surf_lh, surf_rh, data_lh, data_rh, emodes_lh, emodes_rh, evals_lh, evals_rh = load_surface_examples(with_surface=True)
     >>> surf_lh
-    (array([[-38.73596 , -19.343365,  67.22014 ],
-            [-16.662487, -69.061226,  61.281273],
-            [ -9.717618,  -9.233264,  46.58034 ],
-            ...,
-            [-30.751953, -27.045898, -27.080143],
-            [-32.775867, -25.899866, -25.520136],
-            [-34.49119 , -25.403906, -24.645117]], dtype=float32),
-     array([[    0,  2564,  2562],
-            [    0,  2562,  2565],
-            [    0,  2565,  2567],
-            ...,
-            [10241,  9918,  2454],
-            [10161,  9918, 10241],
-            [10161,    11,  9918]], dtype=int32))
+    '/mnt/e-data/surfaces/space-fsaverage_den-10k_hemi-lh_pial.surf.gii'
     
     >>> data_lh.shape
     (10242,)
@@ -107,9 +94,11 @@ Now let's make a surrogate brain map and plot it on the surface.
                     data=data_lh,
                     emodes=emodes_lh,
                     evals=evals_lh,
-                    num_modes=6000,
+                    num_modes=100,
                     resample=True,
-                    )      
+                    )
+    No surface given, expecting precomputed eigenvalues and eigenmodes
+    IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION TO WORK
     >>> surr = eigen.generate()
     
     >>> csplot(surr, 'fsaverage')
