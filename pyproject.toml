@@ -10,7 +10,7 @@ requires = [
 
 [project]
 name = "eigenstrapping"
-version = "0.0.1"
+version = "0.0.1.2"
 description = "For generating surrogate brain maps with spatial autocorrelation using geometric eigenmodes."
 readme = "README.rst"
 authors = [

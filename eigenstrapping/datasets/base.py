@@ -58,14 +58,12 @@ def load_surface_examples(data_dir=None, with_surface=False):
         surfs[i] = fetch_data(name='surfaces', space=space, den=den,
                               hemi=side)
         data[i] = nib.load(data_pth.format(version, side)).agg_data()
-        emodes[i] = np.loadtxt(
-            fetch_data(name='eigenmodes', space=space, den=den, hemi=side,
-                       format='emodes')
-            )
-        evals[i] = np.loadtxt(
-            fetch_data(name='eigenmodes', space=space, den=den, hemi=side,
-                       format='evals')
-            )
+        emodes_file = fetch_data(name='eigenmodes', space=space, den=den, hemi=side,
+                   format='emodes')
+        emodes[i] = np.loadtxt(emodes_file)
+        evals_file = fetch_data(name='eigenmodes', space=space, den=den, hemi=side,
+                   format='evals')
+        evals[i] = np.loadtxt(evals_file)
         masks[i] = np.loadtxt(mask_pth.format(version, side)).astype(np.bool_)
         data[i][~masks[i]] = np.nan
     
@@ -257,7 +255,7 @@ def fetch_data(*, name=None, space=None, den=None, res=None, hemi=None,
         data.append(str(fn))
     
     if len(data) == 1:
-        return data
+        return data[0]
     
     return _groupby_match(data)
 
