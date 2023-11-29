@@ -12,7 +12,7 @@ requires = [
 name = "eigenstrapping"
 version = "0.0.1"
 description = "For generating surrogate brain maps with spatial autocorrelation using geometric eigenmodes."
-readme = "README.md"
+readme = "README.rst"
 authors = [
     {name = "Nikitas C. Koussis", email = "nikitas.koussis@gmail.com"},
 ]
