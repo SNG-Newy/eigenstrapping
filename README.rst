@@ -14,7 +14,7 @@
 The ``eigenstrapping`` toolbox is designed to help researchers generate
 statistically-rigorous models for null hypothesis testing between brain maps using
 non-local spectral shape descriptors - or geometric eigenmodes.
-Documentation can be found `here <https://eigenstrapping.readthedocs.io/eigenstrapping/>`_.
+Documentation can be found `here <https://eigenstrapping.readthedocs.io/en/latest/>`_.
 
 Features
 --------
