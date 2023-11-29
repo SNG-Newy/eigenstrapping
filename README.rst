@@ -27,7 +27,50 @@ Features
 - Cortical and subcortical null models for assessing statistical correspondence between brain maps
 - Generation of geometric eigenmodes on user-derived surfaces
 
-.. include:: install.rst
+Installation Guide
+------------------
+
+Eigenstrapping is available in Python 3.7+. MATLAB version coming soon!
+
+Dependencies
+============
+
+To install eigenstrapping, the following Python packages are required:
+
+* `numpy <https://numpy.org/>`_
+* `scipy <https://scipy.org/scipylib/index.html>`_
+* `scikit-learn <https://scikit-learn.org/stable/>`_
+* `lapy <https://github.com/DeepMI/lapy>`_
+* `matplotlib <https://matplotlib.org/>`_
+* `nibabel <https://nipy.org/nibabel/index.html>`_
+* `nilearn <https://nilearn.github.io/>`_
+* `pandas <https://pandas.pydata.org/>`_
+* `brainspace <https://github.com/MICA-MNI/BrainSpace/tree/master/>`_
+* `netneurotools <https://netneurotools.readthedocs.io/en/latest/installation.html/>`_
+
+``nibabel`` and ``nilearn`` are required for surfaces and volumes. ``matplotlib`` 
+is only required for fitting plots in ``fit.py`` and some of the surface 
+plotting functions. Future improvements will reduce the number of dependencies
+needed.
+
+Additional dependencies
+=======================
+
+* `Connectome Workbench <https://www.humanconnectome.org/software/connectome-workbench>`_
+* `FreeSurfer 6.0.0+ <https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_
+
+Installation
+============
+
+eigenstrapping can be installed using ``pip``: ::
+
+    pip install eigenstrapping
+
+Alternatively, you can install the package from the Github repository: ::
+
+    git clone https://github.com/SNG-newy/eigenstrapping.git
+    cd eigenstrapping
+    python setup.py install
 
 .. include:: references.rst
 
