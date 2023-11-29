@@ -6,7 +6,7 @@
    :alt: Latest PyPI version
    
 .. image:: https://github.com/SNG-newy/eigenstrapping/actions/workflows/docs.yml/badge.svg
-  :target: https://eigenstrapping.readthedocs.io//
+  :target: https://eigenstrapping.readthedocs.io/en/latest/
   :alt: deploy-docs status
 
 |
