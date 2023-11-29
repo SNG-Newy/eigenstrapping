@@ -198,7 +198,7 @@ def load_native(data_dir=None):
     native_surface = fetch_data(name='surfaces', space='native', data_dir=data_dir)
     native_data = fetch_data(name='brainmaps', space='native', data_dir=data_dir)
     
-    return {'surface' : native_surface, 'data' : native_data}
+    return {'surface' : native_surface[0], 'data' : native_data[0]}
 
 def fetch_data(*, name=None, space=None, den=None, res=None, hemi=None,
                    tags=None, format=None, data_dir=None, verbose=1):

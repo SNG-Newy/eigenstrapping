@@ -7,10 +7,10 @@ import scipy.optimize as optimize
 import subprocess
 import os
 import nibabel as nib
-from nilearn import image
+#from nilearn import image
 import numpy as np
-from neuromaps.datasets.atlases import fetch_mni152
-from ants import image_read, registration, apply_transforms
+#from neuromaps.datasets.atlases import fetch_mni152
+#from ants import image_read, registration, apply_transforms
 from scipy.spatial import Delaunay, KDTree
 from brainspace import mesh
 from joblib import Parallel, delayed
@@ -44,63 +44,63 @@ Used by :func:`read_annot` and :func:`write_annot`.  All data (apart from
 strings) in an `.annot` file is stored as big-endian int32.
 """
 
-mni152_2mm = np.asarray(
-                 [[  2.,    0.,   0.,    -90,],
-                  [ -0.,    2.,   0.,   -126,],
-                  [ -0.,    0.,   2.,    -72,],
-                  [  0.,    0.,   0.,      1.]])
+# mni152_2mm = np.asarray(
+#                  [[  2.,    0.,   0.,    -90,],
+#                   [ -0.,    2.,   0.,   -126,],
+#                   [ -0.,    0.,   2.,    -72,],
+#                   [  0.,    0.,   0.,      1.]])
 
-mni152_1mm = np.asarray(
-                [[  -1.,    0.,    0.,   90.],
-                 [   0.,    1.,    0., -126.],
-                 [   0.,    0.,    1.,  -72.],
-                 [   0.,    0.,    0.,    1.]])
+# mni152_1mm = np.asarray(
+#                 [[  -1.,    0.,    0.,   90.],
+#                  [   0.,    1.,    0., -126.],
+#                  [   0.,    0.,    1.,  -72.],
+#                  [   0.,    0.,    0.,    1.]])
 
-def _check_mni(in_file):
-    """
-    Checks if input image is in MNI152 space
-    """
+# def _check_mni(in_file):
+#     """
+#     Checks if input image is in MNI152 space
+#     """
     
-    img = image.load_img(in_file)
+#     img = image.load_img(in_file)
     
-    if img.affine != mni152_2mm:
-        if img.affine != mni152_1mm:
-            return False
+#     if img.affine != mni152_2mm:
+#         if img.affine != mni152_1mm:
+#             return False
         
-    else:
-        return True
+#     else:
+#         return True
     
-def native_to_mni152(in_file, nonlinear=True):
-    """
-    Linear or nonlinear registration of native volumetric image to MNI152 space
-    Uses ANTsPy
-    """
+# def native_to_mni152(in_file, nonlinear=True):
+#     """
+#     Linear or nonlinear registration of native volumetric image to MNI152 space
+#     Uses ANTsPy
+#     """
     
-    img = image_read(in_file)
+#     img = image_read(in_file)
     
-    # get template image
-    mni_file = fetch_mni152(density='1mm').get('2009cAsym_T1w')
-    mni = image_read(mni_file)
+#     # get template image
+#     mni_file = fetch_mni152(density='1mm').get('2009cAsym_T1w')
+#     mni = image_read(mni_file)
 
-    if nonlinear is True:
-        transform_type='SyN'
+#     if nonlinear is True:
+#         transform_type='SyN'
         
-    else:
-        transform_type='Affine'
+#     else:
+#         transform_type='Affine'
         
-    # do transform
-    fixed_image = mni
-    moving_image = img
+#     # do transform
+#     fixed_image = mni
+#     moving_image = img
     
-    mytx = registration(fixed=fixed_image, moving=moving_image, type_of_transform=transform_type)
+#     mytx = registration(fixed=fixed_image, moving=moving_image, type_of_transform=transform_type)
     
-    warped_moving_image = apply_transforms(fixed=fixed_image, moving=moving_image,
-                                           transformlist=mytx['fwdtransforms'])
+#     warped_moving_image = apply_transforms(fixed=fixed_image, moving=moving_image,
+#                                            transformlist=mytx['fwdtransforms'])
     
-    # rebuild as nib.Nifti1Image
-    transformed_image = warped_moving_image.to_nibabel()
+#     # rebuild as nib.Nifti1Image
+#     transformed_image = warped_moving_image.to_nibabel()
     
-    return transformed_image
+#     return transformed_image
 
 def gaussian(x, amplitude, mean, stddev):
     return amplitude * np.exp(- ((x - mean) ** 2) / (2 * (stddev ** 2)))
