@@ -35,7 +35,7 @@ jobs:
       - name: Run codespell
         uses: codespell-project/actions-codespell@v2
 
-run_tests:
+  run_tests:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
