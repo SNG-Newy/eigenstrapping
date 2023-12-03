@@ -4,7 +4,6 @@
 name: eigenstrapping-tests
 
 on:
-  workflow-dispatch:
   push:
     branches: [ "main" ]
   pull_request:
