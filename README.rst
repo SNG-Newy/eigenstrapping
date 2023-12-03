@@ -8,6 +8,10 @@
 .. image:: https://zenodo.org/badge/710175458.svg
   :target: https://zenodo.org/doi/10.5281/zenodo.10218973
   :alt: Zenodo DOI
+
+.. image:: https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml/badge.svg
+  :target: https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml
+  :alt: run-tests status
    
 .. image:: https://github.com/SNG-newy/eigenstrapping/actions/workflows/docs.yml/badge.svg
   :target: https://eigenstrapping.readthedocs.io/en/latest/
