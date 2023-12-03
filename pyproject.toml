@@ -28,7 +28,7 @@ dependencies = [
   "nilearn",
   "numpy",
   "pandas",
-  "scipy>=1.11",
+  "scipy>=0.11",
   "seaborn",
   "tqdm",
 ]
