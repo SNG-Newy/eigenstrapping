@@ -30,7 +30,7 @@ from joblib import Parallel, delayed
 from sklearn.utils.validation import check_random_state
 from scipy.stats import normaltest
 import nibabel as nib
-from lapy import TriaIO, TetIO, Solver
+from lapy import TriaMesh, TetMesh, Solver
 from scipy.interpolate import griddata
 from scipy.spatial.distance import cdist
 from sklearn.linear_model import LinearRegression
@@ -1004,7 +1004,7 @@ class VolumetricEigenstrapping:
         self.points_trans = np.matmul(self.T, np.transpose(self.points))
         
         # load surface
-        self.tetra = TetIO.import_vtk(self.tetra_file)
+        self.tetra = TetMesh.read_vtk(self.tetra_file)
         
         # calculate number and volume
         self.roi_number, self.roi_volume = self.calc_volume()
@@ -1303,7 +1303,7 @@ class VolumetricEigenstrapping:
         cmd = 'mv -f ' + self.voldir + '/tmp_surface.vtk ' + tria_file
         output = subprocess.check_output(cmd, shell='True')
         output = output.splitlines()
-        self.tria = TriaIO.import_vtk(tria_file)
+        self.tria = TriaMesh.read_vtk(tria_file)
         
         file = tria_file.rsplit('/')
         inputGeo = file[len(file)-1]

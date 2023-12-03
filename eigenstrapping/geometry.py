@@ -1,6 +1,6 @@
 #from nipype.interfaces.freesurfer import MRIMarchingCubes
-from lapy import TriaMesh, TriaIO, Solver
-from lapy.DiffGeo import tria_compute_gradient, tria_compute_divergence
+from lapy import TriaMesh, Solver
+from lapy.diffgeo import tria_compute_gradient, tria_compute_divergence
 import warnings
 from collections import OrderedDict
 import scipy.optimize as optimize
@@ -397,7 +397,7 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
         # new method: replace v and t of surface_orig with v and t of surface_cut
         # faster version without the need to write the vtk file
         # load surface (as a lapy object)
-        tria = TriaIO.import_vtk(surface_input_filename)
+        tria = TriaMesh.read_vtk(surface_input_filename)
         tria.v = surface_cut.Points
         tria.t = np.reshape(surface_cut.Polygons, [surface_cut.n_cells, 4])[:,1:4]
 

@@ -4,11 +4,14 @@ requires = [
     "setuptools>=42",
     "wheel",
 ]
+install_requires = [
+  "netneurotools @ git+https://github.com/nikitas-k/netneurotools-scipyfix.git@main"
+]
 
 
 [project]
 name = "eigenstrapping"
-version = "0.0.1.9"
+version = "0.0.1.10"
 description = "For generating surrogate brain maps with spatial autocorrelation using geometric eigenmodes."
 readme = "README.rst"
 authors = [
@@ -22,7 +25,6 @@ dependencies = [
   "parspin",
   "lapy==1.0.1",
   "matplotlib",
-  "netneurotools-scipyfix",
   "neuromaps",
   "nibabel",
   "nilearn",

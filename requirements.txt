@@ -1,16 +1,1 @@
-brainsmash==0.11.0
-brainspace==0.1.10
-eigenstrapping==0.0.1.5
-joblib==1.3.2
-lapy==1.0.1
-matplotlib==3.8.2
-netneurotools==0.2.3
-neuromaps==0.0.4
-nibabel==5.1.0
-nilearn==0.10.2
-numpy==1.26.2
-pandas==2.1.3
-scipy==1.11.4
-seaborn==0.13.0
-setuptools==68.0.0
-tqdm==4.66.1
+.
