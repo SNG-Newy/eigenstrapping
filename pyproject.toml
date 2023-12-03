@@ -1,8 +1,6 @@
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
-    "lapy >= 0.6, < 0.7",
-    "numpy >= 1.14",
     "setuptools>=42",
     "wheel",
 ]
@@ -10,13 +8,30 @@ requires = [
 
 [project]
 name = "eigenstrapping"
-version = "0.0.1.2"
+version = "0.0.1.6"
 description = "For generating surrogate brain maps with spatial autocorrelation using geometric eigenmodes."
 readme = "README.rst"
 authors = [
     {name = "Nikitas C. Koussis", email = "nikitas.koussis@gmail.com"},
 ]
 license = { file = "LICENSE" }
+dependencies = [
+  "brainsmash==0.11.0",
+  "brainspace==0.1.10",
+  "joblib",
+  "parspin",
+  "lapy==1.0.1",
+  "matplotlib",
+  "netneurotools",
+  "neuromaps",
+  "nibabel",
+  "nilearn",
+  "numpy==1.26.2",
+  "pandas",
+  "scipy==1.11.4",
+  "seaborn",
+  "tqdm",
+]
 
 [project.urls]
 Source = "https://github.com/SNG-newy/eigenstrapping"
