@@ -10,7 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -64,3 +64,13 @@ html_static_path = ['_static']
 
 # CSS files to include
 html_css_files = ['theme_overrides.css']
+
+sphinx_gallery_conf = {
+    'doc_module': 'eigenstrapping',
+    'backreferences_dir': os.path.join('generated', 'modules'),
+    'reference_url': {
+        'eigenstrapping': None
+    },
+    'thumbnail_size': (250, 250),
+    'ignore_pattern': r'/wip.*\.py',
+}
