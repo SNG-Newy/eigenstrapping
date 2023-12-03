@@ -25,6 +25,7 @@ author = 'Systems Neuroscience Group Newcastle'
 release = '0.0.1.10'
 sys.path.insert(0, os.path.abspath(os.path.pardir))
 os.system('python3 -m pip install git+https://github.com/nikitas-k/netneurotools_scipyfix.git@main')
+os.system('python3 -m pip install tqdm')
 
 # -- General configuration ---------------------------------------------------
 
