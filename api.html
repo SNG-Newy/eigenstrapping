@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API &mdash; eigenstrapping 0.0.1 documentation</title>
+  <title>Reference API &mdash; eigenstrapping 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css?v=ccc4b35e" />
@@ -48,7 +48,18 @@
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reference API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-null-models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-dataio-data-helpers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-datasets-dataset-fetchers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-fit-variogram-fits"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-geometry-mesh-and-eigenmode-functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-plotting-plotting-functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-rotations-random-rotation-functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-stats-statistical-functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eigenstrapping-utils-utility-functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -65,7 +76,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">API</li>
+      <li class="breadcrumb-item active">Reference API</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -74,8 +85,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="api">
-<span id="id1"></span><h1>API<a class="headerlink" href="#api" title="Permalink to this heading"></a></h1>
+  <section id="reference-api">
+<span id="api"></span><h1>Reference API<a class="headerlink" href="#reference-api" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="list-of-modules">
+<p class="topic-title"><strong>List of modules</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#eigenstrapping-null-models" id="id1"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-dataio-data-helpers" id="id2"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-datasets-dataset-fetchers" id="id3"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-fit-variogram-fits" id="id4"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-geometry-mesh-and-eigenmode-functions" id="id5"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-plotting-plotting-functions" id="id6"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-rotations-random-rotation-functions" id="id7"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-stats-statistical-functions" id="id8"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a></p></li>
+<li><p><a class="reference internal" href="#eigenstrapping-utils-utility-functions" id="id9"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a></p></li>
+</ul>
+</nav>
+<section id="eigenstrapping-null-models">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a><a class="headerlink" href="#eigenstrapping-null-models" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-dataio-data-helpers">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a><a class="headerlink" href="#eigenstrapping-dataio-data-helpers" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-datasets-dataset-fetchers">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a><a class="headerlink" href="#eigenstrapping-datasets-dataset-fetchers" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-fit-variogram-fits">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a><a class="headerlink" href="#eigenstrapping-fit-variogram-fits" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-geometry-mesh-and-eigenmode-functions">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a><a class="headerlink" href="#eigenstrapping-geometry-mesh-and-eigenmode-functions" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-plotting-plotting-functions">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a><a class="headerlink" href="#eigenstrapping-plotting-plotting-functions" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-rotations-random-rotation-functions">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a><a class="headerlink" href="#eigenstrapping-rotations-random-rotation-functions" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-stats-statistical-functions">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a><a class="headerlink" href="#eigenstrapping-stats-statistical-functions" title="Permalink to this heading"></a></h2>
+</section>
+<section id="eigenstrapping-utils-utility-functions">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a><a class="headerlink" href="#eigenstrapping-utils-utility-functions" title="Permalink to this heading"></a></h2>
+</section>
 </section>
 
 
