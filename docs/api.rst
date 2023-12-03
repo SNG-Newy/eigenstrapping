@@ -210,7 +210,6 @@ Reference API
    eigenstrapping.utils.get_schaefer
    eigenstrapping.utils.calc_parcellate
    eigenstrapping.utils.parcellate_distmat
-   eigenstrapping.utils.calc_moran
    
    eigenstrapping.utils.reconstruct_data
    eigenstrapping.utils.eigen_decomposition
