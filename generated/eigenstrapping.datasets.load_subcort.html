@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.datasets.load_distmat &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.datasets.load_subcort &mdash; eigenstrapping 0.0.1.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
@@ -26,8 +26,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eigenstrapping.datasets.load_subcort" href="eigenstrapping.datasets.load_subcort.html" />
-    <link rel="prev" title="eigenstrapping.datasets.load_genepc" href="eigenstrapping.datasets.load_genepc.html" /> 
+    <link rel="next" title="eigenstrapping.datasets.load_native" href="eigenstrapping.datasets.load_native.html" />
+    <link rel="prev" title="eigenstrapping.datasets.load_distmat" href="eigenstrapping.datasets.load_distmat.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,11 +59,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_surface_examples.html">eigenstrapping.datasets.load_surface_examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_genepc.html">eigenstrapping.datasets.load_genepc</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.datasets.load_distmat</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.datasets.load_distmat"><code class="docutils literal notranslate"><span class="pre">load_distmat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_distmat.html">eigenstrapping.datasets.load_distmat</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.datasets.load_subcort</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.datasets.load_subcort"><code class="docutils literal notranslate"><span class="pre">load_subcort()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_subcort.html">eigenstrapping.datasets.load_subcort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_native.html">eigenstrapping.datasets.load_native</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.fetch_data.html">eigenstrapping.datasets.fetch_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.txt2memmap.html">eigenstrapping.datasets.txt2memmap</a></li>
@@ -95,7 +95,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api.html">Reference API</a></li>
-      <li class="breadcrumb-item active">eigenstrapping.datasets.load_distmat</li>
+      <li class="breadcrumb-item active">eigenstrapping.datasets.load_subcort</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -104,50 +104,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="eigenstrapping-datasets-load-distmat">
-<h1>eigenstrapping.datasets.load_distmat<a class="headerlink" href="#eigenstrapping-datasets-load-distmat" title="Permalink to this heading"></a></h1>
+  <section id="eigenstrapping-datasets-load-subcort">
+<h1>eigenstrapping.datasets.load_subcort<a class="headerlink" href="#eigenstrapping-datasets-load-subcort" title="Permalink to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="eigenstrapping.datasets.load_distmat">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.datasets.</span></span><span class="sig-name descname"><span class="pre">load_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fsaverage'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">den</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'10k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hemi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/datasets/base.html#load_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.datasets.load_distmat" title="Permalink to this definition"></a></dt>
-<dd><p>Downloads geodesic distance matrices. If the dense distance matrix is retrieved,
-there is an option to return the sorted distance matrix and index memmapped, ala
-variogram calculation in <code class="docutils literal notranslate"><span class="pre">brainsmash</span></code> in <cite>sort=True</cite>. If <cite>sort=False</cite>,
-the unsorted distance matrix (as per normal) is returned.</p>
+<dt class="sig sig-object py" id="eigenstrapping.datasets.load_subcort">
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.datasets.</span></span><span class="sig-name descname"><span class="pre">load_subcort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'thalamus'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/datasets/base.html#load_subcort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.datasets.load_subcort" title="Permalink to this definition"></a></dt>
+<dd><p>Loads all the files for the subcortical structures used in the paper -
+cortical-subcortical gradients and the subcortical ROIs from the 25%
+probability Harvard-Oxford atlas.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which space of the files to get. Default is ‘fsaverage5’</p></li>
-<li><p><strong>data_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Path to use as data directory. If not specified, will check for
-environmental variable ‘E_DATA’; if that is not set, will use
-<cite>~/e-data</cite> instead. Default: None</p></li>
-<li><p><strong>hemi</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which hemisphere to load data for. Default ‘lh’</p></li>
-<li><p><strong>parcellated</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, return parcellated format of distance matrix. If False, return
-sorted dense distance matrix.</p></li>
-<li><p><strong>sort</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, return sorted dense distance matrix and index memory-mapped using
-<cite>.utils.txt2memmap()</cite> for variogram calculation. Does nothing if
-<cite>parcellation</cite> is passed.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>structure</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which subcortical structure to return. Default is ‘thalamus’.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul>
-<li><p><em>if parcellated</em> –</p>
-<dl class="simple">
-<dt>ndarray</dt><dd><p>Parcellated distance matrix</p>
-</dd>
-</dl>
-</li>
-<li><p><em>else</em> –</p>
-<dl class="simple">
-<dt>if sort:</dt><dd><dl class="simple">
-<dt>tuple of ndarrays</dt><dd><p>Sorted distance matrix and index for hemisphere in ‘lh’</p>
-</dd>
-</dl>
-</dd>
-<dt>else:</dt><dd><p>ndarray
-Dense geodesic distance matrix</p>
-</dd>
-</dl>
-</li>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>data</strong> (<em>nib.Nifti1Image</em>) – Subcortical data of cortico-subcortical gradients in MNI152 space.</p></li>
+<li><p><strong>mask</strong> (<em>nib.Nifti1Image</em>) – Mask image of subcortical structure in MNI152 space (i.e., 1 inside
+structure and 0 outside structure)</p></li>
 </ul>
 </p>
 </dd>
@@ -160,8 +133,8 @@ Dense geodesic distance matrix</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="eigenstrapping.datasets.load_genepc.html" class="btn btn-neutral float-left" title="eigenstrapping.datasets.load_genepc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="eigenstrapping.datasets.load_subcort.html" class="btn btn-neutral float-right" title="eigenstrapping.datasets.load_subcort" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="eigenstrapping.datasets.load_distmat.html" class="btn btn-neutral float-left" title="eigenstrapping.datasets.load_distmat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eigenstrapping.datasets.load_native.html" class="btn btn-neutral float-right" title="eigenstrapping.datasets.load_native" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

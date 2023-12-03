@@ -232,7 +232,7 @@
         
     <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">index</span></div>
 
-<span class="k">def</span> <span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;thalamus&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="load_subcort"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort">[docs]</a><span class="k">def</span> <span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;thalamus&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads all the files for the subcortical structures used in the paper -</span>
 <span class="sd">    cortical-subcortical gradients and the subcortical ROIs from the 25% </span>
@@ -256,7 +256,7 @@
     <span class="n">data</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_pth</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;brainmaps/</span><span class="si">{</span><span class="n">structure</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">))</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_pth</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;masks/</span><span class="si">{</span><span class="n">structure</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">))</span>
     
-    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">mask</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">mask</span></div>
 
 <div class="viewcode-block" id="load_native"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_native.html#eigenstrapping.datasets.load_native">[docs]</a><span class="k">def</span> <span class="nf">load_native</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -339,7 +339,7 @@
     
     <span class="k">return</span> <span class="n">_groupby_match</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">txt2memmap</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">maskfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="txt2memmap"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap">[docs]</a><span class="k">def</span> <span class="nf">txt2memmap</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">maskfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Export distance matrix to memory-mapped array.</span>
 
@@ -428,10 +428,10 @@
         <span class="k">del</span> <span class="n">fpd</span>  <span class="c1"># Flush memory changes to disk</span>
         <span class="k">del</span> <span class="n">fpi</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;distmat&#39;</span><span class="p">:</span> <span class="n">npydfile</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">npyifile</span><span class="p">}</span>  <span class="c1"># Return filenames</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;distmat&#39;</span><span class="p">:</span> <span class="n">npydfile</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">npyifile</span><span class="p">}</span>  <span class="c1"># Return filenames</span></div>
 
 
-<span class="k">def</span> <span class="nf">load_memmap</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="load_memmap"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_memmap.html#eigenstrapping.datasets.load_memmap">[docs]</a><span class="k">def</span> <span class="nf">load_memmap</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a memory-mapped array.</span>
 
@@ -445,7 +445,7 @@
 <span class="sd">    np.memmap</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mmap_mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mmap_mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span></div>
 
 <span class="k">def</span> <span class="nf">_count_lines</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>

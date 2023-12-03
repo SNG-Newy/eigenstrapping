@@ -70,8 +70,11 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_surface_examples.html">eigenstrapping.datasets.load_surface_examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_genepc.html">eigenstrapping.datasets.load_genepc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_distmat.html">eigenstrapping.datasets.load_distmat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_subcort.html">eigenstrapping.datasets.load_subcort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_native.html">eigenstrapping.datasets.load_native</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html">eigenstrapping.datasets.fetch_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.txt2memmap.html">eigenstrapping.datasets.txt2memmap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_memmap.html">eigenstrapping.datasets.load_memmap</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a><ul>
@@ -234,11 +237,20 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat" title="eigenstrapping.datasets.load_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_distmat</span></code></a>([...])</p></td>
 <td><p>Downloads geodesic distance matrices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_native.html#eigenstrapping.datasets.load_native" title="eigenstrapping.datasets.load_native"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_native</span></code></a>([data_dir])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort" title="eigenstrapping.datasets.load_subcort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_subcort</span></code></a>([...])</p></td>
+<td><p>Loads all the files for the subcortical structures used in the paper - cortical-subcortical gradients and the subcortical ROIs from the 25% probability Harvard-Oxford atlas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_native.html#eigenstrapping.datasets.load_native" title="eigenstrapping.datasets.load_native"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_native</span></code></a>([data_dir])</p></td>
 <td><p>Download HCP native surface and data for demonstration purposes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data" title="eigenstrapping.datasets.fetch_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.fetch_data</span></code></a>(*[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data" title="eigenstrapping.datasets.fetch_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.fetch_data</span></code></a>(*[, ...])</p></td>
 <td><p>Downloads files for brain surfaces and eigenmodes matching requested variables</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap" title="eigenstrapping.datasets.txt2memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.txt2memmap</span></code></a>(...[, ...])</p></td>
+<td><p>Export distance matrix to memory-mapped array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_memmap.html#eigenstrapping.datasets.load_memmap" title="eigenstrapping.datasets.load_memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_memmap</span></code></a>(filename)</p></td>
+<td><p>Load a memory-mapped array.</p></td>
 </tr>
 </tbody>
 </table>
