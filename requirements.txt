@@ -1,1 +1,14 @@
-.
+brainsmash==0.11.0
+brainspace==0.1.10
+joblib
+parspin
+lapy==1.0.1
+matplotlib
+neuromaps
+nibabel
+nilearn
+numpy
+pandas
+scipy>=0.11
+seaborn
+tqdm
