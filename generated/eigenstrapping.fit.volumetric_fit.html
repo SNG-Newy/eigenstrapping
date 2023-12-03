@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eigenstrapping.fit.volumetric_fit &mdash; eigenstrapping 0.0.1.10 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eigenstrapping.geometry.gaussian" href="eigenstrapping.geometry.gaussian.html" />
+    <link rel="prev" title="eigenstrapping.fit.surface_fit" href="eigenstrapping.fit.surface_fit.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">Reference API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.fit.surface_fit.html">eigenstrapping.fit.surface_fit</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.fit.volumetric_fit</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.fit.volumetric_fit"><code class="docutils literal notranslate"><span class="pre">volumetric_fit()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">Reference API</a></li>
+      <li class="breadcrumb-item active">eigenstrapping.fit.volumetric_fit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eigenstrapping-fit-volumetric-fit">
+<h1>eigenstrapping.fit.volumetric_fit<a class="headerlink" href="#eigenstrapping-fit-volumetric-fit" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="eigenstrapping.fit.volumetric_fit">
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.fit.</span></span><span class="sig-name descname"><span class="pre">volumetric_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsurrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_diags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/fit.html#volumetric_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.fit.volumetric_fit" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate variogram fits for :class: <cite>eigenstrapping.VolumetricEigenstrapping</cite>
+to determine how many modes to decompose volumetric map with.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mask</strong> (<em>str to mask file</em>) – Target ROI volume with 1 inside region-of-interest, and 0 elsewhere</p></li>
+<li><p><strong>x</strong> (<em>str to data inside mask</em>) – Target brain map</p></li>
+<li><p><strong>D</strong> (<em>(</em><em>N</em><em>,</em><em>N</em><em>) </em><em>np.ndarray</em><em> or </em><em>np.memmap</em>) – Pairwise distance matrix between elements of <cite>x</cite></p></li>
+<li><p><strong>index</strong> (<em>(</em><em>N</em><em>,</em><em>N</em><em>) </em><em>np.ndarray</em><em> or </em><em>np.memmap</em>) – See <a href="#id1"><span class="problematic" id="id2">:method:`variogram.variogram`</span></a></p></li>
+<li><p><strong>nsurr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default 20</em>) – Number of simulated surrogate maps from which to compute variograms</p></li>
+<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default False</em>) – if True, return: 1, the smoothed variogram values for the target
+brain map; 2, the distances at which the smoothed variograms values
+were computed; and 3, the surrogate maps’ smoothed variogram values</p></li>
+<li><p><strong>params</strong> – Keyword arguments for :class: <cite>eigenstrapping.VolumetricEigenstrapping</cite> or
+:method: <cite>variogram.variogram</cite>. If eigenmodes and eigenvalues have been
+precomputed for the surface that <cite>x</cite> exists on, then pass them as <cite>evals</cite>
+and <cite>emodes</cite>. If they’re not given, then a <cite>surface</cite> must be given.
+See :class: <cite>eigenstrapping.VolumetricEigenstrapping</cite> for more details.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>if and only if return_data is True</em></p></li>
+<li><p><strong>surrs</strong> (<em>(N,) np.ndarray</em>) – Eigenstrapped surrogates in volume space</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div style='clear:both'></div></section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eigenstrapping.fit.surface_fit.html" class="btn btn-neutral float-left" title="eigenstrapping.fit.surface_fit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eigenstrapping.geometry.gaussian.html" class="btn btn-neutral float-right" title="eigenstrapping.geometry.gaussian" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

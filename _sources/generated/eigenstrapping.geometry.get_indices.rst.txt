@@ -1,0 +1,12 @@
+﻿eigenstrapping.geometry.get_indices
+===================================
+
+.. currentmodule:: eigenstrapping.geometry
+
+.. autofunction:: get_indices
+
+.. .. include:: modules/eigenstrapping.geometry.get_indices.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

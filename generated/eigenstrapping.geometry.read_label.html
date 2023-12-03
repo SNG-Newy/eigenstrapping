@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eigenstrapping.geometry.read_label &mdash; eigenstrapping 0.0.1.10 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eigenstrapping.geometry.write_label" href="eigenstrapping.geometry.write_label.html" />
+    <link rel="prev" title="eigenstrapping.geometry.read_geometry" href="eigenstrapping.geometry.read_geometry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">Reference API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.gaussian.html">eigenstrapping.geometry.gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.estimate_fwhm.html">eigenstrapping.geometry.estimate_fwhm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.resel_count.html">eigenstrapping.geometry.resel_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.get_tkrvox2ras.html">eigenstrapping.geometry.get_tkrvox2ras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.make_tetra_file.html">eigenstrapping.geometry.make_tetra_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.make_tria_file.html">eigenstrapping.geometry.make_tria_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.create_temp_surface.html">eigenstrapping.geometry.create_temp_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.get_indices.html">eigenstrapping.geometry.get_indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_eig.html">eigenstrapping.geometry.calc_eig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_surface_eigenmodes.html">eigenstrapping.geometry.calc_surface_eigenmodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.compute_normals.html">eigenstrapping.geometry.compute_normals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.inflate_mesh.html">eigenstrapping.geometry.inflate_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.nearest_neighbor.html">eigenstrapping.geometry.nearest_neighbor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_volume.html">eigenstrapping.geometry.calc_volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.normalize_vtk.html">eigenstrapping.geometry.normalize_vtk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.read_annot.html">eigenstrapping.geometry.read_annot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.read_geometry.html">eigenstrapping.geometry.read_geometry</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.geometry.read_label</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.geometry.read_label"><code class="docutils literal notranslate"><span class="pre">read_label()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.write_label.html">eigenstrapping.geometry.write_label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.read_morph_data.html">eigenstrapping.geometry.read_morph_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.geodesic_distmat.html">eigenstrapping.geometry.geodesic_distmat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.diffusion.html">eigenstrapping.geometry.diffusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">Reference API</a></li>
+      <li class="breadcrumb-item active">eigenstrapping.geometry.read_label</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eigenstrapping-geometry-read-label">
+<h1>eigenstrapping.geometry.read_label<a class="headerlink" href="#eigenstrapping-geometry-read-label" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="eigenstrapping.geometry.read_label">
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">read_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_scalars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#read_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.read_label" title="Permalink to this definition"></a></dt>
+<dd><p>Load in a Freesurfer .label file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to label file.</p></li>
+<li><p><strong>read_scalars</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, read and return scalars associated with each vertex.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>label_array</strong> (<em>numpy array</em>) – Array with indices of vertices included in label.</p></li>
+<li><p><strong>scalar_array</strong> (<em>numpy array (floats)</em>) – Only returned if <cite>read_scalars</cite> is True.  Array of scalar data for each
+vertex.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div style='clear:both'></div></section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eigenstrapping.geometry.read_geometry.html" class="btn btn-neutral float-left" title="eigenstrapping.geometry.read_geometry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eigenstrapping.geometry.write_label.html" class="btn btn-neutral float-right" title="eigenstrapping.geometry.write_label" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

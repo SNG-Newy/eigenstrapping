@@ -1,0 +1,12 @@
+﻿eigenstrapping.geometry.write_label
+===================================
+
+.. currentmodule:: eigenstrapping.geometry
+
+.. autofunction:: write_label
+
+.. .. include:: modules/eigenstrapping.geometry.write_label.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

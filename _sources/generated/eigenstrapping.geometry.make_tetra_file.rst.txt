@@ -1,0 +1,12 @@
+﻿eigenstrapping.geometry.make_tetra_file
+=======================================
+
+.. currentmodule:: eigenstrapping.geometry
+
+.. autofunction:: make_tetra_file
+
+.. .. include:: modules/eigenstrapping.geometry.make_tetra_file.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

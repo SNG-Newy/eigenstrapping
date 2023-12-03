@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eigenstrapping.datasets.base &mdash; eigenstrapping 0.0.1.10 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=ccc4b35e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=855213f0"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Reference API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eigenstrapping.datasets.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eigenstrapping.datasets.base</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Data fetchers</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">neuromaps</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">images</span>
+<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_data_dir</span><span class="p">,</span> <span class="n">_groupby_match</span><span class="p">,</span>
+                    <span class="n">get_dataset_info</span><span class="p">,</span> <span class="n">_match_files</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">dataio</span>
+
+<span class="kn">from</span> <span class="nn">nilearn.datasets.utils</span> <span class="kn">import</span> <span class="n">_fetch_file</span>
+
+<div class="viewcode-block" id="load_surface_examples"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples">[docs]</a><span class="k">def</span> <span class="nf">load_surface_examples</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_surface</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloads all surface files for fsaverage5 space</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_dir : str, optional</span>
+<span class="sd">        Path to use as data directory. If not specified, will check for</span>
+<span class="sd">        environmental variable &#39;EIGEN_DATA&#39;; if that is not set, will use</span>
+<span class="sd">        `~/eigenstrapping-data` instead. Default: None</span>
+<span class="sd">    with_surface : str, optional</span>
+<span class="sd">        Flag whether to return the surfaces or not. Default False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of ndarrays</span>
+<span class="sd">        Maps, emodes, and evals for left and right hemispheres.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">space</span> <span class="o">=</span> <span class="s1">&#39;fsaverage&#39;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;fsaverage5&#39;</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="s1">&#39;10k&#39;</span>
+        
+    <span class="n">local_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    
+    <span class="n">data_fname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.gii&#39;</span>
+    <span class="n">mask_fname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.txt&#39;</span>
+    
+    <span class="n">data_pth</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s1">&#39;brainmaps&#39;</span><span class="p">,</span> <span class="n">data_fname</span><span class="p">)</span>
+    <span class="n">mask_pth</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s1">&#39;masks&#39;</span><span class="p">,</span> <span class="n">mask_fname</span><span class="p">)</span>
+    
+    <span class="n">surfs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">emodes</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">side</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="s1">&#39;rh&#39;</span><span class="p">]):</span>
+        <span class="n">surfs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surfaces&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span>
+                              <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_pth</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">side</span><span class="p">))</span><span class="o">.</span><span class="n">agg_data</span><span class="p">()</span>
+        <span class="n">emodes_file</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;eigenmodes&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">,</span>
+                   <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;emodes&#39;</span><span class="p">)</span>
+        <span class="n">emodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">emodes_file</span><span class="p">)</span>
+        <span class="n">evals_file</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;eigenmodes&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">,</span>
+                   <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;evals&#39;</span><span class="p">)</span>
+        <span class="n">evals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">evals_file</span><span class="p">)</span>
+        <span class="n">masks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mask_pth</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">side</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="o">~</span><span class="n">masks</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    
+    <span class="k">if</span> <span class="n">with_surface</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">surfs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">surfs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">evals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">evals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">evals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">evals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="load_genepc"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_genepc.html#eigenstrapping.datasets.load_genepc">[docs]</a><span class="k">def</span> <span class="nf">load_genepc</span><span class="p">(</span><span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download and return the Allen Human Brain Atlas gene PC1 in</span>
+<span class="sd">    fsaverage5 space.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    join : bool, optional</span>
+<span class="sd">        If True, return both hemispheres in one array. If False, return</span>
+<span class="sd">        two hemispheres separately. Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of ndarrays of shape (10242,) (10242,)</span>
+<span class="sd">        if join is True then returns ndarray of shape (20484,)</span>
+<span class="sd">        Gene PC1 data in fsaverage5 space</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">genepc</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_annotation</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;genepc1&#39;</span><span class="p">,</span> <span class="n">return_single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">genepc</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">join</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data</span>
+    
+    <span class="n">data_lh</span><span class="p">,</span> <span class="n">data_rh</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10242</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">data_lh</span><span class="p">,</span> <span class="n">data_rh</span></div>
+
+<div class="viewcode-block" id="load_distmat"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat">[docs]</a><span class="k">def</span> <span class="nf">load_distmat</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">parcellated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloads geodesic distance matrices. If the dense distance matrix is retrieved, </span>
+<span class="sd">    there is an option to return the sorted distance matrix and index memmapped, ala</span>
+<span class="sd">    variogram calculation in ``brainsmash`` in `sort=True`. If `sort=False`,</span>
+<span class="sd">    the unsorted distance matrix (as per normal) is returned.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    space : str, optional</span>
+<span class="sd">        Which space of the files to get. Default is &#39;fsaverage5&#39;</span>
+<span class="sd">    data_dir : str, optional</span>
+<span class="sd">        Path to use as data directory. If not specified, will check for</span>
+<span class="sd">        environmental variable &#39;E_DATA&#39;; if that is not set, will use</span>
+<span class="sd">        `~/e-data` instead. Default: None</span>
+<span class="sd">    hemi : str, optional</span>
+<span class="sd">        Which hemisphere to load data for. Default &#39;lh&#39;</span>
+<span class="sd">    parcellated : bool, optional</span>
+<span class="sd">        If True, return parcellated format of distance matrix. If False, return</span>
+<span class="sd">        sorted dense distance matrix.</span>
+<span class="sd">    sort : bool, optional</span>
+<span class="sd">        If True, return sorted dense distance matrix and index memory-mapped using</span>
+<span class="sd">        `.utils.txt2memmap()` for variogram calculation. Does nothing if</span>
+<span class="sd">        `parcellation` is passed.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    if parcellated:</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            Parcellated distance matrix</span>
+<span class="sd">    else:</span>
+<span class="sd">        if sort:</span>
+<span class="sd">            tuple of ndarrays</span>
+<span class="sd">                Sorted distance matrix and index for hemisphere in &#39;lh&#39;</span>
+<span class="sd">        else:</span>
+<span class="sd">            ndarray</span>
+<span class="sd">            Dense geodesic distance matrix</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">parcellated</span><span class="p">:</span>
+        <span class="n">distmat</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distmat&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span>
+                             <span class="n">hemi</span><span class="o">=</span><span class="n">hemi</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;parc&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">distmat</span>
+    
+    <span class="n">distmat</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distmat&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span>
+                         <span class="n">hemi</span><span class="o">=</span><span class="n">hemi</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;dense&#39;</span><span class="p">)</span>
+    
+    <span class="n">outfiles</span> <span class="o">=</span> <span class="n">txt2memmap</span><span class="p">(</span><span class="n">distmat</span><span class="p">,</span> <span class="n">get_data_dir</span><span class="p">(</span><span class="n">data_dir</span><span class="p">))</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">load_memmap</span><span class="p">(</span><span class="n">outfiles</span><span class="p">[</span><span class="s1">&#39;distmat&#39;</span><span class="p">])</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">load_memmap</span><span class="p">(</span><span class="n">outfiles</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">])</span>
+        
+    <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">index</span></div>
+
+<span class="k">def</span> <span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;thalamus&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads all the files for the subcortical structures used in the paper -</span>
+<span class="sd">    cortical-subcortical gradients and the subcortical ROIs from the 25% </span>
+<span class="sd">    probability Harvard-Oxford atlas.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure : str, optional</span>
+<span class="sd">        Which subcortical structure to return. Default is &#39;thalamus&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : nib.Nifti1Image</span>
+<span class="sd">        Subcortical data of cortico-subcortical gradients in MNI152 space.</span>
+<span class="sd">    mask : nib.Nifti1Image</span>
+<span class="sd">        Mask image of subcortical structure in MNI152 space (i.e., 1 inside </span>
+<span class="sd">        structure and 0 outside structure)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">root_pth</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_pth</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;brainmaps/</span><span class="si">{</span><span class="n">structure</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">))</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_pth</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;masks/</span><span class="si">{</span><span class="n">structure</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">mask</span>
+
+<div class="viewcode-block" id="load_native"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_native.html#eigenstrapping.datasets.load_native">[docs]</a><span class="k">def</span> <span class="nf">load_native</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download HCP native surface and data for demonstration purposes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_dir : str, optional</span>
+<span class="sd">        Path to use . The default is Npne.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    native : dict</span>
+<span class="sd">        Dictionary of filenames </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">native_surface</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surfaces&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="n">data_dir</span><span class="p">)</span>
+    <span class="n">native_data</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;brainmaps&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="n">data_dir</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;surface&#39;</span> <span class="p">:</span> <span class="n">native_surface</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;data&#39;</span> <span class="p">:</span> <span class="n">native_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span></div>
+
+<div class="viewcode-block" id="fetch_data"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data">[docs]</a><span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloads files for brain surfaces and eigenmodes matching requested variables</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name, space, den, res, hemi, tags, format : str or list-of-str</span>
+<span class="sd">        Values on which to match surfaces. If not specified surfaces with</span>
+<span class="sd">        any value for the relevant key will be matched. Default: None</span>
+<span class="sd">    data_dir : str, optional</span>
+<span class="sd">        Path to use as data directory. If not specified, will</span>
+<span class="sd">        use `~/e-data` instead. Default: None</span>
+<span class="sd">    verbose : int, optional</span>
+<span class="sd">        Modifies verbosity of download, where higher numbers mean more updates.</span>
+<span class="sd">        Default: 1</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : dict</span>
+<span class="sd">        Dictionary of downloaded annotations where dictionary keys are tuples</span>
+<span class="sd">        (space, den/res) and values are lists of corresponding</span>
+<span class="sd">        filenames</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check input parameters to ensure we&#39;re fetching _something_</span>
+    <span class="n">supplied</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">hemi</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="nb">format</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">supplied</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">supplied</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Must provide at least one parameters on which to &#39;</span>
+                         <span class="s1">&#39;match files. If you want to fetch all &#39;</span>
+                         <span class="s1">&#39;annotations set any of the parameters to &quot;all&quot;.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># get info on datasets we need to fetch</span>
+    <span class="n">data_dir</span> <span class="o">=</span> <span class="n">get_data_dir</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="n">data_dir</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">_match_files</span><span class="p">(</span><span class="n">get_dataset_info</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+                        <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">res</span><span class="p">,</span>
+                        <span class="n">hemi</span><span class="o">=</span><span class="n">hemi</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Identified </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">)</span><span class="si">}</span><span class="s1"> datsets matching specified parameters&#39;</span><span class="p">)</span>
+
+    <span class="c1"># TODO: current work-around to handle that _fetch_files() does not support</span>
+    <span class="c1"># session instances. hopefully a future version will and we can just use</span>
+    <span class="c1"># that function to handle this instead of calling _fetch_file() directly</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">dset</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">dset</span><span class="p">[</span><span class="s1">&#39;rel_path&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">dset</span><span class="p">[</span><span class="s1">&#39;fname&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">dl_file</span> <span class="o">=</span> <span class="n">_fetch_file</span><span class="p">(</span><span class="n">dset</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                  <span class="n">md5sum</span><span class="o">=</span><span class="n">dset</span><span class="p">[</span><span class="s1">&#39;checksum&#39;</span><span class="p">])</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">dl_file</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">_groupby_match</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">txt2memmap</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">maskfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Export distance matrix to memory-mapped array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dist_file : filename</span>
+<span class="sd">        Path to `delimiter`-separated distance matrix file</span>
+<span class="sd">    output_dir : filename</span>
+<span class="sd">        Path to directory in which output files will be written</span>
+<span class="sd">    maskfile : filename or np.ndarray or None, default None</span>
+<span class="sd">        Path to a neuroimaging/txt file containing a mask, or a mask</span>
+<span class="sd">        represented as a numpy array. Mask scalars are cast to boolean, and</span>
+<span class="sd">        all elements not equal to zero will be masked.</span>
+<span class="sd">    delimiter : str</span>
+<span class="sd">        Delimiting character in `dist_file`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Keys are &#39;D&#39; and &#39;index&#39;; values are absolute paths to the</span>
+<span class="sd">        corresponding binary files on disk.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Each row of the distance matrix is sorted before writing to file. Thus, a</span>
+<span class="sd">    second mem-mapped array is necessary, the i-th row of which contains</span>
+<span class="sd">    argsort(d[i]).</span>
+<span class="sd">    If `maskfile` is not None, a binary mask.txt file will also be written to</span>
+<span class="sd">    the output directory.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    IOError : `output_dir` doesn&#39;t exist</span>
+<span class="sd">    ValueError : Mask image and distance matrix have inconsistent sizes</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nlines</span> <span class="o">=</span> <span class="n">_count_lines</span><span class="p">(</span><span class="n">dist_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Output directory does not exist: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">))</span>
+
+    <span class="c1"># Load mask if one was provided</span>
+    <span class="k">if</span> <span class="n">maskfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">dataio</span><span class="p">(</span><span class="n">maskfile</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">nlines</span><span class="p">:</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="s2">&quot;Incompatible input sizes</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">e</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> rows in </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nlines</span><span class="p">,</span> <span class="n">dist_file</span><span class="p">)</span>
+            <span class="n">e</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> elements in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">maskfile</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">mask_fileout</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;mask.txt&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>  <span class="c1"># Write to text file</span>
+            <span class="n">fname</span><span class="o">=</span><span class="n">mask_fileout</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">nv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="o">~</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>  <span class="c1"># number of non-masked elements</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nlines</span><span class="p">)[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>  <span class="c1"># indices of non-masked elements</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nv</span> <span class="o">=</span> <span class="n">nlines</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nlines</span><span class="p">)</span>
+
+    <span class="c1"># Build memory-mapped arrays</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+
+        <span class="n">npydfile</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;distmat.npy&quot;</span><span class="p">)</span>
+        <span class="n">npyifile</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;index.npy&quot;</span><span class="p">)</span>
+        <span class="n">fpd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">open_memmap</span><span class="p">(</span>
+            <span class="n">npydfile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nv</span><span class="p">,</span> <span class="n">nv</span><span class="p">))</span>
+        <span class="n">fpi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">open_memmap</span><span class="p">(</span>
+            <span class="n">npyifile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nv</span><span class="p">,</span> <span class="n">nv</span><span class="p">))</span>
+
+        <span class="n">ifp</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Build memory-mapped arrays one row of distances at a time</span>
+        <span class="k">for</span> <span class="n">il</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>  <span class="c1"># Loop over lines of file</span>
+            <span class="k">if</span> <span class="n">il</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>  <span class="c1"># Keep only CIFTI vertices</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">nlines</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                            <span class="s2">&quot;Distance matrix is not square: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">dist_file</span><span class="p">))</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                    <span class="n">sort_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                    <span class="n">fpd</span><span class="p">[</span><span class="n">ifp</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">sort_idx</span><span class="p">]</span>  <span class="c1"># sorted row of distances</span>
+                    <span class="n">fpi</span><span class="p">[</span><span class="n">ifp</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sort_idx</span>  <span class="c1"># sort indexes</span>
+                    <span class="n">ifp</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">del</span> <span class="n">fpd</span>  <span class="c1"># Flush memory changes to disk</span>
+        <span class="k">del</span> <span class="n">fpi</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;distmat&#39;</span><span class="p">:</span> <span class="n">npydfile</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">npyifile</span><span class="p">}</span>  <span class="c1"># Return filenames</span>
+
+
+<span class="k">def</span> <span class="nf">load_memmap</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a memory-mapped array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        path to memory-mapped array saved as npy file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.memmap</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mmap_mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_count_lines</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Count number of lines in a file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : filename</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        number of lines in file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">buf_size</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+        <span class="n">read_f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">read</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">read_f</span><span class="p">(</span><span class="n">buf_size</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">buf</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">+=</span> <span class="n">buf</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">read_f</span><span class="p">(</span><span class="n">buf_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lines</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+﻿eigenstrapping.geometry.read_label
+==================================
+
+.. currentmodule:: eigenstrapping.geometry
+
+.. autofunction:: read_label
+
+.. .. include:: modules/eigenstrapping.geometry.read_label.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

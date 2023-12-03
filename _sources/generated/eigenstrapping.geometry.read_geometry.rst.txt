@@ -1,0 +1,12 @@
+﻿eigenstrapping.geometry.read_geometry
+=====================================
+
+.. currentmodule:: eigenstrapping.geometry
+
+.. autofunction:: read_geometry
+
+.. .. include:: modules/eigenstrapping.geometry.read_geometry.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

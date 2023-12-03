@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; eigenstrapping 0.0.1.10 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Reference API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-plot-surface-examples-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="getting-started">
+<span id="sphx-glr-auto-examples-plot-surface-examples-py"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
+<section id="quick-introduction-to-brain-maps-and-eigenmodes">
+<h2>Quick introduction to brain maps and eigenmodes<a class="headerlink" href="#quick-introduction-to-brain-maps-and-eigenmodes" title="Permalink to this heading"></a></h2>
+<p>Patterns on the cortical surface or in the subcortex (“brain maps”) more often
+than not express with smoothness - spatial autocorrelation. Accounting
+for this in statistical testing of the associations between or the influence
+that one brain map has on another is a non-trivial problem. More recently,
+methods that account for smoothness have been developed, but these carry their own
+issues (see our <a class="reference external" href="https://null.null">paper</a> for an in-depth discussion on this topic).</p>
+<p>Eigenmodes of a surface encode all pairwise (auto)correlations (i.e., smoothness).
+The reason for this is too maths heavy for a quick intro, but suffice to say
+that this has been discussed many times by people smarter than the people who came up with
+this method (see <a class="reference internal" href="../references.html#references"><span class="std std-ref">References</span></a>).</p>
+<p>Eigenstrapping offers a solution by leveraging this fact, and another property of
+eigenmodes: they are orthogonal. By taking random rotations of them, one can
+create new brain maps with the same smoothness but randomized topology. The steps
+below will help you get started and build your own surrogate maps.</p>
+<ul class="sphx-glr-horizontal">
+<li><img src="../_images/sphx_glr_plot_surface_examples_001.png" srcset="../_images/sphx_glr_plot_surface_examples_001.png" alt="4.00" class = "sphx-glr-multi-img"/></li>
+<li><img src="../_images/sphx_glr_plot_surface_examples_002.png" srcset="../_images/sphx_glr_plot_surface_examples_002.png" alt="4.00" class = "sphx-glr-multi-img"/></li>
+</ul>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/65668144aa3a762736d6ab2b ...
+ ...done. (3 seconds, 0 min)
+Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/6566812ff0b8e24c97a9d80c ...
+
+Downloaded 2662400 of 260655724 bytes (1.0%,  1.6min remaining)
+Downloaded 29392896 of 260655724 bytes (11.3%,   15.8s remaining)
+Downloaded 57614336 of 260655724 bytes (22.1%,   10.6s remaining)
+Downloaded 84942848 of 260655724 bytes (32.6%,    8.3s remaining)
+Downloaded 113180672 of 260655724 bytes (43.4%,    6.5s remaining)
+Downloaded 141418496 of 260655724 bytes (54.3%,    5.1s remaining)
+Downloaded 169443328 of 260655724 bytes (65.0%,    3.8s remaining)
+Downloaded 194740224 of 260655724 bytes (74.7%,    2.7s remaining)
+Downloaded 220446720 of 260655724 bytes (84.6%,    1.7s remaining)
+Downloaded 249069568 of 260655724 bytes (95.6%,    0.5s remaining) ...done. (12 seconds, 0 min)
+Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/6566812479d42829de3e864c ...
+ ...done. (2 seconds, 0 min)
+Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/65668144932b9f48b2760891 ...
+ ...done. (2 seconds, 0 min)
+Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/6566812ef0b8e24c97a9d80a ...
+
+Downloaded 2482176 of 261166559 bytes (1.0%,  1.7min remaining)
+Downloaded 28966912 of 261166559 bytes (11.1%,   16.1s remaining)
+Downloaded 57008128 of 261166559 bytes (21.8%,   10.8s remaining)
+Downloaded 84623360 of 261166559 bytes (32.4%,    8.4s remaining)
+Downloaded 110460928 of 261166559 bytes (42.3%,    6.8s remaining)
+Downloaded 138977280 of 261166559 bytes (53.2%,    5.3s remaining)
+Downloaded 166928384 of 261166559 bytes (63.9%,    4.0s remaining)
+Downloaded 194306048 of 261166559 bytes (74.4%,    2.8s remaining)
+Downloaded 222543872 of 261166559 bytes (85.2%,    1.6s remaining)
+Downloaded 250462208 of 261166559 bytes (95.9%,    0.4s remaining) ...done. (12 seconds, 0 min)
+Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/65668124932b9f48b276087f ...
+ ...done. (1 seconds, 0 min)
+/home/runner/eigenstrapping-data/surfaces/space-fsaverage_den-10k_hemi-lh_pial.surf.gii
+(10242,)
+(10242, 1000)
+(1000,)
+Downloading data from https://files.osf.io/v1/resources/4mw3a/providers/osfstorage/60b684ab9096b7021b63cf6b ...
+ ...done. (2 seconds, 0 min)
+Extracting data from /home/runner/neuromaps-data/e38b96d96273aa064c22296eda1e5688/fsaverage10k.tar.gz..... done.
+No surface given, expecting precomputed eigenvalues and eigenmodes
+IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION TO WORK
+
+(&lt;Figure size 900x600 with 3 Axes&gt;, &lt;Axes3D: &gt;)
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Input data types</span>
+<span class="c1"># ================</span>
+
+<span class="c1"># ``eigenstrapping`` requires a few inputs:</span>
+
+<span class="c1"># * A brain map, i.e., a one-dimensional vector, and either:</span>
+
+<span class="c1"># * A surface mesh, i.e., a set of vertices and face indices</span>
+<span class="c1"># * A set of eigenmodes and corresponding eigenvalues</span>
+
+<span class="c1"># For the first run, we will load all of these files from the example dataset,</span>
+<span class="c1"># but let&#39;s assume that these files have already been generated.</span>
+
+<span class="c1"># ``eigenstrapping`` can handle a variety of inputs:</span>
+
+<span class="c1"># * Delimited `*.txt` files</span>
+<span class="c1"># * Neuroimaging files such as `*.nii`, `*.gii`, or `*scalar.gii`</span>
+<span class="c1"># * Data and memory-mapped distance matrices written to `*.npy` files</span>
+<span class="c1"># * Numpy arrays and array-like objects</span>
+
+<span class="c1"># First run</span>
+<span class="c1"># =========</span>
+
+<span class="c1"># The package comes with example surfaces (and their eigenmodes) and cortical gradient data</span>
+<span class="c1"># from Margulies&#39; 2015 paper (see :ref:`References &lt;references&gt;`). Let&#39;s start by importing the data (this may take</span>
+<span class="c1"># a few moments):</span>
+
+<span class="kn">from</span> <span class="nn">eigenstrapping.datasets</span> <span class="kn">import</span> <a href="../generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples" title="eigenstrapping.datasets.load_surface_examples" class="sphx-glr-backref-module-eigenstrapping-datasets sphx-glr-backref-type-py-function"><span class="n">load_surface_examples</span></a>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surf_lh</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surf_rh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_rh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_lh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_rh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_lh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_rh</span></a> <span class="o">=</span> <a href="../generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples" title="eigenstrapping.datasets.load_surface_examples" class="sphx-glr-backref-module-eigenstrapping-datasets sphx-glr-backref-type-py-function"><span class="n">load_surface_examples</span></a><span class="p">(</span><span class="n">with_surface</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surf_lh</span></a><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_lh</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_lh</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)</span>
+
+<span class="c1">#Now let&#39;s plot the data on the surface.</span>
+
+<span class="kn">from</span> <span class="nn">eigenstrapping.plotting</span> <span class="kn">import</span> <a href="../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot" title="eigenstrapping.plotting.csplot" class="sphx-glr-backref-module-eigenstrapping-plotting sphx-glr-backref-type-py-function"><span class="n">csplot</span></a>
+
+<a href="../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot" title="eigenstrapping.plotting.csplot" class="sphx-glr-backref-module-eigenstrapping-plotting sphx-glr-backref-type-py-function"><span class="n">csplot</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span></a><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
+
+<span class="c1">#Now let&#39;s make a surrogate brain map and plot it on the surface.</span>
+
+<span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-class"><span class="n">SurfaceEigenstrapping</span></a>
+
+<a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eigen</span></a> <span class="o">=</span> <a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-class"><span class="n">SurfaceEigenstrapping</span></a><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span></a><span class="p">,</span>
+                    <span class="n">emodes</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_lh</span></a><span class="p">,</span>
+                    <span class="n">evals</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_lh</span></a><span class="p">,</span>
+                    <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                    <span class="n">resample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surr</span></a> <span class="o">=</span> <a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping.generate" title="eigenstrapping.SurfaceEigenstrapping.generate" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-method"><span class="n">eigen</span><span class="o">.</span><span class="n">generate</span></a><span class="p">()</span>
+
+<a href="../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot" title="eigenstrapping.plotting.csplot" class="sphx-glr-backref-module-eigenstrapping-plotting sphx-glr-backref-type-py-function"><span class="n">csplot</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surr</span></a><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 42.215 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-surface-examples-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/4ead12ed6a97c69ab4cf6d95b2218932/plot_surface_examples.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_surface_examples.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/9a387a1cf287bc680523a7a577f20027/plot_surface_examples.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_surface_examples.py</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

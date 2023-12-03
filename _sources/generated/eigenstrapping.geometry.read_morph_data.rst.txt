@@ -1,0 +1,12 @@
+﻿eigenstrapping.geometry.read_morph_data
+=======================================
+
+.. currentmodule:: eigenstrapping.geometry
+
+.. autofunction:: read_morph_data
+
+.. .. include:: modules/eigenstrapping.geometry.read_morph_data.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

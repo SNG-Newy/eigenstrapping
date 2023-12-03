@@ -1,0 +1,12 @@
+﻿eigenstrapping.dataio.export_cifti_mapping
+==========================================
+
+.. currentmodule:: eigenstrapping.dataio
+
+.. autofunction:: export_cifti_mapping
+
+.. .. include:: modules/eigenstrapping.dataio.export_cifti_mapping.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

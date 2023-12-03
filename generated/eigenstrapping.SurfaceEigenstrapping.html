@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eigenstrapping.SurfaceEigenstrapping &mdash; eigenstrapping 0.0.1.10 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eigenstrapping.VolumetricEigenstrapping" href="eigenstrapping.VolumetricEigenstrapping.html" />
+    <link rel="prev" title="Reference API" href="../api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">Reference API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-eigenstrapping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.SurfaceEigenstrapping</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.SurfaceEigenstrapping"><code class="docutils literal notranslate"><span class="pre">SurfaceEigenstrapping</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.VolumetricEigenstrapping.html">eigenstrapping.VolumetricEigenstrapping</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">Reference API</a></li>
+      <li class="breadcrumb-item active">eigenstrapping.SurfaceEigenstrapping</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eigenstrapping-surfaceeigenstrapping">
+<h1>eigenstrapping.SurfaceEigenstrapping<a class="headerlink" href="#eigenstrapping-surfaceeigenstrapping" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eigenstrapping.SurfaceEigenstrapping">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eigenstrapping.</span></span><span class="sig-name descname"><span class="pre">SurfaceEigenstrapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_surface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decomp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'matrix'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cholmod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_rotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/base.html#SurfaceEigenstrapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.SurfaceEigenstrapping" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the eigenmodes and eigenvalues of the surface in <cite>surface</cite> and
+resample the hypersphere bounded by the eigengroups contained within <cite>emodes</cite>,
+to reconstruct the data using coefficients conditioned on the original data
+Based on the degenerate solutions of solving the Laplace-Beltrami operator
+on the cortex. The power spectrum is perfectly retained (the square of the
+eigenvalues). If evals and emodes are given (i.e., precomputed) then
+eigenmodes are not computed. Performs amplitude adjustment by default (see
+<cite>resample</cite>)</p>
+<dl>
+<dt>&#64;author: Nikitas C. Koussis, School of Psychological Sciences,</dt><dd><p>University of Newcastle &amp; Systems Neuroscience Group Newcastle</p>
+<p>Michael Breakspear, School of Psychological Sciences,
+University of Newcastle &amp; Systems Neuroscience Group Newcastle</p>
+</dd>
+</dl>
+<section id="process">
+<h2>Process<a class="headerlink" href="#process" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>the orthonormal eigenvectors n within eigengroup l give the surface</dt><dd><p>of the hyperellipse of dimensions l-1
+NOTE: for eigengroup 0 with the zeroth mode, we ignore it,
+and for eigengroup 1, this is resampling the surface of the
+2-sphere</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>the axes of the hyperellipse are given by the sqrt of the eigenvalues</dt><dd><p>corresponding to eigenvectors n</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>linear transform the eigenvectors N to the hypersphere by dividing</dt><dd><p>by the ellipsoid axes</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>finds the set of points <cite>p</cite> on the hypersphere given by the basis</dt><dd><p>modes (the eigenmodes) by normalizing them to unit length</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>rotate the set of points <cite>p</cite> by cos(angle) for</dt><dd><p>even dimensions and sin(angle) for odd dims (resampling step)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>find the unit vectors of the points <cite>p</cite> by dividing by the</dt><dd><p>Euclidean norm (equivalent to the eigenmodes)</p>
+</dd>
+</dl>
+</li>
+<li><p>make the new unit vectors orthonormal using Gram-Schmidt process</p></li>
+<li><dl class="simple">
+<dt>return the new eigenmodes of that eigengroup until all eigengroups</dt><dd><p>are computed</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>reconstruct the null data by multiplying the original coefficients</dt><dd><p>by the new eigenmodes</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>resamples the null data by performing rank-ordering to replicate</dt><dd><p>the reconstructed data term, then adds the noise term back into the
+null data to produce a surrogate that replicates the original
+variance of the empirical data.
+* Only performed if <cite>resample</cite> = True.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p class="rubric">References</p>
+<p>1. Robinson, P. A. et al., (2016), Eigenmodes of brain activity: Neural field
+theory predictions and comparison with experiment. NeuroImage 142, 79-98.
+&lt;<a class="reference external" href="https://dx.doi.org/10.1016/j.neuroimage.2016.04.050">https://dx.doi.org/10.1016/j.neuroimage.2016.04.050</a>&gt;</p>
+<p>2. Jorgensen, M., (2014), Volumes of n-dimensional spheres and ellipsoids.
+&lt;<a class="reference external" href="https://www.whitman.edu/documents/Academics/Mathematics/2014/jorgenmd.pdf">https://www.whitman.edu/documents/Academics/Mathematics/2014/jorgenmd.pdf</a>&gt;</p>
+<ol class="arabic simple" start="3">
+<li><p>&lt;<a class="reference external" href="https://math.stackexchange.com/questions/3316373/ellipsoid-in-n-dimension">https://math.stackexchange.com/questions/3316373/ellipsoid-in-n-dimension</a>&gt;</p></li>
+</ol>
+<p>4. Blumenson, L. E. (1960). A derivation of n-dimensional spherical
+coordinates. The American Mathematical Monthly, 67(1), 63-66.
+&lt;<a class="reference external" href="https://www.jstor.org/stable/2308932">https://www.jstor.org/stable/2308932</a>&gt;</p>
+<p>5. Trefethen, Lloyd N., Bau, David III, (1997). Numerical linear algebra.
+Philadelphia, PA: Society for Industrial and Applied Mathematics.
+ISBN 978-0-898713-61-9.</p>
+<ol class="arabic simple" start="6">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/QR_decomposition">https://en.wikipedia.org/wiki/QR_decomposition</a></p></li>
+</ol>
+<p>7. Chen, Y. C. et al., (2022). The individuality of shape asymmetries
+of the human cerebral cortex. Elife, 11, e75056.
+&lt;<a class="reference external" href="https://doi.org/10.7554/eLife.75056">https://doi.org/10.7554/eLife.75056</a>&gt;</p>
+<dl class="field-list">
+<dt class="field-odd">param surface<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Filename of surface to resample of surface.darrays[0].data of shape (n_vertices, 3)
+and surface.darrays[1].data of shape (n_faces, 3). Must be a single
+hemisphere or bounded surface.</p>
+</dd>
+<dt class="field-even">type surface<span class="colon">:</span></dt>
+<dd class="field-even"><p>str of path to file or array_like</p>
+</dd>
+<dt class="field-odd">param data<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Filename of empirical data to resample</p>
+</dd>
+<dt class="field-even">type data<span class="colon">:</span></dt>
+<dd class="field-even"><p>str of path to file or np.ndarray of (n_vertices,)</p>
+</dd>
+<dt class="field-odd">param evals<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Eigenvalues corresponding to the number of eigenmodes n in <cite>emodes</cite></p>
+</dd>
+<dt class="field-even">type evals<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray of shape (n,), optional</p>
+</dd>
+<dt class="field-odd">param emodes<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Eigenmodes that are the solution to the generalized eigenvalue problem
+or Helmholtz equation in the Laplace-Beltrami operator of the cortex</p>
+</dd>
+<dt class="field-even">type emodes<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray of shape (n_vertices, n), optional</p>
+</dd>
+<dt class="field-odd">param num_modes<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If <cite>evals</cite> and <cite>emodes</cite> are not given, then they are computed on the
+surface given in <cite>surface</cite>. This variable controls how many modes
+to compute. Cannot exceed the number of vertices in <cite>surface</cite>.
+Default is 200.</p>
+</dd>
+<dt class="field-even">type num_modes<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, optional</p>
+</dd>
+<dt class="field-odd">param medial<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medial wall mask for the input surface <cite>surface</cite>. Suitable only if
+surface is cortical hemisphere. Will use the labels for the medial
+wall to mask out of the surrogates. If None, uses the naive
+implementation of finding the medial wall by finding 0.0 values
+in <cite>data</cite> - prone to errors if <cite>data</cite> has zero values outside of the
+medial wall. Can also pass <cite>False</cite> to not attempt masking of medial wall
+at all.</p>
+<p>WARNING: If passing <cite>False</cite> to medial and <cite>True</cite> to resample,
+resulting surrogates may have strange distributions since the
+rank-ordering step may assign medial-wall values outside of the
+medial wall. USE AT YOUR OWN RISK.</p>
+</dd>
+<dt class="field-even">type medial<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.logical_array or str of path to file, default None</p>
+</dd>
+<dt class="field-odd">param save_surface<span class="colon">:</span></dt>
+<dd class="field-odd"><p>As above, if <cite>evals</cite> and <cite>emodes</cite> are computed and medial wall mask
+is given, then cortical surface with cuts is saved. Default False.</p>
+</dd>
+<dt class="field-even">type save_surface<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool, optional</p>
+</dd>
+<dt class="field-odd">param seed<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Specify the seed for random angle generation (or random state instance)
+default None.</p>
+</dd>
+<dt class="field-even">type seed<span class="colon">:</span></dt>
+<dd class="field-even"><p>None or int or np.random.RandomState instance</p>
+</dd>
+<dt class="field-odd">param decomp_method<span class="colon">:</span></dt>
+<dd class="field-odd"><p>method of calculation of coefficients: ‘matrix’, ‘matrix_separate’,
+‘regression’.</p>
+<p>The default is ‘matrix’.</p>
+</dd>
+<dt class="field-even">type decomp_method<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, optional</p>
+</dd>
+<dt class="field-odd">param resample<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set whether to resample surrogate map from original map to preserve
+values, default True</p>
+</dd>
+<dt class="field-even">type resample<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool, optional</p>
+</dd>
+<dt class="field-odd">param randomize<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set whether to shuffle coefficients calculated from minimizing
+least-squares error to reconstruct surrogates. Results in better
+randomization of surrogates at the cost of poorer replication of
+empirical spatial autocorrelation.</p>
+</dd>
+<dt class="field-even">type randomize<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool, optional</p>
+</dd>
+<dt class="field-odd">param find_optimal<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Overrides <cite>evals</cite> and <cite>emodes</cite> if “True”. Computes a large amount
+of modes (20% of all possible modes of surface) and finds the optimal
+number of modes to make residual error between least-squares error
+estimation of coefficients and empirical data “white” (Gaussian),
+then generates new residuals with the same variance structure.
+Can increase computation time significantly but results in best balance
+of empirical variogram and randomization of values.</p>
+</dd>
+<dt class="field-even">type find_optimal<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool, optional</p>
+</dd>
+<dt class="field-odd">param n_jobs<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of workers to use for parallelization. Default 1.</p>
+</dd>
+<dt class="field-even">type n_jobs<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, optional</p>
+</dd>
+<dt class="field-odd">param use_cholmod<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Specify whether or not to use sksparse subroutines - requires
+<code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code> and <code class="docutils literal notranslate"><span class="pre">libsuitesparse-dev</span></code> to be installed. See
+<a class="reference external" href="https://github.com/scikit-sparse/scikit-sparse">https://github.com/scikit-sparse/scikit-sparse</a> for more information.</p>
+</dd>
+<dt class="field-even">type use_cholmod<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool, optional</p>
+</dd>
+</dl>
+<p>:raises ValueError : Inappropriate inputs:</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eigenstrapping.SurfaceEigenstrapping.eigen_decomposition">
+<span class="sig-name descname"><span class="pre">eigen_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'matrix'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/base.html#SurfaceEigenstrapping.eigen_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.SurfaceEigenstrapping.eigen_decomposition" title="Permalink to this definition"></a></dt>
+<dd><p>Decompose data using eigenmodes and calculate the coefficient of
+contribution of each vector.</p>
+<section id="parameters">
+<h3>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>method<span class="classifier">string</span></dt><dd><p>method of calculation of coefficients: ‘matrix’, ‘matrix_separate’,
+‘regression’</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>coeffs<span class="classifier">numpy array of shape (N, 3)</span></dt><dd><p>coefficient values</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eigenstrapping.SurfaceEigenstrapping.eigen_spectrum">
+<span class="sig-name descname"><span class="pre">eigen_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/base.html#SurfaceEigenstrapping.eigen_spectrum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.SurfaceEigenstrapping.eigen_spectrum" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the modal decomposition power spectrum reconstruction using original
+modes. See <code class="docutils literal notranslate"><span class="pre">eigen_decomposition()</span></code>. Returns fig and ax handles from
+matplotlib.pyplot for further use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em><em> of </em><em>shape</em><em> (</em><em>n_vertices</em><em>,</em><em>)</em>) – Data to decompose and reconstruct for eigen spectrum.</p></li>
+<li><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag whether to show plot, default True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.pyplot class</em>) – Figure handle</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.pyplot class</em>) – Axes handle</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eigenstrapping.SurfaceEigenstrapping.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/base.html#SurfaceEigenstrapping.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.SurfaceEigenstrapping.generate" title="Permalink to this definition"></a></dt>
+<dd><p>Generate eigensphere resampled surrogate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>surrogate_data</strong> – Eigensphere resampled surrogate</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eigenstrapping.SurfaceEigenstrapping.plot_data">
+<span class="sig-name descname"><span class="pre">plot_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hemi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lateral'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/base.html#SurfaceEigenstrapping.plot_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.SurfaceEigenstrapping.plot_data" title="Permalink to this definition"></a></dt>
+<dd><p>Plots a data map using nilearn.plotting, returns fig and ax handles
+from matplotlib.pyplot for further use. Can also plot values on the
+surface by input to <cite>data</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surface</strong> (<em>nib.GiftiImage class</em><em> or </em><em>np.ndarray</em><em> of </em><em>shape</em><em> (</em><em>n_vertices</em><em>, </em><em>3</em><em>)</em>) – A single surface to plot.</p></li>
+<li><p><strong>data</strong> (<em>np.ndarray</em><em> of </em><em>shape</em><em> (</em><em>n_vertices</em><em>,</em><em>)</em>) – Data to plot on the surface</p></li>
+<li><p><strong>hemi</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which hemisphere to plot. The default is ‘left’.</p></li>
+<li><p><strong>view</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which view to look at the surface.
+The default is ‘lateral’. Accepted strings are detailed in
+the docs for nilearn.plotting</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>matplotlib.cm class</em>) – Which colormap to plot the surface with, default is ‘viridis’</p></li>
+<li><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag whether to show the plot, default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>figure handle</em>)</p></li>
+<li><p><strong>ax</strong> (<em>axes handle</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eigenstrapping.SurfaceEigenstrapping.resample_eigenspace">
+<span class="sig-name descname"><span class="pre">resample_eigenspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'normal'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/base.html#SurfaceEigenstrapping.resample_eigenspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.SurfaceEigenstrapping.resample_eigenspace" title="Permalink to this definition"></a></dt>
+<dd><p>Resample across the eigenspace through linear weighted sums of real
+modes iteratively. Each iteration returns new orthogonal modes that
+are reweighted combinations of previous modes. NOTE: should only be
+applied to modes that have the same eigenvalue, i.e., on the
+eigensphere.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>modes</strong> (<em>np.ndarray</em><em> of </em><em>(</em><em>n_vertices</em><em>, </em><em>mu</em><em>)</em>) – Orthogonal vectors of n_vertices and mu modes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>new_modes</strong> – Array containing resampled vectors for each pair.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray of (n_vertices, mu)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eigenstrapping.SurfaceEigenstrapping.rotate_modes">
+<span class="sig-name descname"><span class="pre">rotate_modes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/base.html#SurfaceEigenstrapping.rotate_modes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.SurfaceEigenstrapping.rotate_modes" title="Permalink to this definition"></a></dt>
+<dd><p>Rotate modes using random rotations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vectors</strong> (<em>np.ndarray</em><em> of </em><em>(</em><em>n_vertices</em><em>, </em><em>mu</em><em>)</em>) – Orthogonal vectors of n_vertices and mu modes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>rotated_vectors</strong> – Array containing rotated vectors for each pair.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray of (n_vertices, mu)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<div style='clear:both'></div></section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../api.html" class="btn btn-neutral float-left" title="Reference API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eigenstrapping.VolumetricEigenstrapping.html" class="btn btn-neutral float-right" title="eigenstrapping.VolumetricEigenstrapping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

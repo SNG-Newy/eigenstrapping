@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eigenstrapping.geometry &mdash; eigenstrapping 0.0.1.10 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=ccc4b35e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=855213f0"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Reference API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eigenstrapping.geometry</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eigenstrapping.geometry</h1><div class="highlight"><pre>
+<span></span><span class="c1">#from nipype.interfaces.freesurfer import MRIMarchingCubes</span>
+<span class="kn">from</span> <span class="nn">lapy</span> <span class="kn">import</span> <span class="n">TriaMesh</span><span class="p">,</span> <span class="n">Solver</span>
+<span class="kn">from</span> <span class="nn">lapy.diffgeo</span> <span class="kn">import</span> <span class="n">tria_compute_gradient</span><span class="p">,</span> <span class="n">tria_compute_divergence</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">optimize</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
+<span class="c1">#from nilearn import image</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#from neuromaps.datasets.atlases import fetch_mni152</span>
+<span class="c1">#from ants import image_read, registration, apply_transforms</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Delaunay</span><span class="p">,</span> <span class="n">KDTree</span>
+<span class="kn">from</span> <span class="nn">brainspace</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">splu</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">sksparse.cholmod</span> <span class="kn">import</span> <span class="n">cholesky</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scikit-sparse libraries not found, using LU decomposition for eigenmodes (slower)&quot;</span><span class="p">)</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Helper utilities for geometry and registration</span>
+
+<span class="sd">    - Runs mri_mc from Freesurfer to create 2d surface</span>
+<span class="sd">    - Projects 2d surface using gmsh</span>
+<span class="sd">    - Writes out geometry in tetrahedral format, triangular format, or in Freesurfer binary</span>
+<span class="sd">    - Writes out label files</span>
+<span class="sd">    - Registers from native space to MNI152 and fsaverage space</span>
+
+<span class="sd">read_geometry() was taken from nibabel.freesurfer package (https://github.com/nipy/nibabel/blob/master/nibabel/freesurfer/io.py).</span>
+<span class="sd">get_tkrvox2ras(), make_tetra_file(), normalize_vtk(), and calc_volume() taken</span>
+<span class="sd">from &lt;https://github.com/BMHLab/BrainEigenmodes&gt;, authors J. Pang and K. Aquino.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">_ANNOT_DT</span> <span class="o">=</span> <span class="s2">&quot;&gt;i4&quot;</span>
+<span class="sd">&quot;&quot;&quot;Data type for Freesurfer `.annot` files.</span>
+
+<span class="sd">Used by :func:`read_annot` and :func:`write_annot`.  All data (apart from</span>
+<span class="sd">strings) in an `.annot` file is stored as big-endian int32.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># mni152_2mm = np.asarray(</span>
+<span class="c1">#                  [[  2.,    0.,   0.,    -90,],</span>
+<span class="c1">#                   [ -0.,    2.,   0.,   -126,],</span>
+<span class="c1">#                   [ -0.,    0.,   2.,    -72,],</span>
+<span class="c1">#                   [  0.,    0.,   0.,      1.]])</span>
+
+<span class="c1"># mni152_1mm = np.asarray(</span>
+<span class="c1">#                 [[  -1.,    0.,    0.,   90.],</span>
+<span class="c1">#                  [   0.,    1.,    0., -126.],</span>
+<span class="c1">#                  [   0.,    0.,    1.,  -72.],</span>
+<span class="c1">#                  [   0.,    0.,    0.,    1.]])</span>
+
+<span class="c1"># def _check_mni(in_file):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Checks if input image is in MNI152 space</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+    
+<span class="c1">#     img = image.load_img(in_file)</span>
+    
+<span class="c1">#     if img.affine != mni152_2mm:</span>
+<span class="c1">#         if img.affine != mni152_1mm:</span>
+<span class="c1">#             return False</span>
+        
+<span class="c1">#     else:</span>
+<span class="c1">#         return True</span>
+    
+<span class="c1"># def native_to_mni152(in_file, nonlinear=True):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Linear or nonlinear registration of native volumetric image to MNI152 space</span>
+<span class="c1">#     Uses ANTsPy</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+    
+<span class="c1">#     img = image_read(in_file)</span>
+    
+<span class="c1">#     # get template image</span>
+<span class="c1">#     mni_file = fetch_mni152(density=&#39;1mm&#39;).get(&#39;2009cAsym_T1w&#39;)</span>
+<span class="c1">#     mni = image_read(mni_file)</span>
+
+<span class="c1">#     if nonlinear is True:</span>
+<span class="c1">#         transform_type=&#39;SyN&#39;</span>
+        
+<span class="c1">#     else:</span>
+<span class="c1">#         transform_type=&#39;Affine&#39;</span>
+        
+<span class="c1">#     # do transform</span>
+<span class="c1">#     fixed_image = mni</span>
+<span class="c1">#     moving_image = img</span>
+    
+<span class="c1">#     mytx = registration(fixed=fixed_image, moving=moving_image, type_of_transform=transform_type)</span>
+    
+<span class="c1">#     warped_moving_image = apply_transforms(fixed=fixed_image, moving=moving_image,</span>
+<span class="c1">#                                            transformlist=mytx[&#39;fwdtransforms&#39;])</span>
+    
+<span class="c1">#     # rebuild as nib.Nifti1Image</span>
+<span class="c1">#     transformed_image = warped_moving_image.to_nibabel()</span>
+    
+<span class="c1">#     return transformed_image</span>
+
+<div class="viewcode-block" id="gaussian"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.gaussian.html#eigenstrapping.geometry.gaussian">[docs]</a><span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stddev</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">stddev</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="estimate_fwhm"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.estimate_fwhm.html#eigenstrapping.geometry.estimate_fwhm">[docs]</a><span class="k">def</span> <span class="nf">estimate_fwhm</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="c1"># Find the maximum value and its position in the image</span>
+    <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">max_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">max_row</span><span class="p">,</span> <span class="n">max_col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">max_pos</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="c1"># Create a 1d profile along the maximum row and column</span>
+    <span class="n">row_profile</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="n">max_row</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">col_profile</span> <span class="o">=</span> <span class="n">image</span><span class="p">[:,</span> <span class="n">max_col</span><span class="p">]</span>
+    
+    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;maxfev&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)}</span>
+    
+    <span class="c1"># Fit a gaussian curve to the row profile</span>
+    <span class="n">row_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">row_profile</span><span class="p">))</span>
+    <span class="n">row_params</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">curve_fit</span><span class="p">(</span><span class="n">gaussian</span><span class="p">,</span> <span class="n">row_x</span><span class="p">,</span> <span class="n">row_profile</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="n">max_val</span><span class="p">,</span> <span class="n">max_col</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+    
+    <span class="c1"># Fit a gaussian curve to the column profile</span>
+    <span class="n">col_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">col_profile</span><span class="p">))</span>
+    <span class="n">col_params</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">curve_fit</span><span class="p">(</span><span class="n">gaussian</span><span class="p">,</span> <span class="n">col_x</span><span class="p">,</span> <span class="n">col_profile</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="n">max_val</span><span class="p">,</span> <span class="n">max_row</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate the FWHM as 2.355 times the std dev of the Gaussian</span>
+    <span class="n">row_fwhm</span> <span class="o">=</span> <span class="mf">2.355</span> <span class="o">*</span> <span class="n">row_params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">col_fwhm</span> <span class="o">=</span> <span class="mf">2.355</span> <span class="o">*</span> <span class="n">col_params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="c1"># take the average</span>
+    <span class="n">fwhm</span> <span class="o">=</span> <span class="p">(</span><span class="n">row_fwhm</span> <span class="o">+</span> <span class="n">col_fwhm</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    
+    <span class="k">return</span> <span class="n">fwhm</span></div>
+    
+<div class="viewcode-block" id="resel_count"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.resel_count.html#eigenstrapping.geometry.resel_count">[docs]</a><span class="k">def</span> <span class="nf">resel_count</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">fwhm</span><span class="p">):</span>
+    <span class="c1"># returns resel count of image given FWHM</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">/</span> <span class="n">fwhm</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="get_tkrvox2ras"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.get_tkrvox2ras.html#eigenstrapping.geometry.get_tkrvox2ras">[docs]</a><span class="k">def</span> <span class="nf">get_tkrvox2ras</span><span class="p">(</span><span class="n">voldim</span><span class="p">,</span> <span class="n">voxres</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate transformation matrix to switch between tetrahedral and volume space.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    voldim : array (1x3)</span>
+<span class="sd">        Dimension of the volume (number of voxels in each of the 3 dimensions)</span>
+<span class="sd">    voxres : array (!x3)</span>
+<span class="sd">        Voxel resolution (resolution in each of the 3 dimensions)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    T : array (4x4)</span>
+<span class="sd">        Transformation matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]);</span>
+    <span class="n">T</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">voxres</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">voxres</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">voldim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+
+    <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">voxres</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">voxres</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">voldim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+
+
+    <span class="n">T</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">voxres</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">T</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">voxres</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">voldim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">T</span></div>
+
+<div class="viewcode-block" id="make_tetra_file"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.make_tetra_file.html#eigenstrapping.geometry.make_tetra_file">[docs]</a><span class="k">def</span> <span class="nf">make_tetra_file</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate tetrahedral version of the ROI in the nifti file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nifti_input_filename : str</span>
+<span class="sd">        Filename of input volume where the relevant ROI have voxel values = 1</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    tetra_file : str</span>
+<span class="sd">        Filename of output tetrahedral vtk file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nifti_input_file_head</span><span class="p">,</span> <span class="n">nifti_input_file_tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">)</span>
+    <span class="n">nifti_input_file_main</span><span class="p">,</span> <span class="n">nifti_input_file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">nifti_input_file_tail</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mri_mc &#39;</span> <span class="o">+</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39; 1 &#39;</span> <span class="o">+</span> <span class="n">nifti_input_file_head</span> <span class="o">+</span> <span class="s1">&#39;/rh.tmp_surface.vtk&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mv -f &#39;</span> <span class="o">+</span> <span class="n">nifti_input_file_head</span> <span class="o">+</span> <span class="s1">&#39;/rh.tmp_surface.vtk &#39;</span> <span class="o">+</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;.vtk&#39;</span><span class="p">)</span>
+
+    <span class="n">geo_file</span> <span class="o">=</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;.geo&#39;</span>
+    <span class="n">tria_file</span> <span class="o">=</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;.vtk&#39;</span>
+    <span class="n">tetra_file</span> <span class="o">=</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;.tetra.vtk&#39;</span>
+
+    <span class="n">file</span> <span class="o">=</span> <span class="n">tria_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">inputGeo</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">geo_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.Algorithm3D=4;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.Optimize=1;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.OptimizeNetgen=1;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Merge &quot;&#39;</span><span class="o">+</span><span class="n">inputGeo</span><span class="o">+</span><span class="s1">&#39;&quot;;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Surface Loop(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Volume(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Physical Volume(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;gmsh -3 -o &#39;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">geo_file</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sed &#39;s/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d&#39; &quot;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s2">&quot; &gt; &quot;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s2">&quot;&#39;_fixed&#39;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mv -f &#39;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s1">&#39;_fixed &#39;</span> <span class="o">+</span> <span class="n">tetra_file</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">tetra_file</span></div>
+
+<div class="viewcode-block" id="make_tria_file"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.make_tria_file.html#eigenstrapping.geometry.make_tria_file">[docs]</a><span class="k">def</span> <span class="nf">make_tria_file</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate triangular mesh of the ROI in the nifti file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nifti_input_filename : str</span>
+<span class="sd">        Filename of input volume where the relevant ROI have voxel values = 1</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tria_file : str</span>
+<span class="sd">        Filename of output triangular vtk file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nifti_input_file_head</span><span class="p">,</span> <span class="n">nifti_input_file_tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">)</span>
+    <span class="n">nifti_input_file_main</span><span class="p">,</span> <span class="n">nifti_input_file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">nifti_input_file_tail</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mri_mc &#39;</span> <span class="o">+</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39; 1 &#39;</span> <span class="o">+</span> <span class="n">nifti_input_file_head</span> <span class="o">+</span> <span class="s1">&#39;/rh.tmp_surface.vtk&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mv -f &#39;</span> <span class="o">+</span> <span class="n">nifti_input_file_head</span> <span class="o">+</span> <span class="s1">&#39;/rh.tmp_surface.vtk &#39;</span> <span class="o">+</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;.vtk&#39;</span><span class="p">)</span>
+
+    <span class="n">geo_file</span> <span class="o">=</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;.geo&#39;</span>
+    <span class="n">tria_file</span> <span class="o">=</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;.vtk&#39;</span>
+
+    <span class="n">file</span> <span class="o">=</span> <span class="n">tria_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">inputGeo</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">geo_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.Algorithm3D=4;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.Optimize=1;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.OptimizeNetgen=1;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Merge &quot;&#39;</span><span class="o">+</span><span class="n">inputGeo</span><span class="o">+</span><span class="s1">&#39;&quot;;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Surface Loop(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Volume(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Physical Volume(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;gmsh -2 -o &#39;</span> <span class="o">+</span> <span class="n">tria_file</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">geo_file</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sed &#39;s/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d&#39; &quot;</span> <span class="o">+</span> <span class="n">tria_file</span> <span class="o">+</span> <span class="s2">&quot; &gt; &quot;</span> <span class="o">+</span> <span class="n">tria_file</span> <span class="o">+</span> <span class="s2">&quot;&#39;_fixed&#39;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mv -f &#39;</span> <span class="o">+</span> <span class="n">tria_file</span> <span class="o">+</span> <span class="s1">&#39;_fixed &#39;</span> <span class="o">+</span> <span class="n">tria_file</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">tria_file</span></div>
+
+<div class="viewcode-block" id="create_temp_surface"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.create_temp_surface.html#eigenstrapping.geometry.create_temp_surface">[docs]</a><span class="k">def</span> <span class="nf">create_temp_surface</span><span class="p">(</span><span class="n">surface_input</span><span class="p">,</span> <span class="n">surface_output_filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write surface to a new vtk file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surface_input : brainspace compatible object</span>
+<span class="sd">        Loaded vtk object corresponding to a surface triangular mesh</span>
+<span class="sd">    surface_output_filename : str</span>
+<span class="sd">        Filename of surface to be saved</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">surface_output_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# vtk DataFile Version 2.0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">surface_output_filename</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ASCII</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;DATASET POLYDATA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;POINTS &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">surface_input</span><span class="o">.</span><span class="n">Points</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; float</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">surface_input</span><span class="o">.</span><span class="n">Points</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">surface_input</span><span class="o">.</span><span class="n">Points</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]))))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;POLYGONS &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">surface_input</span><span class="o">.</span><span class="n">polys2D</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">surface_input</span><span class="o">.</span><span class="n">polys2D</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">surface_input</span><span class="o">.</span><span class="n">polys2D</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">surface_input</span><span class="o">.</span><span class="n">polys2D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])))))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="get_indices"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.get_indices.html#eigenstrapping.geometry.get_indices">[docs]</a><span class="k">def</span> <span class="nf">get_indices</span><span class="p">(</span><span class="n">surface_original</span><span class="p">,</span> <span class="n">surface_new</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract indices of vertices of the two surfaces that match.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surface_original : brainspace compatible object</span>
+<span class="sd">        Loaded vtk object corresponding to a surface triangular mesh</span>
+<span class="sd">    surface_new : brainspace compatible object</span>
+<span class="sd">        Loaded vtk object corresponding to a surface triangular mesh</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    indices : array</span>
+<span class="sd">        indices of vertices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">surface_new</span><span class="o">.</span><span class="n">Points</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">surface_new</span><span class="o">.</span><span class="n">Points</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">surface_new</span><span class="o">.</span><span class="n">Points</span><span class="p">[</span><span class="n">i</span><span class="p">,:],</span><span class="n">surface_original</span><span class="o">.</span><span class="n">Points</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">indices</span></div>
+
+<div class="viewcode-block" id="calc_eig"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig">[docs]</a><span class="k">def</span> <span class="nf">calc_eig</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">num_modes</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the eigenvalues and eigenmodes of a surface.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tria : lapy compatible object</span>
+<span class="sd">        Loaded vtk object corresponding to a surface triangular mesh</span>
+<span class="sd">    num_modes : int</span>
+<span class="sd">        Number of eigenmodes to be calculated</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    evals : array (num_modes x 1)</span>
+<span class="sd">        Eigenvalues</span>
+<span class="sd">    emodes : array (number of surface points x num_modes)</span>
+<span class="sd">        Eigenmodes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">fem</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="n">use_cholmod</span><span class="p">)</span>
+    <span class="n">evals</span><span class="p">,</span> <span class="n">emodes</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">eigs</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="n">num_modes</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">evals</span><span class="p">,</span> <span class="n">emodes</span></div>
+    
+<div class="viewcode-block" id="calc_surface_eigenmodes"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_surface_eigenmodes.html#eigenstrapping.geometry.calc_surface_eigenmodes">[docs]</a><span class="k">def</span> <span class="nf">calc_surface_eigenmodes</span><span class="p">(</span><span class="n">surface_input_filename</span><span class="p">,</span> <span class="n">mask_input</span><span class="p">,</span> <span class="n">save_cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remove_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function to calculate the eigenmodes of a cortical surface with </span>
+<span class="sd">    application of a mask (e.g., to remove the medial wall).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surface_input_filename : str</span>
+<span class="sd">        Filename of input surface with ``n_vertices``</span>
+<span class="sd">    mask_input : str or 1D ndarray</span>
+<span class="sd">        Filename of mask to be applied on the surface (e.g., cortex without </span>
+<span class="sd">        medial wall, values = 1 for mask and 0 elsewhere)</span>
+<span class="sd">    save_cut : boolean </span>
+<span class="sd">        Boolean to decide if the new surface with mask applied will be saved to </span>
+<span class="sd">        a new surface file</span>
+<span class="sd">    num_modes : int</span>
+<span class="sd">        Number of eigenmodes to be calculated      </span>
+<span class="sd">    use_cholmod : bool, optional</span>
+<span class="sd">        Spec to use cholesky libraries of ``scikit-sparse``. Requires installation</span>
+<span class="sd">        of ``scikit-sparse`` and ``libsuitesparse-dev``.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray of shape=(num_modes,)</span>
+<span class="sd">        Eigenvalues computed on masked surface.</span>
+<span class="sd">    np.ndarray of shape=(n_vertices, num_modes)</span>
+<span class="sd">        Eigenmodes corresponding to eigenvalues computed on masked surface</span>
+<span class="sd">        padded with zeros to match size of original surface (``n_vertices``)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># load surface (as a brainspace object)</span>
+    <span class="n">surface_orig</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_io</span><span class="o">.</span><span class="n">read_surface</span><span class="p">(</span><span class="n">surface_input_filename</span><span class="p">)</span>
+    
+    <span class="c1"># load mask</span>
+    <span class="c1"># can be any ROI (even whole cortex)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mask_input</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">mask_input</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mask_input_file_main</span><span class="p">,</span> <span class="n">mask_input_file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">mask_input</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mask_input_file_ext</span> <span class="o">==</span> <span class="s1">&#39;.txt&#39;</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mask_input</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mask_input_file_ext</span> <span class="o">==</span> <span class="s1">&#39;.gii&#39;</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mask_input</span><span class="p">)</span><span class="o">.</span><span class="n">darrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">mask_input</span>
+    
+    <span class="c1"># create temporary suface based on mask</span>
+    <span class="n">surface_cut</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_operations</span><span class="o">.</span><span class="n">mask_points</span><span class="p">(</span><span class="n">surface_orig</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">save_cut</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># old method: save vtk of surface_cut and open via lapy TriaIO </span>
+        <span class="c1"># The writing phase of this process is very slow especially for large surfaces</span>
+        <span class="n">temp_cut_filename</span><span class="o">=</span><span class="s1">&#39;temp_cut.gii&#39;</span>
+        <span class="n">temp_cut</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">GiftiImage</span><span class="p">()</span>
+        <span class="n">temp_cut</span><span class="o">.</span><span class="n">add_gifti_data_array</span><span class="p">(</span><span class="n">nib</span><span class="o">.</span><span class="n">gifti</span><span class="o">.</span><span class="n">gifti</span><span class="o">.</span><span class="n">GiftiDataArray</span><span class="p">(</span><span class="n">surface_cut</span><span class="o">.</span><span class="n">GetPoints</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)))</span>
+        <span class="n">temp_cut</span><span class="o">.</span><span class="n">add_gifti_data_array</span><span class="p">(</span><span class="n">nib</span><span class="o">.</span><span class="n">gifti</span><span class="o">.</span><span class="n">gifti</span><span class="o">.</span><span class="n">GiftiDataArray</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mesh_elements</span><span class="o">.</span><span class="n">get_cells</span><span class="p">(</span><span class="n">surface_cut</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int32&#39;</span><span class="p">)))</span>
+        <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">temp_cut</span><span class="p">,</span> <span class="n">temp_cut_filename</span><span class="p">)</span>
+        <span class="c1"># load surface (as a lapy object)</span>
+        <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">temp_cut</span><span class="o">.</span><span class="n">agg_data</span><span class="p">()</span>
+        <span class="n">tria</span> <span class="o">=</span> <span class="n">TriaMesh</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># new method: replace v and t of surface_orig with v and t of surface_cut</span>
+        <span class="c1"># faster version without the need to write the vtk file</span>
+        <span class="c1"># load surface (as a lapy object)</span>
+        <span class="n">tria</span> <span class="o">=</span> <span class="n">TriaMesh</span><span class="o">.</span><span class="n">read_vtk</span><span class="p">(</span><span class="n">surface_input_filename</span><span class="p">)</span>
+        <span class="n">tria</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">surface_cut</span><span class="o">.</span><span class="n">Points</span>
+        <span class="n">tria</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">surface_cut</span><span class="o">.</span><span class="n">Polygons</span><span class="p">,</span> <span class="p">[</span><span class="n">surface_cut</span><span class="o">.</span><span class="n">n_cells</span><span class="p">,</span> <span class="mi">4</span><span class="p">])[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+
+    <span class="c1"># calculate eigenvalues and eigenmodes</span>
+    <span class="n">evals</span><span class="p">,</span> <span class="n">emodes</span> <span class="o">=</span> <span class="n">calc_eig</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">num_modes</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">remove_zero</span><span class="p">:</span>
+        <span class="c1"># remove zeroth eigenmode</span>
+        <span class="n">evals</span> <span class="o">=</span> <span class="n">evals</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">emodes</span> <span class="o">=</span> <span class="n">emodes</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="c1"># get indices of vertices of surface_orig that match surface_cut</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">get_indices</span><span class="p">(</span><span class="n">surface_orig</span><span class="p">,</span> <span class="n">surface_cut</span><span class="p">)</span>
+    
+    <span class="c1"># reshape emodes to match vertices of original surface</span>
+    <span class="n">emodes_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">surface_orig</span><span class="o">.</span><span class="n">n_points</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">emodes</span><span class="p">)[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">emodes</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">emodes_reshaped</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span><span class="n">mode</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">emodes</span><span class="p">[:,</span><span class="n">mode</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">evals</span><span class="p">,</span> <span class="n">emodes_reshaped</span></div>
+
+<div class="viewcode-block" id="compute_normals"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.compute_normals.html#eigenstrapping.geometry.compute_normals">[docs]</a><span class="k">def</span> <span class="nf">compute_normals</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the normal for each vertex in the mesh.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">coords</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">faces</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">-</span> <span class="n">coords</span><span class="p">[</span><span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">coords</span><span class="p">[</span><span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span> <span class="o">-</span> <span class="n">coords</span><span class="p">[</span><span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+        <span class="n">normals</span><span class="p">[</span><span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">fn</span>
+        <span class="n">normals</span><span class="p">[</span><span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">fn</span>
+        <span class="n">normals</span><span class="p">[</span><span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">fn</span>
+
+    <span class="n">norms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">normals</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">normals</span> <span class="o">/=</span> <span class="n">norms</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">normals</span></div>
+
+<div class="viewcode-block" id="inflate_mesh"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.inflate_mesh.html#eigenstrapping.geometry.inflate_mesh">[docs]</a><span class="k">def</span> <span class="nf">inflate_mesh</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">inflation_rate</span><span class="o">=</span><span class="mf">0.02</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inflate the mesh using basic inflation algorithm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_vertices</span> <span class="o">=</span> <span class="n">vertices</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+
+        <span class="n">normals</span> <span class="o">=</span> <span class="n">compute_normals</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
+
+        <span class="n">new_vertices</span> <span class="o">+=</span> <span class="n">normals</span> <span class="o">*</span> <span class="n">inflation_rate</span>
+
+    <span class="k">return</span> <span class="n">new_vertices</span>   </div>
+
+<div class="viewcode-block" id="nearest_neighbor"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.nearest_neighbor.html#eigenstrapping.geometry.nearest_neighbor">[docs]</a><span class="k">def</span> <span class="nf">nearest_neighbor</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the one-nearest neighbors of vertices in points `P` on another </span>
+<span class="sd">    surface `X` using Delaunay triangulation and KDTree query.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    P : np.ndarray of shape (N,3)</span>
+<span class="sd">        Points to search for within the coordinate set of `X`. `P` can</span>
+<span class="sd">        be a single point</span>
+<span class="sd">    X : np.ndarray of shape (M,3)</span>
+<span class="sd">        Vertices of the surface to search within</span>
+<span class="sd">    radius : float</span>
+<span class="sd">        Radius to search for nearest neighbors within</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nearest_indexes : int</span>
+<span class="sd">        Indexes of one-nearest neighbors of vertices in `P`. Note that</span>
+<span class="sd">        if two vertices in `X` are the same distance away from a point in `P`,</span>
+<span class="sd">        function returns only the first one.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Create Delaunay triangulation for first surface</span>
+    <span class="n">tri</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    
+    <span class="c1"># Create tree of vertices to query on</span>
+    <span class="n">kdtree</span> <span class="o">=</span> <span class="n">KDTree</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+        <span class="n">simplex_index</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">find_simplex</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">simplex_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_is_point_within_radius</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">simplex_index</span><span class="p">]],</span> <span class="n">radius</span><span class="p">)):</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">nearest_neighbor_index</span> <span class="o">=</span> <span class="n">kdtree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">simplex_vertices</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">simplex_index</span><span class="p">]]</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">simplex_vertices</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">valid_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dist</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">valid_indices</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">nearest_neighbor_index</span> <span class="o">=</span> <span class="n">kdtree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">nearest_neighbor_index</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">simplex_index</span><span class="p">][</span><span class="n">valid_indices</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">valid_indices</span><span class="p">])]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nearest_neighbor_index</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">simplex_index</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">dist</span><span class="p">)]</span>
+        <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nearest_neighbor_index</span>
+
+    <span class="k">return</span> <span class="n">indices</span></div>
+
+
+<span class="k">def</span> <span class="nf">_is_point_within_radius</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a point is within a given radius of any vertex in a set of vertices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vertices</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="calc_volume"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_volume.html#eigenstrapping.geometry.calc_volume">[docs]</a><span class="k">def</span> <span class="nf">calc_volume</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the physical volume of the ROI in the nifti file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nifti_input_filename : str</span>
+<span class="sd">        Filename of input volume where the relevant ROI have voxel values = 1</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    ROI_number : int</span>
+<span class="sd">        Total number of non-zero voxels</span>
+<span class="sd">    ROI_volume : float</span>
+<span class="sd">        Total volume of non-zero voxels in physical dimensions   </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Load data</span>
+    <span class="n">ROI_data</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">)</span>
+    <span class="n">roi_data</span> <span class="o">=</span> <span class="n">ROI_data</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
+
+    <span class="c1"># Get voxel dimensions in mm</span>
+    <span class="n">voxel_dims</span> <span class="o">=</span> <span class="p">(</span><span class="n">ROI_data</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;pixdim&quot;</span><span class="p">])[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">voxel_vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">voxel_dims</span><span class="p">)</span>
+
+    <span class="c1"># Compute volume</span>
+    <span class="n">ROI_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">roi_data</span><span class="p">)</span>
+    <span class="n">ROI_volume</span> <span class="o">=</span> <span class="n">ROI_number</span> <span class="o">*</span> <span class="n">voxel_vol</span>
+
+    <span class="c1"># print(&quot;Number of non-zero voxels = {}&quot;.format(ROI_number))</span>
+    <span class="c1"># print(&quot;Volume of non-zero voxels = {} mm^3&quot;.format(ROI_volume))</span>
+
+    <span class="k">return</span> <span class="n">ROI_number</span><span class="p">,</span> <span class="n">ROI_volume</span></div>
+
+<div class="viewcode-block" id="normalize_vtk"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.normalize_vtk.html#eigenstrapping.geometry.normalize_vtk">[docs]</a><span class="k">def</span> <span class="nf">normalize_vtk</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="n">nifti_input_filename</span><span class="p">,</span> <span class="n">normalization_type</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">normalization_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize tetrahedral surface.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tet : lapy compatible object</span>
+<span class="sd">        Loaded vtk object corresponding to a surface tetrahedral mesh</span>
+<span class="sd">    nifti_input_filename : str</span>
+<span class="sd">        Filename of input volume where the relevant ROI have voxel values = 1</span>
+<span class="sd">    normalization_type : str (default: &#39;none&#39;)</span>
+<span class="sd">        Type of normalization</span>
+<span class="sd">        number - normalization with respect to the total number of non-zero voxels</span>
+<span class="sd">        volume - normalization with respect to the total volume of non-zero voxels in physical dimensions   </span>
+<span class="sd">        constant - normalization with respect to a chosen constant</span>
+<span class="sd">        others - no normalization</span>
+<span class="sd">    normalization_factor : float (default: 1)</span>
+<span class="sd">        Factor to be used in a constant normalization     </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    tet_norm : lapy compatible object</span>
+<span class="sd">        Loaded vtk object corresponding to the normalized surface tetrahedral mesh</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nifti_input_file_head</span><span class="p">,</span> <span class="n">nifti_input_file_tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">)</span>
+    <span class="n">nifti_input_file_main</span><span class="p">,</span> <span class="n">nifti_input_file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">nifti_input_file_tail</span><span class="p">)</span>
+
+    <span class="n">ROI_number</span><span class="p">,</span> <span class="n">ROI_volume</span> <span class="o">=</span> <span class="n">calc_volume</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">)</span>
+
+    <span class="c1"># normalization process</span>
+    <span class="n">tet_norm</span> <span class="o">=</span> <span class="n">tet</span>
+    <span class="k">if</span> <span class="n">normalization_type</span> <span class="o">==</span> <span class="s1">&#39;number&#39;</span><span class="p">:</span>
+        <span class="n">tet_norm</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">tet</span><span class="o">.</span><span class="n">v</span><span class="o">/</span><span class="p">(</span><span class="n">ROI_number</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">normalization_type</span> <span class="o">==</span> <span class="s1">&#39;volume&#39;</span><span class="p">:</span>
+        <span class="n">tet_norm</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">tet</span><span class="o">.</span><span class="n">v</span><span class="o">/</span><span class="p">(</span><span class="n">ROI_volume</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">normalization_type</span> <span class="o">==</span> <span class="s1">&#39;constant&#39;</span><span class="p">:</span>
+        <span class="n">tet_norm</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">tet</span><span class="o">.</span><span class="n">v</span><span class="o">/</span><span class="p">(</span><span class="n">normalization_factor</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># writing normalized surface to a vtk file</span>
+    <span class="k">if</span> <span class="n">normalization_type</span> <span class="o">==</span> <span class="s1">&#39;number&#39;</span> <span class="ow">or</span> <span class="n">normalization_type</span> <span class="o">==</span> <span class="s1">&#39;volume&#39;</span> <span class="ow">or</span> <span class="n">normalization_type</span> <span class="o">==</span> <span class="s1">&#39;constant&#39;</span><span class="p">:</span>
+        <span class="n">surface_output_filename</span> <span class="o">=</span> <span class="n">nifti_input_filename</span> <span class="o">+</span> <span class="s1">&#39;_norm=&#39;</span> <span class="o">+</span> <span class="n">normalization_type</span> <span class="o">+</span> <span class="s1">&#39;.tetra.vtk&#39;</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">surface_output_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# vtk DataFile Version 2.0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nifti_input_file_tail</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ASCII</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;DATASET POLYDATA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;POINTS &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">tet</span><span class="o">.</span><span class="n">v</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; float</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">tet</span><span class="o">.</span><span class="n">v</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">tet_norm</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;POLYGONS &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">tet</span><span class="o">.</span><span class="n">t</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">tet</span><span class="o">.</span><span class="n">t</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">tet</span><span class="o">.</span><span class="n">t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">tet</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]))))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">tet_norm</span></div>
+
+<div class="viewcode-block" id="read_annot"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.read_annot.html#eigenstrapping.geometry.read_annot">[docs]</a><span class="k">def</span> <span class="nf">read_annot</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">orig_ids</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read in a Freesurfer annotation from a ``.annot`` file.</span>
+
+<span class="sd">    An ``.annot`` file contains a sequence of vertices with a label (also known</span>
+<span class="sd">    as an &quot;annotation value&quot;) associated with each vertex, and then a sequence</span>
+<span class="sd">    of colors corresponding to each label.</span>
+
+<span class="sd">    Annotation file format versions 1 and 2 are supported, corresponding to</span>
+<span class="sd">    the &quot;old-style&quot; and &quot;new-style&quot; color table layout.</span>
+
+<span class="sd">    Note that the output color table ``ctab`` is in RGBT form, where T</span>
+<span class="sd">    (transparency) is 255 - alpha.</span>
+
+<span class="sd">    See:</span>
+<span class="sd">     * https://surfer.nmr.mgh.harvard.edu/fswiki/LabelsClutsAnnotationFiles#Annotation</span>
+<span class="sd">     * https://github.com/freesurfer/freesurfer/blob/dev/matlab/read_annotation.m</span>
+<span class="sd">     * https://github.com/freesurfer/freesurfer/blob/8b88b34/utils/colortab.c</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath : str</span>
+<span class="sd">        Path to annotation file.</span>
+<span class="sd">    orig_ids : bool</span>
+<span class="sd">        Whether to return the vertex ids as stored in the annotation</span>
+<span class="sd">        file or the positional colortable ids. With orig_ids=False</span>
+<span class="sd">        vertices with no id have an id set to -1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    labels : ndarray, shape (n_vertices,)</span>
+<span class="sd">        Annotation id at each vertex. If a vertex does not belong</span>
+<span class="sd">        to any label and orig_ids=False, its id will be set to -1.</span>
+<span class="sd">    ctab : ndarray, shape (n_labels, 5)</span>
+<span class="sd">        RGBT + label id colortable array.</span>
+<span class="sd">    names : list of bytes</span>
+<span class="sd">        The names of the labels. The length of the list is n_labels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fobj</span><span class="p">:</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">_ANNOT_DT</span>
+
+        <span class="c1"># number of vertices</span>
+        <span class="n">vnum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># vertex ids + annotation values</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">vnum</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># is there a color table?</span>
+        <span class="n">ctab_exists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ctab_exists</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Color table not found in annotation file&#39;</span><span class="p">)</span>
+
+        <span class="c1"># in old-format files, the next field will contain the number of</span>
+        <span class="c1"># entries in the color table. In new-format files, this must be</span>
+        <span class="c1"># equal to -2</span>
+        <span class="n">n_entries</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># We&#39;ve got an old-format .annot file.</span>
+        <span class="k">if</span> <span class="n">n_entries</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_read_annot_ctab_old_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">n_entries</span><span class="p">)</span>
+        <span class="c1"># We&#39;ve got a new-format .annot file</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_read_annot_ctab_new_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="o">-</span><span class="n">n_entries</span><span class="p">)</span>
+
+    <span class="c1"># generate annotation values for each LUT entry</span>
+    <span class="n">ctab</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">4</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_pack_rgb</span><span class="p">(</span><span class="n">ctab</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">orig_ids</span><span class="p">:</span>
+        <span class="nb">ord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">ctab</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">labels</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">labels</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">ctab</span><span class="p">[</span><span class="nb">ord</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="n">mask</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span></div>
+
+<span class="k">def</span> <span class="nf">_pack_rgb</span><span class="p">(</span><span class="n">rgb</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pack an RGB sequence into a single integer.</span>
+
+<span class="sd">    Used by :func:`read_annot` and :func:`write_annot` to generate</span>
+<span class="sd">    &quot;annotation values&quot; for a Freesurfer ``.annot`` file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rgb : ndarray, shape (n, 3)</span>
+<span class="sd">        RGB colors</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out : ndarray, shape (n, 1)</span>
+<span class="sd">        Annotation values for each color.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bitshifts</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">16</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">rgb</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rgb</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">bitshifts</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_read_annot_ctab_old_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">n_entries</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read in an old-style Freesurfer color table from `fobj`.</span>
+
+<span class="sd">    Note that the output color table ``ctab`` is in RGBT form, where T</span>
+<span class="sd">    (transparency) is 255 - alpha.</span>
+
+<span class="sd">    This function is used by :func:`read_annot`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    fobj : file-like</span>
+<span class="sd">        Open file handle to a Freesurfer `.annot` file, with seek point</span>
+<span class="sd">        at the beginning of the color table data.</span>
+<span class="sd">    n_entries : int</span>
+<span class="sd">        Number of entries in the color table.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    ctab : ndarray, shape (n_entries, 5)</span>
+<span class="sd">        RGBT colortable array - the last column contains all zeros.</span>
+<span class="sd">    names : list of str</span>
+<span class="sd">        The names of the labels. The length of the list is n_entries.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">)</span>
+
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">_ANNOT_DT</span>
+    <span class="c1"># orig_tab string length + string</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">orig_tab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s1">&#39;&gt;c&#39;</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+    <span class="n">orig_tab</span> <span class="o">=</span> <span class="n">orig_tab</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">ctab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_entries</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_entries</span><span class="p">):</span>
+        <span class="c1"># structure name length + string</span>
+        <span class="n">name_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;|S</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name_length</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># read RGBT for this entry</span>
+        <span class="n">ctab</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span>
+
+
+<span class="k">def</span> <span class="nf">_read_annot_ctab_new_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">ctab_version</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read in a new-style Freesurfer color table from `fobj`.</span>
+
+<span class="sd">    Note that the output color table ``ctab`` is in RGBT form, where T</span>
+<span class="sd">    (transparency) is 255 - alpha.</span>
+
+<span class="sd">    This function is used by :func:`read_annot`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    fobj : file-like</span>
+<span class="sd">        Open file handle to a Freesurfer `.annot` file, with seek point</span>
+<span class="sd">        at the beginning of the color table data.</span>
+<span class="sd">    ctab_version : int</span>
+<span class="sd">        Color table format version - must be equal to 2</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    ctab : ndarray, shape (n_labels, 5)</span>
+<span class="sd">        RGBT colortable array - the last column contains all zeros.</span>
+<span class="sd">    names : list of str</span>
+<span class="sd">        The names of the labels. The length of the list is n_labels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">)</span>
+
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">_ANNOT_DT</span>
+    <span class="c1"># This code works with a file version == 2, nothing else</span>
+    <span class="k">if</span> <span class="n">ctab_version</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Unrecognised .annot file version (</span><span class="si">%i</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">ctab_version</span><span class="p">)</span>
+    <span class="c1"># maximum LUT index present in the file</span>
+    <span class="n">max_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ctab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_index</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="c1"># orig_tab string length + string</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;|S</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Orig table path</span>
+    <span class="c1"># number of LUT entries present in the file</span>
+    <span class="n">entries_to_read</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">entries_to_read</span><span class="p">):</span>
+        <span class="c1"># index of this entry</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># structure name length + string</span>
+        <span class="n">name_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;|S</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name_length</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># RGBT</span>
+        <span class="n">ctab</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span>
+    
+<span class="k">def</span> <span class="nf">_fread3</span><span class="p">(</span><span class="n">fobj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a 3-byte int from an open binary file object</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fobj : file</span>
+<span class="sd">        File descriptor</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    n : int</span>
+<span class="sd">        A 3 byte int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;u1&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">b1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">b2</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="n">b3</span>
+
+
+<span class="k">def</span> <span class="nf">_read_volume_info</span><span class="p">(</span><span class="n">fobj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper for reading the footer from a surface file.&quot;&quot;&quot;</span>
+    <span class="n">volume_info</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i4&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="p">[</span><span class="mi">20</span><span class="p">]):</span>  <span class="c1"># Read two bytes more</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">head</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i4&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span>
+            <span class="n">head</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Unknown extension code.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">volume_info</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+
+    <span class="n">volume_info</span><span class="p">[</span><span class="s2">&quot;head&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;valid&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;filename&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;volume&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;voxelsize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;xras&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;yras&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zras&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cras&quot;</span><span class="p">,</span>
+    <span class="p">]:</span>
+        <span class="n">pair</span> <span class="o">=</span> <span class="n">fobj</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="n">key</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Error parsing volume info.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;valid&quot;</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">):</span>
+            <span class="n">volume_info</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;volume&quot;</span><span class="p">:</span>
+            <span class="n">volume_info</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">volume_info</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># Ignore the rest</span>
+    <span class="k">return</span> <span class="n">volume_info</span>    
+    
+<div class="viewcode-block" id="read_geometry"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.read_geometry.html#eigenstrapping.geometry.read_geometry">[docs]</a><span class="k">def</span> <span class="nf">read_geometry</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">read_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_stamp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a triangular format Freesurfer surface mesh.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath : str</span>
+<span class="sd">        Path to surface file.</span>
+<span class="sd">    read_metadata : bool, optional</span>
+<span class="sd">        If True, read and return metadata as key-value pairs.</span>
+<span class="sd">        Valid keys:</span>
+<span class="sd">        * &#39;head&#39; : array of int</span>
+<span class="sd">        * &#39;valid&#39; : str</span>
+<span class="sd">        * &#39;filename&#39; : str</span>
+<span class="sd">        * &#39;volume&#39; : array of int, shape (3,)</span>
+<span class="sd">        * &#39;voxelsize&#39; : array of float, shape (3,)</span>
+<span class="sd">        * &#39;xras&#39; : array of float, shape (3,)</span>
+<span class="sd">        * &#39;yras&#39; : array of float, shape (3,)</span>
+<span class="sd">        * &#39;zras&#39; : array of float, shape (3,)</span>
+<span class="sd">        * &#39;cras&#39; : array of float, shape (3,)</span>
+<span class="sd">    read_stamp : bool, optional</span>
+<span class="sd">        Return the comment from the file</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coords : numpy array</span>
+<span class="sd">        nvtx x 3 array of vertex (x, y, z) coordinates.</span>
+<span class="sd">    faces : numpy array</span>
+<span class="sd">        nfaces x 3 array of defining mesh triangles.</span>
+<span class="sd">    volume_info : OrderedDict</span>
+<span class="sd">        Returned only if `read_metadata` is True.  Key-value pairs found in the</span>
+<span class="sd">        geometry file.</span>
+<span class="sd">    create_stamp : str</span>
+<span class="sd">        Returned only if `read_stamp` is True.  The comment added by the</span>
+<span class="sd">        program that saved the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">volume_info</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="n">TRIANGLE_MAGIC</span> <span class="o">=</span> <span class="mi">16777214</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fobj</span><span class="p">:</span>
+        <span class="n">magic</span> <span class="o">=</span> <span class="n">_fread3</span><span class="p">(</span><span class="n">fobj</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">magic</span> <span class="o">==</span> <span class="n">TRIANGLE_MAGIC</span><span class="p">:</span>  <span class="c1"># Triangle file</span>
+            <span class="n">create_stamp</span> <span class="o">=</span> <span class="n">fobj</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">test_dev</span> <span class="o">=</span> <span class="n">fobj</span><span class="o">.</span><span class="n">peek</span><span class="p">(</span><span class="mi">1</span><span class="p">)[:</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">test_dev</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="n">fobj</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">vnum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i4&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">fnum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i4&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;f4&quot;</span><span class="p">,</span> <span class="n">vnum</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i4&quot;</span><span class="p">,</span> <span class="n">fnum</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">fnum</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">read_metadata</span><span class="p">:</span>
+                <span class="n">volume_info</span> <span class="o">=</span> <span class="n">_read_volume_info</span><span class="p">(</span><span class="n">fobj</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;File does not appear to be a Freesurfer surface (triangle file)&quot;</span>
+            <span class="p">)</span>
+
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># XXX: due to mayavi bug on mac 32bits</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">read_metadata</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">volume_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No volume information contained in the file&quot;</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="p">(</span><span class="n">volume_info</span><span class="p">,)</span>
+    <span class="k">if</span> <span class="n">read_stamp</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">+=</span> <span class="p">(</span><span class="n">create_stamp</span><span class="p">,)</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="read_label"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.read_label.html#eigenstrapping.geometry.read_label">[docs]</a><span class="k">def</span> <span class="nf">read_label</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">read_scalars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load in a Freesurfer .label file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath : str</span>
+<span class="sd">        Path to label file.</span>
+<span class="sd">    read_scalars : bool, optional</span>
+<span class="sd">        If True, read and return scalars associated with each vertex.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    label_array : numpy array</span>
+<span class="sd">        Array with indices of vertices included in label.</span>
+<span class="sd">    scalar_array : numpy array (floats)</span>
+<span class="sd">        Only returned if `read_scalars` is True.  Array of scalar data for each</span>
+<span class="sd">        vertex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">label_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">read_scalars</span><span class="p">:</span>
+        <span class="n">scalar_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">label_array</span><span class="p">,</span> <span class="n">scalar_array</span>
+    <span class="k">return</span> <span class="n">label_array</span></div>
+
+<div class="viewcode-block" id="write_label"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.write_label.html#eigenstrapping.geometry.write_label">[docs]</a><span class="k">def</span> <span class="nf">write_label</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write Freesurfer label data `values` to filepath `filepath`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath : str</span>
+<span class="sd">        String containing path to label file to be written</span>
+<span class="sd">    vertices : ndarray, shape (n_vertices, 3)</span>
+<span class="sd">        Coordinates of each vertex</span>
+<span class="sd">    values : optional, shape (n_vertices,)</span>
+<span class="sd">        Array of scalar data for each vertex. The default is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">vnum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vector</span><span class="o">.</span><span class="n">shape</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">((</span><span class="n">vnum</span><span class="p">,),</span> <span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vnum</span><span class="p">),</span> <span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid shape: argument values must be a vector&#39;</span><span class="p">)</span>
+            
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    
+    <span class="n">start_line</span> <span class="o">=</span> <span class="s1">&#39;#!ascii label  , from subject  vox2ras=TkReg</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">magic_number</span> <span class="o">=</span> <span class="n">vnum</span> <span class="o">+</span> <span class="mi">6000</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fobj</span><span class="p">:</span>
+        <span class="n">fobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">start_line</span><span class="p">)</span>
+        <span class="n">fobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">magic_number</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="c1">#now write vertex and label array</span>
+        <span class="n">label_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">vnum</span><span class="p">)),</span> <span class="n">vertices</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">T</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;&gt;f4&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">label_array</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">])</span></div>
+        
+<div class="viewcode-block" id="read_morph_data"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.read_morph_data.html#eigenstrapping.geometry.read_morph_data">[docs]</a><span class="k">def</span> <span class="nf">read_morph_data</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a Freesurfer morphometry data file.</span>
+
+<span class="sd">    This function reads in what Freesurfer internally calls &quot;curv&quot; file types,</span>
+<span class="sd">    (e.g. ?h. curv, ?h.thickness), but as that has the potential to cause</span>
+<span class="sd">    confusion where &quot;curv&quot; also refers to the surface curvature values,</span>
+<span class="sd">    we refer to these files as &quot;morphometry&quot; files with PySurfer.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath : str</span>
+<span class="sd">        Path to morphometry file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    curv : numpy array</span>
+<span class="sd">        Vector representation of surface morpometry values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fobj</span><span class="p">:</span>
+        <span class="n">magic</span> <span class="o">=</span> <span class="n">_fread3</span><span class="p">(</span><span class="n">fobj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">magic</span> <span class="o">==</span> <span class="mi">16777215</span><span class="p">:</span>
+            <span class="n">vnum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i4&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">curv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;f4&quot;</span><span class="p">,</span> <span class="n">vnum</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vnum</span> <span class="o">=</span> <span class="n">magic</span>
+            <span class="n">_fread3</span><span class="p">(</span><span class="n">fobj</span><span class="p">)</span>
+            <span class="n">curv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i2&quot;</span><span class="p">,</span> <span class="n">vnum</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="k">return</span> <span class="n">curv</span></div>
+
+<div class="viewcode-block" id="geodesic_distmat"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat">[docs]</a><span class="k">def</span> <span class="nf">geodesic_distmat</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute geodesic distance using the heat diffusion method built into LaPy</span>
+<span class="sd">        Based on: doi/10.1145/2516971.2516977</span>
+<span class="sd">        Crane et al., &quot;Geodesics in heat: A new approach to computing distance </span>
+<span class="sd">        based on heat flow&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surf : Shape class</span>
+<span class="sd">        Input surface</span>
+<span class="sd">    n_jobs : int, optional</span>
+<span class="sd">        Number of workers to use for parallel calls to ._thread_method(),</span>
+<span class="sd">        default is 1.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    D : (N,N) np.ndarray</span>
+<span class="sd">        Distance matrix of every vertex to every other vertex</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">surf</span><span class="p">)</span><span class="o">.</span><span class="n">agg_data</span><span class="p">()</span>
+    <span class="n">tria</span> <span class="o">=</span> <span class="n">TriaMesh</span><span class="p">(</span><span class="n">surf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">import_optional_dependency</span><span class="p">(</span><span class="s1">&#39;sksparse&#39;</span><span class="p">)</span>
+        <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span>
+    
+    <span class="n">fem</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">lump</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="n">use_cholmod</span><span class="p">)</span>
+        
+    <span class="n">D</span> <span class="o">=</span> <span class="n">__distance_threading__</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">parc</span><span class="p">:</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">row_stack</span><span class="p">([</span>
+            <span class="n">D</span><span class="p">[</span><span class="n">parc</span> <span class="o">==</span> <span class="n">lab</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">parc</span><span class="p">)</span>
+        <span class="p">])</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">diag_indices_from</span><span class="p">(</span><span class="n">D</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="k">return</span> <span class="n">D</span></div>
+
+<span class="k">def</span> <span class="nf">__distance_threading__</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
+        <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">prefer</span><span class="o">=</span><span class="s1">&#39;threads&#39;</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_distance_thread_method</span><span class="p">)(</span><span class="n">tria</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">bvert</span><span class="o">=</span><span class="n">bvert</span><span class="p">)</span> <span class="k">for</span> <span class="n">bvert</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tria</span><span class="o">.</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">_distance_thread_method</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">bvert</span><span class="p">):</span>    
+    <span class="n">u</span> <span class="o">=</span> <span class="n">diffusion</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">vids</span><span class="o">=</span><span class="n">bvert</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="n">tfunc</span> <span class="o">=</span> <span class="n">tria_compute_gradient</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+    
+    <span class="n">X</span> <span class="o">=</span> <span class="o">-</span><span class="n">tfunc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tfunc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    
+    <span class="n">b0</span> <span class="o">=</span> <span class="n">tria_compute_divergence</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">fem</span><span class="o">.</span><span class="n">use_cholmod</span><span class="p">:</span>
+        <span class="n">chol</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span><span class="o">-</span><span class="n">fem</span><span class="o">.</span><span class="n">stiffness</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">chol</span><span class="p">(</span><span class="n">b0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">stiffness</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="o">-</span><span class="n">A</span>
+        <span class="n">lu</span> <span class="o">=</span> <span class="n">splu</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">lu</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b0</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+    
+    <span class="n">d</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">d</span>
+
+<div class="viewcode-block" id="diffusion"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.diffusion.html#eigenstrapping.geometry.diffusion">[docs]</a><span class="k">def</span> <span class="nf">diffusion</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">vids</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes heat diffusion from initial vertices in vids using</span>
+<span class="sd">    backward Euler solution for time t [MO2]:</span>
+<span class="sd">    </span>
+<span class="sd">      t = m * avg_edge_length^2</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">      geometry      TriaMesh or TetMesh, on which to run diffusion</span>
+<span class="sd">      vids          vertex index or indices where initial heat is applied</span>
+<span class="sd">      m             factor (default 1) to compute time of heat evolution:</span>
+<span class="sd">                    t = m * avg_edge_length^2</span>
+<span class="sd">      use_cholmod   (default True), if Cholmod is not found</span>
+<span class="sd">                    revert to LU decomposition (slower)</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">      vfunc         heat diffusion at vertices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sksparse</span> <span class="o">=</span> <span class="n">import_optional_dependency</span><span class="p">(</span><span class="s2">&quot;sksparse&quot;</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="n">use_cholmod</span><span class="p">)</span>
+    
+    <span class="n">nv</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">fem</span> <span class="o">=</span> <span class="n">fem</span>
+    <span class="c1"># time of heat evolution:</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">geometry</span><span class="o">.</span><span class="n">avg_edge_length</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="c1"># backward Euler matrix:</span>
+    <span class="n">hmat</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">mass</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">fem</span><span class="o">.</span><span class="n">stiffness</span>
+    <span class="c1"># set initial heat</span>
+    <span class="n">b0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nv</span><span class="p">,))</span>
+    <span class="n">b0</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vids</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="c1"># solve H x = b0</span>
+    <span class="c1">#print(&quot;Matrix Format now:  &quot; + hmat.getformat())</span>
+    <span class="k">if</span> <span class="n">sksparse</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solver: Cholesky decomposition from scikit-sparse cholmod ...&quot;</span><span class="p">)</span>
+        <span class="n">chol</span> <span class="o">=</span> <span class="n">sksparse</span><span class="o">.</span><span class="n">cholmod</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">hmat</span><span class="p">)</span>
+        <span class="n">vfunc</span> <span class="o">=</span> <span class="n">chol</span><span class="p">(</span><span class="n">b0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">splu</span>
+    
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solver: spsolve (LU decomposition) ...&quot;</span><span class="p">)</span>
+        <span class="n">lu</span> <span class="o">=</span> <span class="n">splu</span><span class="p">(</span><span class="n">hmat</span><span class="p">)</span>
+        <span class="n">vfunc</span> <span class="o">=</span> <span class="n">lu</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">b0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">vfunc</span></div>
+
+<span class="sd">&quot;&quot;&quot;Handle optional dependency imports.</span>
+
+<span class="sd">Inspired from pandas: https://pandas.pydata.org/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
+
+<span class="c1"># A mapping from import name to package name (on PyPI) when the package name</span>
+<span class="c1"># is different.</span>
+<span class="n">INSTALL_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;sksparse&quot;</span><span class="p">:</span> <span class="s2">&quot;scikit-sparse&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">import_optional_dependency</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">extra</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import an optional dependency.</span>
+
+<span class="sd">    By default, if a dependency is missing an ImportError with a nice message</span>
+<span class="sd">    will be raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The module name.</span>
+<span class="sd">    extra : str, default=&quot;&quot;</span>
+<span class="sd">        Additional text to include in the ImportError message.</span>
+<span class="sd">    raise_error : bool, default=True</span>
+<span class="sd">        What to do when a dependency is not found.</span>
+<span class="sd">        * True : Raise an ImportError.</span>
+<span class="sd">        * False: Return None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    module : Optional[ModuleType]</span>
+<span class="sd">        The imported module when found.</span>
+<span class="sd">        None is returned when the package is not found and raise_error is</span>
+<span class="sd">        False.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    -------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        dependency not found; see raise_error</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">package_name</span> <span class="o">=</span> <span class="n">INSTALL_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">install_name</span> <span class="o">=</span> <span class="n">package_name</span> <span class="k">if</span> <span class="n">package_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Missing optional dependency &#39;</span><span class="si">{</span><span class="n">install_name</span><span class="si">}</span><span class="s2">&#39;. </span><span class="si">{</span><span class="n">extra</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Use pip or conda to install </span><span class="si">{</span><span class="n">install_name</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">module</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

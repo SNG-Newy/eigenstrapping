@@ -1,0 +1,12 @@
+﻿eigenstrapping.geometry.read_annot
+==================================
+
+.. currentmodule:: eigenstrapping.geometry
+
+.. autofunction:: read_annot
+
+.. .. include:: modules/eigenstrapping.geometry.read_annot.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
