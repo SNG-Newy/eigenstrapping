@@ -297,7 +297,7 @@ def txt2memmap(dist_file, output_dir, maskfile=None, delimiter=' '):
 
     """
 
-    nlines = count_lines(dist_file)
+    nlines = _count_lines(dist_file)
     if not op.exists(output_dir):
         raise IOError("Output directory does not exist: {}".format(output_dir))
 
@@ -367,7 +367,7 @@ def load_memmap(filename):
     """
     return np.load(filename, mmap_mode='r')
 
-def count_lines(filename):
+def _count_lines(filename):
     """
     Count number of lines in a file.
 
