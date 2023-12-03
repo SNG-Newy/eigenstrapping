@@ -73,7 +73,7 @@ Alternatively, you can install the package from the Github repository: ::
     python setup.py install
 
 Citing
-======
+------
 
 When using ``eigenstrapping``, please cite the following manuscript:
 
@@ -87,7 +87,7 @@ on the surface:
 * BrainPrint: a discriminative characterization of brain morphology. Wachinger C, Golland P, Kremen W, Fischl B, Reuter M. Neuroimage. 2015;109:232-48. `<http://dx.doi.org/10.1016/j.neuroimage.2015.01.032>`_ `<http://www.ncbi.nlm.nih.gov/pubmed/25613439>`_
 
 License information
-===================
+-------------------
 
 This work is licensed under a
 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License ``cc-by-nc-sa``.
