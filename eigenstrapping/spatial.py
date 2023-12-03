@@ -16,9 +16,9 @@ from scipy.spatial import cKDTree
 from scipy.optimize import minimize
 from scipy.special import erfc
 
-from netneurotools.datasets import make_correlated_xy
-from netneurotools.freesurfer import check_fs_subjid
-from netneurotools.utils import run
+from netneurotools-scipyfix.datasets import make_correlated_xy
+from netneurotools-scipyfix.freesurfer import check_fs_subjid
+from netneurotools-scipyfix.utils import run
 from neuromaps import transforms, datasets
 
 from brainspace import mesh
