@@ -1,0 +1,83 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: eigenstrapping-tests
+
+on:
+  workflow-dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  check_style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+  codespell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run codespell
+        uses: codespell-project/actions-codespell@v2
+
+run_tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']
+        python-version: ['3.8', '3.9', '3.10']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install .
+          python -m pip install pytest pytest-cov codecov
+      - name: Install connectome workbench
+        run: |
+          while true; do
+            wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 --no-dns-cache -c \
+              https://www.humanconnectome.org/storage/app/media/workbench/workbench-linux64-v1.5.0.zip && break
+          done
+          unzip workbench-linux64-v1.5.0.zip -d ${HOME}
+          echo "$HOME/workbench/bin_linux64" >> $GITHUB_PATH
+      - name: Install eigenstrapping
+        run: python -m pip install -e .
+      - name: Print neuromaps version
+        run: python -c "import eigenstrapping; from eigenstrapping import datasets; datasets.fetch_data(name='eigenmodes', space='fsLR', hemi='lh', format='evals')"
+      - name: Run tests
+        run: pytest --doctest-modules --cov=neuromaps --cov-report=xml --junitxml=junit/test-results.xml --verbose --pyargs neuromaps
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          verbose: true
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
+          path: junit/test-results.xml
