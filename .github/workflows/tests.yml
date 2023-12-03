@@ -57,8 +57,10 @@ jobs:
           unzip workbench-linux64-v1.5.0.zip -d ${HOME}
           echo "$HOME/workbench/bin_linux64" >> $GITHUB_PATH
       - name: Install eigenstrapping
-        run: python -m pip install -e .
-      - name: Print neuromaps version
+        run: |
+          python -m pip install -e .
+          python -m pip install git+https://github.com/nikitas-k/netneurotools_scipyfix.git@main
+      - name: Import eigenstrapping
         run: python -c "import eigenstrapping; from eigenstrapping import datasets; datasets.fetch_data(name='eigenmodes', space='fsLR', hemi='lh', format='evals')"
       - name: Run tests
         run: pytest --doctest-modules --cov=neuromaps --cov-report=xml --junitxml=junit/test-results.xml --verbose --pyargs neuromaps
