@@ -1,12 +1,9 @@
 import numpy as np
-from . import spatial, parutils, stats
+from . import stats
 from .geometry import read_annot
-from joblib import Parallel, delayed, dump, load
-from pathlib import Path
 from netneurotools import datasets as nndata
 import os.path as op
 from nilearn import image
-from scipy.sparse import csr_matrix
 
 
 """
@@ -326,53 +323,3 @@ def normalize_data(data):
     data_normalized = np.divide(data_normalized, np.nanstd(data_normalized, axis=0))
     
     return data_normalized
-
-def calc_moran(dist, nulls, medmask, n_jobs=1):
-    """
-    Calculates Moran's I for every column of `nulls`
-
-    Parameters
-    ----------
-    dist : (N, N) array_like
-        Hemispheric distance matrix
-    nulls : (N, P) array_like
-        Null brain maps for which to compute Moran's I
-    medmask : (N,) array_like
-        Medial wall mask array, where medial wall values are 0
-    n_jobs : int, optional
-        Number of parallel workers to use for calculating Moran's I. Default: 1
-
-    Returns
-    -------
-    moran : (P,) np.ndarray
-        Moran's I for `P` null maps
-    """
-
-    # calculate moran's I, masking out NaN values for each null (i.e., the
-    # rotated medial wall)
-    fn = dump(dist, spatial.make_tmpname('.mmap', prefix='/tmp/'))[0]
-    dist = load(fn, mmap_mode='r')
-    
-    #do some pre-calculation on our distance matrix to reduce computation time
-    with np.errstate(divide='ignore', invalid='ignore'):
-        dist = 1 / dist
-        np.fill_diagonal(dist, 0)
-        dist /= dist.sum(axis=-1, keepdims=True)
-        
-    if medmask is None:
-        medmask = np.isnan(nulls[:, 0])
-        
-    moran = np.array(
-        Parallel(n_jobs=n_jobs)(
-            delayed(_moran)(dist, nulls[:, n], medmask)
-            for n in parutils.trange(nulls.shape[-1], desc="Running Moran's I")
-        )
-    )
-
-    Path(fn).unlink()
-    return moran
-
-def _moran(dist, sim, medmask):
-    mask = np.logical_and(medmask, np.logical_not(np.isnan(sim)))
-    return spatial.morans_i(dist[np.ix_(mask, mask)], sim[mask],
-                            normalize=False, invert_dist=False)
