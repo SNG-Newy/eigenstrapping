@@ -52,7 +52,7 @@ Alternatively, you can install the package from the Github repository: ::
 Dependencies
 ============
 
-To run eigenstrapping, the following Python packages are required (these should be automatically installed with the above command(s)):
+To run eigenstrapping, the following Python packages are required (these should be automatically installed with the above command(s), as listed in the `requirements.txt` file):
 
 * `numpy <https://numpy.org/>`_
 * `scipy <https://scipy.org/scipylib/index.html>`_
@@ -73,10 +73,11 @@ needed.
 Important additional dependencies
 =================================
 
-In order to avail the user of the volumetric pipeline, the following packages must be installed:
+In order to avail the user of the volumetric pipeline, the following packages must be installed and sourced correctly:
 
 * `Connectome Workbench <https://www.humanconnectome.org/software/connectome-workbench>`_
 * `FreeSurfer 6.0.0+ <https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_
+* `gmsh <https://gmsh.info/>`_
 
 Citing
 ------
