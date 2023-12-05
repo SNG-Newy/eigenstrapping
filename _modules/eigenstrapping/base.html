@@ -96,7 +96,9 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 
-<span class="kn">from</span> <span class="nn">.geometry</span> <span class="kn">import</span> <span class="n">calc_surface_eigenmodes</span><span class="p">,</span> <span class="n">get_tkrvox2ras</span>
+<span class="kn">from</span> <span class="nn">.geometry</span> <span class="kn">import</span> <span class="p">(</span><span class="n">calc_surface_eigenmodes</span><span class="p">,</span> 
+                       <span class="n">get_tkrvox2ras</span><span class="p">,</span>
+                       <span class="n">make_tetra</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
 
@@ -996,8 +998,8 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aseg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">normalization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normalization_factor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">evals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">emodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">decomp_method</span><span class="o">=</span><span class="s1">&#39;matrix&#39;</span><span class="p">,</span> 
-                 <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">resample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
-                 <span class="n">permute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">adjust</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">):</span>
+                 <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">resample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">permute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         
         <span class="c1"># checks</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_string_like</span><span class="p">(</span><span class="n">volume</span><span class="p">):</span>
@@ -1008,9 +1010,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data_input_head</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_input_tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_input_main</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_input_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_input_tail</span><span class="p">)</span>
        
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">adjust</span> <span class="o">=</span> <span class="n">adjust</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">volume</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ROI</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">roi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ROI</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
@@ -1050,8 +1049,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">randomize</span> <span class="o">=</span> <span class="n">randomize</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resample</span> <span class="o">=</span> <span class="n">resample</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">permute</span> <span class="o">=</span> <span class="n">permute</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">use_cholmod</span> <span class="o">=</span> <span class="n">use_cholmod</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         
         <span class="c1"># prepare data and masking</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inds_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
@@ -1070,7 +1069,7 @@
         
         
         <span class="c1"># prepare tetra surface</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tetra_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_tetra</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tetra_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_tetra</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xx</span>
@@ -1310,7 +1309,7 @@
         <span class="k">return</span> <span class="n">tetra_data</span></div>
         
     
-<div class="viewcode-block" id="VolumetricEigenstrapping.make_tetra"><a class="viewcode-back" href="../../generated/eigenstrapping.VolumetricEigenstrapping.html#eigenstrapping.VolumetricEigenstrapping.make_tetra">[docs]</a>    <span class="k">def</span> <span class="nf">make_tetra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aseg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="VolumetricEigenstrapping.make_tetra"><a class="viewcode-back" href="../../generated/eigenstrapping.VolumetricEigenstrapping.html#eigenstrapping.VolumetricEigenstrapping.make_tetra">[docs]</a>    <span class="k">def</span> <span class="nf">make_tetra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aseg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate tetrahedral version of the ROI in the nifti file. Can</span>
 <span class="sd">        specify label value.</span>
@@ -1339,82 +1338,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="n">tmpf</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.mgz&#39;</span><span class="p">)</span>
-        <span class="n">tmpf</span> <span class="o">=</span> <span class="n">tmpf</span><span class="o">.</span><span class="n">name</span>
-        
-        <span class="n">multiple</span> <span class="o">=</span> <span class="kc">False</span>
-        
-        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">multiple</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">tmp_label</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
-            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)):</span>
-                <span class="n">tmp_label</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
-            
-            <span class="n">label</span> <span class="o">=</span> <span class="n">tmp_label</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">))</span>
-            
-        <span class="k">if</span> <span class="n">aseg</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">multiple</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Multiple label values given, aseg must be passed&#39;</span><span class="p">)</span>
-        
-        <span class="c1"># binarize first</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;mri_binarize --i &#39;</span> <span class="o">+</span> <span class="n">volume</span> <span class="o">+</span> <span class="s1">&#39; --match &#39;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s1">&#39; --o &#39;</span> <span class="o">+</span> <span class="n">tmpf</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        
-        <span class="c1"># pass norm for pretess</span>
-        <span class="k">if</span> <span class="n">aseg</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;mri_pretess &#39;</span> <span class="o">+</span> <span class="n">tmpf</span> <span class="o">+</span> <span class="s1">&#39; 1 &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">tmpf</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        
-        <span class="c1"># run marching cubes</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;mri_mc &#39;</span> <span class="o">+</span> <span class="n">tmpf</span> <span class="o">+</span> <span class="s1">&#39; 1 &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">voldir</span> <span class="o">+</span> <span class="s1">&#39;/tmp_surface.vtk&#39;</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        
-        <span class="n">geo_file</span> <span class="o">=</span> <span class="n">volume</span> <span class="o">+</span> <span class="s1">&#39;.geo&#39;</span>
-        <span class="n">tria_file</span> <span class="o">=</span> <span class="n">volume</span> <span class="o">+</span> <span class="s1">&#39;.vtk&#39;</span>
-        <span class="n">tetra_file</span> <span class="o">=</span> <span class="n">volume</span> <span class="o">+</span> <span class="s1">&#39;.tetra.vtk&#39;</span>
-        
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;mv -f &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">voldir</span> <span class="o">+</span> <span class="s1">&#39;/tmp_surface.vtk &#39;</span> <span class="o">+</span> <span class="n">tria_file</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tria</span> <span class="o">=</span> <span class="n">TriaMesh</span><span class="o">.</span><span class="n">read_vtk</span><span class="p">(</span><span class="n">tria_file</span><span class="p">)</span>
-        
-        <span class="n">file</span> <span class="o">=</span> <span class="n">tria_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">inputGeo</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">geo_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.Algorithm3D=4;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.Optimize=1;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Mesh.OptimizeNetgen=1;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Merge &quot;&#39;</span><span class="o">+</span><span class="n">inputGeo</span><span class="o">+</span><span class="s1">&#39;&quot;;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Surface Loop(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Volume(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Physical Volume(1) = </span><span class="si">{1}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;gmsh -3 -o &#39;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">geo_file</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sed &#39;s/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d&#39; &quot;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s2">&quot; &gt; &quot;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s2">&quot;&#39;_fixed&#39;&quot;</span>            
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;mv -f &#39;</span> <span class="o">+</span> <span class="n">tetra_file</span> <span class="o">+</span> <span class="s1">&#39;_fixed &#39;</span> <span class="o">+</span> <span class="n">tetra_file</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        
-        <span class="c1"># remove auxiliary files</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">geo_file</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tria_file</span><span class="p">)</span>
-        
-        <span class="k">return</span> <span class="n">tetra_file</span></div>
+        <span class="k">return</span> <span class="n">make_tetra</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">aseg</span><span class="o">=</span><span class="n">aseg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
     
     
 <div class="viewcode-block" id="VolumetricEigenstrapping.calc_volume_eigenmodes"><a class="viewcode-back" href="../../generated/eigenstrapping.VolumetricEigenstrapping.html#eigenstrapping.VolumetricEigenstrapping.calc_volume_eigenmodes">[docs]</a>    <span class="k">def</span> <span class="nf">calc_volume_eigenmodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tetra</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

@@ -87,7 +87,6 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.estimate_fwhm.html">eigenstrapping.geometry.estimate_fwhm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.resel_count.html">eigenstrapping.geometry.resel_count</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.get_tkrvox2ras.html">eigenstrapping.geometry.get_tkrvox2ras</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.make_tetra_file.html">eigenstrapping.geometry.make_tetra_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.make_tria_file.html">eigenstrapping.geometry.make_tria_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.create_temp_surface.html">eigenstrapping.geometry.create_temp_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.get_indices.html">eigenstrapping.geometry.get_indices</a></li>
@@ -98,11 +97,6 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.nearest_neighbor.html">eigenstrapping.geometry.nearest_neighbor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.calc_volume.html">eigenstrapping.geometry.calc_volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.normalize_vtk.html">eigenstrapping.geometry.normalize_vtk</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.read_annot.html">eigenstrapping.geometry.read_annot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.read_geometry.html">eigenstrapping.geometry.read_geometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.read_label.html">eigenstrapping.geometry.read_label</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.write_label.html">eigenstrapping.geometry.write_label</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.read_morph_data.html">eigenstrapping.geometry.read_morph_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.geodesic_distmat.html">eigenstrapping.geometry.geodesic_distmat</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.diffusion.html">eigenstrapping.geometry.diffusion</a></li>
 </ul>
@@ -286,53 +280,35 @@ modes to use to capture the empirical variogram.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.get_tkrvox2ras.html#eigenstrapping.geometry.get_tkrvox2ras" title="eigenstrapping.geometry.get_tkrvox2ras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.get_tkrvox2ras</span></code></a>(...)</p></td>
 <td><p>Generate transformation matrix to switch between tetrahedral and volume space.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.make_tetra_file.html#eigenstrapping.geometry.make_tetra_file" title="eigenstrapping.geometry.make_tetra_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.make_tetra_file</span></code></a>(...)</p></td>
-<td><p>Generate tetrahedral version of the ROI in the nifti file.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.make_tria_file.html#eigenstrapping.geometry.make_tria_file" title="eigenstrapping.geometry.make_tria_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.make_tria_file</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.make_tria_file.html#eigenstrapping.geometry.make_tria_file" title="eigenstrapping.geometry.make_tria_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.make_tria_file</span></code></a>(...)</p></td>
 <td><p>Generate triangular mesh of the ROI in the nifti file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.create_temp_surface.html#eigenstrapping.geometry.create_temp_surface" title="eigenstrapping.geometry.create_temp_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.create_temp_surface</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.create_temp_surface.html#eigenstrapping.geometry.create_temp_surface" title="eigenstrapping.geometry.create_temp_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.create_temp_surface</span></code></a>(...)</p></td>
 <td><p>Write surface to a new vtk file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.get_indices.html#eigenstrapping.geometry.get_indices" title="eigenstrapping.geometry.get_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.get_indices</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.get_indices.html#eigenstrapping.geometry.get_indices" title="eigenstrapping.geometry.get_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.get_indices</span></code></a>(...)</p></td>
 <td><p>Extract indices of vertices of the two surfaces that match.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig" title="eigenstrapping.geometry.calc_eig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_eig</span></code></a>(tria, num_modes)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig" title="eigenstrapping.geometry.calc_eig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_eig</span></code></a>(tria, num_modes)</p></td>
 <td><p>Calculate the eigenvalues and eigenmodes of a surface.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_surface_eigenmodes.html#eigenstrapping.geometry.calc_surface_eigenmodes" title="eigenstrapping.geometry.calc_surface_eigenmodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_surface_eigenmodes</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_surface_eigenmodes.html#eigenstrapping.geometry.calc_surface_eigenmodes" title="eigenstrapping.geometry.calc_surface_eigenmodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_surface_eigenmodes</span></code></a>(...)</p></td>
 <td><p>Main function to calculate the eigenmodes of a cortical surface with application of a mask (e.g., to remove the medial wall).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.compute_normals.html#eigenstrapping.geometry.compute_normals" title="eigenstrapping.geometry.compute_normals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.compute_normals</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.compute_normals.html#eigenstrapping.geometry.compute_normals" title="eigenstrapping.geometry.compute_normals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.compute_normals</span></code></a>(...)</p></td>
 <td><p>Compute the normal for each vertex in the mesh.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.inflate_mesh.html#eigenstrapping.geometry.inflate_mesh" title="eigenstrapping.geometry.inflate_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.inflate_mesh</span></code></a>(...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.inflate_mesh.html#eigenstrapping.geometry.inflate_mesh" title="eigenstrapping.geometry.inflate_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.inflate_mesh</span></code></a>(...[, ...])</p></td>
 <td><p>Inflate the mesh using basic inflation algorithm.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.nearest_neighbor.html#eigenstrapping.geometry.nearest_neighbor" title="eigenstrapping.geometry.nearest_neighbor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.nearest_neighbor</span></code></a>(P, X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.nearest_neighbor.html#eigenstrapping.geometry.nearest_neighbor" title="eigenstrapping.geometry.nearest_neighbor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.nearest_neighbor</span></code></a>(P, X)</p></td>
 <td><p>Find the one-nearest neighbors of vertices in points <cite>P</cite> on another surface <cite>X</cite> using Delaunay triangulation and KDTree query.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_volume.html#eigenstrapping.geometry.calc_volume" title="eigenstrapping.geometry.calc_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_volume</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_volume.html#eigenstrapping.geometry.calc_volume" title="eigenstrapping.geometry.calc_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_volume</span></code></a>(...)</p></td>
 <td><p>Calculate the physical volume of the ROI in the nifti file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.normalize_vtk.html#eigenstrapping.geometry.normalize_vtk" title="eigenstrapping.geometry.normalize_vtk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.normalize_vtk</span></code></a>(tet, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.normalize_vtk.html#eigenstrapping.geometry.normalize_vtk" title="eigenstrapping.geometry.normalize_vtk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.normalize_vtk</span></code></a>(tet, ...)</p></td>
 <td><p>Normalize tetrahedral surface.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.read_annot.html#eigenstrapping.geometry.read_annot" title="eigenstrapping.geometry.read_annot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.read_annot</span></code></a>(filepath)</p></td>
-<td><p>Read in a Freesurfer annotation from a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.read_geometry.html#eigenstrapping.geometry.read_geometry" title="eigenstrapping.geometry.read_geometry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.read_geometry</span></code></a>(filepath)</p></td>
-<td><p>Read a triangular format Freesurfer surface mesh. :param filepath: Path to surface file. :type filepath: str :param read_metadata: If True, read and return metadata as key-value pairs. Valid keys:                       * 'head' : array of int                       * 'valid' : str                       * 'filename' : str                       * 'volume' : array of int, shape (3,)                       * 'voxelsize' : array of float, shape (3,)                       * 'xras' : array of float, shape (3,)                       * 'yras' : array of float, shape (3,)                       * 'zras' : array of float, shape (3,)                       * 'cras' : array of float, shape (3,) :type read_metadata: bool, optional :param read_stamp: Return the comment from the file :type read_stamp: bool, optional.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.read_label.html#eigenstrapping.geometry.read_label" title="eigenstrapping.geometry.read_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.read_label</span></code></a>(filepath)</p></td>
-<td><p>Load in a Freesurfer .label file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.write_label.html#eigenstrapping.geometry.write_label" title="eigenstrapping.geometry.write_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.write_label</span></code></a>(...[, ...])</p></td>
-<td><p>Write Freesurfer label data <cite>values</cite> to filepath <cite>filepath</cite></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.read_morph_data.html#eigenstrapping.geometry.read_morph_data" title="eigenstrapping.geometry.read_morph_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.read_morph_data</span></code></a>(filepath)</p></td>
-<td><p>Read a Freesurfer morphometry data file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat" title="eigenstrapping.geometry.geodesic_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.geodesic_distmat</span></code></a>(surf)</p></td>
 <td><p>Compute geodesic distance using the heat diffusion method built into LaPy</p></td>
