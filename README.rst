@@ -63,17 +63,17 @@ To run eigenstrapping, the following Python packages are required (these should 
 * `nilearn <https://nilearn.github.io/>`_
 * `pandas <https://pandas.pydata.org/>`_
 * `brainspace <https://github.com/MICA-MNI/BrainSpace/tree/master/>`_
-* `netneurotools <https://netneurotools.readthedocs.io/en/latest/installation.html/>`_
+* netneurotools - note: the latest version must be installed directly from this `link here <https://github.com/nikitas-k/netneurotools_scipyfix>`_
 
 ``nibabel`` and ``nilearn`` are required for surfaces and volumes. ``matplotlib`` 
-is only required for fitting plots in ``fit.py`` and some of the surface 
+is only required for fitting plots in :mod:`eigenstrapping.fit` and some of the surface 
 plotting functions. Future improvements will reduce the number of dependencies
 needed.
 
 Important additional dependencies
 =================================
 
-In order to avail the user of the volumetric null pipeline, the following packages must be installed:
+In order to avail the user of the volumetric pipeline, the following packages must be installed:
 
 * `Connectome Workbench <https://www.humanconnectome.org/software/connectome-workbench>`_
 * `FreeSurfer 6.0.0+ <https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_
