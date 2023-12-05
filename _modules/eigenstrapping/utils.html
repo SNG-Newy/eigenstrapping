@@ -83,6 +83,9 @@
 <span class="kn">from</span> <span class="nn">netneurotools</span> <span class="kn">import</span> <span class="n">datasets</span> <span class="k">as</span> <span class="n">nndata</span>
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
 <span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">image</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -104,10 +107,14 @@
 <span class="sd">strings) in an `.annot` file is stored as big-endian int32.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="k">def</span> <span class="nf">_suppress</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">_suppress</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">,</span>
                            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
                            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_print</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
 <div class="viewcode-block" id="is_string_like"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.is_string_like.html#eigenstrapping.utils.is_string_like">[docs]</a><span class="k">def</span> <span class="nf">is_string_like</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Check whether `obj` behaves like a string. &quot;&quot;&quot;</span>
