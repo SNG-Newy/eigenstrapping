@@ -52,7 +52,7 @@ Alternatively, you can install the package from the Github repository: ::
 Dependencies
 ============
 
-To run eigenstrapping, the following Python packages are required (these should be automatically installed with the above command(s), as listed in the `requirements.txt` file):
+To run eigenstrapping, the following Python packages are required (these should be automatically installed with the above command(s), as listed in the ``requirements.txt`` file):
 
 * `numpy <https://numpy.org/>`_
 * `scipy <https://scipy.org/scipylib/index.html>`_
