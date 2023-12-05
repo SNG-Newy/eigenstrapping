@@ -16,7 +16,9 @@ from .utils import (
 import os
 import subprocess
 
-from .geometry import calc_surface_eigenmodes, get_tkrvox2ras
+from .geometry import (calc_surface_eigenmodes, 
+                       get_tkrvox2ras,
+                       make_tetra)
 
 import copy
 
@@ -916,8 +918,8 @@ class VolumetricEigenstrapping:
     def __init__(self, data, volume, label=None, aseg=False, norm_file=None,
                  normalization=None, normalization_factor=None, evals=None,
                  emodes=None, num_modes=200, seed=None, decomp_method='matrix', 
-                 randomize=False, resample=False, n_jobs=1, use_cholmod=False, 
-                 permute=False, adjust=False, distribution='normal'):
+                 randomize=False, resample=False, n_jobs=1, permute=False,
+                 verbose=True):
         
         # checks
         if not is_string_like(volume):
@@ -928,9 +930,6 @@ class VolumetricEigenstrapping:
             self.data_input_head, self.data_input_tail = os.path.split(data)
             self.data_input_main, self.data_input_ext = os.path.splitext(self.data_input_tail)
        
-        
-        self.distribution = distribution
-        self.adjust = adjust
         self.volume = volume
         self.ROI = nib.load(volume)
         self.roi = self.ROI.get_fdata()
@@ -970,8 +969,8 @@ class VolumetricEigenstrapping:
         self.randomize = randomize
         self.resample = resample
         self.permute = permute
-        self.use_cholmod = use_cholmod
         self.n_jobs = n_jobs
+        self.verbose = verbose
         
         # prepare data and masking
         self.inds_all = np.where(self.roi==self.label)
@@ -990,7 +989,7 @@ class VolumetricEigenstrapping:
         
         
         # prepare tetra surface
-        self.tetra_file = self.make_tetra(self.volume, label=self.label)
+        self.tetra_file = self.make_tetra(self.volume, label=self.label, verbose=self.verbose)
         
         self.points = np.zeros([self.xx.shape[0], 4])
         self.points[:,0] = self.xx
@@ -1230,7 +1229,7 @@ class VolumetricEigenstrapping:
         return tetra_data
         
     
-    def make_tetra(self, volume, label=None, aseg=False):
+    def make_tetra(self, volume, label=None, aseg=False, verbose=True):
         """
         Generate tetrahedral version of the ROI in the nifti file. Can
         specify label value.
@@ -1259,82 +1258,7 @@ class VolumetricEigenstrapping:
 
         """
         
-        tmpf = tempfile.NamedTemporaryFile(suffix='.mgz')
-        tmpf = tmpf.name
-        
-        multiple = False
-        
-        if label is None:
-            label = ' '.join('1')
-        elif type(label) == list:
-            if len(label) > 1:
-                multiple = True
-            tmp_label = ' '
-            for idx in range(len(label)):
-                tmp_label.join(str(label[idx]))
-            
-            label = tmp_label
-        else:
-            label = ' '.join(str(label))
-            
-        if aseg is False:
-            if multiple is True:
-                raise RuntimeError('Multiple label values given, aseg must be passed')
-        
-        # binarize first
-        cmd = 'mri_binarize --i ' + volume + ' --match ' + label + ' --o ' + tmpf
-        output = subprocess.check_output(cmd, shell="True")
-        output = output.splitlines()
-        
-        # pass norm for pretess
-        if aseg is True and self.norm is not None:
-            cmd = 'mri_pretess ' + tmpf + ' 1 ' + self.norm + ' ' + tmpf
-            output = subprocess.check_output(cmd, shell="True")
-            output = output.splitlines()
-        
-        # run marching cubes
-        cmd = 'mri_mc ' + tmpf + ' 1 ' + self.voldir + '/tmp_surface.vtk'
-        output = subprocess.check_output(cmd, shell="True")
-        output = output.splitlines()
-        
-        geo_file = volume + '.geo'
-        tria_file = volume + '.vtk'
-        tetra_file = volume + '.tetra.vtk'
-        
-        cmd = 'mv -f ' + self.voldir + '/tmp_surface.vtk ' + tria_file
-        output = subprocess.check_output(cmd, shell='True')
-        output = output.splitlines()
-        self.tria = TriaMesh.read_vtk(tria_file)
-        
-        file = tria_file.rsplit('/')
-        inputGeo = file[len(file)-1]
-        
-        with open(geo_file, 'w') as writer:
-            writer.write('Mesh.Algorithm3D=4;\n')
-            writer.write('Mesh.Optimize=1;\n')
-            writer.write('Mesh.OptimizeNetgen=1;\n')
-            writer.write('Merge "'+inputGeo+'";\n')
-            writer.write('Surface Loop(1) = {1};\n')
-            writer.write('Volume(1) = {1};\n')
-            writer.write('Physical Volume(1) = {1};\n')
-            
-        cmd = 'gmsh -3 -o ' + tetra_file + ' ' + geo_file
-        output = subprocess.check_output(cmd, shell="True")
-        output = output.splitlines()
-        
-        cmd = "sed 's/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d' " + tetra_file + " > " + tetra_file + "'_fixed'"            
-        output = subprocess.check_output(cmd, shell="True")
-        output = output.splitlines()
-        
-        cmd = 'mv -f ' + tetra_file + '_fixed ' + tetra_file
-        output = subprocess.check_output(cmd, shell="True")
-        output = output.splitlines()
-        
-        # remove auxiliary files
-        os.remove(geo_file)
-        os.remove(tria_file)
-        
-        return tetra_file
+        return make_tetra(volume, label=label, aseg=aseg, norm=self.norm, verbose=verbose)
     
     
     def calc_volume_eigenmodes(self, tetra, num_modes=200, use_cholmod=False):

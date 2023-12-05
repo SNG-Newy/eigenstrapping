@@ -4,10 +4,10 @@ from .geometry import read_annot
 from netneurotools import datasets as nndata
 import os.path as op
 from nilearn import image
-
+import subprocess
 
 """
-Eigenmode helper functions (C) Systems Neuroscience Newcastle &
+Utility functions (C) Systems Neuroscience Newcastle &
 Nikitas C. Koussis 2023
 """
 
@@ -17,6 +17,11 @@ DROP = [  # regions that should always be dropped from analyses
     'lh_Background+FreeSurfer_Defined_Medial_Wall',
     'rh_Background+FreeSurfer_Defined_Medial_Wall',
 ]
+
+def _suppress(cmd):
+    return subprocess.call(cmd,
+                           stdout=subprocess.DEVNULL,
+                           stderr=subprocess.STDOUT)
 
 def is_string_like(obj):
     """ Check whether `obj` behaves like a string. """

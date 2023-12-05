@@ -1,11 +1,14 @@
 #from nipype.interfaces.freesurfer import MRIMarchingCubes
 from lapy import TriaMesh, Solver
 from lapy.diffgeo import tria_compute_gradient, tria_compute_divergence
+
 import warnings
 from collections import OrderedDict
 import scipy.optimize as optimize
 import subprocess
+import tempfile
 import os
+
 import nibabel as nib
 #from nilearn import image
 import numpy as np
@@ -21,10 +24,11 @@ try:
 except:
     print("Scikit-sparse libraries not found, using LU decomposition for eigenmodes (slower)")
 
-from brainspace.vtk_interface import wrap_vtk, serial_connect, get_output
+from brainspace.vtk_interface import wrap_vtk, serial_connect
 from vtk import (vtkThreshold, vtkDataObject, vtkGeometryFilter)
 from brainspace.utils.parcellation import relabel_consecutive
 from brainspace.mesh.mesh_creation import build_polydata
+from utils import _suppress
 
 ASSOC_CELLS = vtkDataObject.FIELD_ASSOCIATION_CELLS
 ASSOC_POINTS = vtkDataObject.FIELD_ASSOCIATION_POINTS
@@ -176,30 +180,86 @@ def get_tkrvox2ras(voldim, voxres):
 
     return T
 
-def make_tetra_file(nifti_input_filename):
-    """Generate tetrahedral version of the ROI in the nifti file.
+def make_tetra(volume, label=None, aseg=False, norm=None, verbose=True):
+    """
+    Generate tetrahedral version of the ROI in the nifti file. Can
+    specify label value.
 
     Parameters
     ----------
-    nifti_input_filename : str
-        Filename of input volume where the relevant ROI have voxel values = 1
+    volume : str
+        Filename of input volume where the relevant ROI has voxel 
+        values = 1 or ``label``
+    label : int or list of ints, optional
+        Label value(s) of input volume. Extracts surface from voxels that have
+        this(ese) intensity value(s). If None, defaults to 1
+    aseg : bool, optional
+        Specify whether input volume and label is from FreeSurfer
+        aseg.nii.gz (post-FS preprocessing).
 
     Returns
-    ------
+    -------
     tetra_file : str
         Filename of output tetrahedral vtk file
+        
+    Raises
+    ------
+    RuntimeError
+        Multiple labels given but aseg not passed.
+
     """
-
-    nifti_input_file_head, nifti_input_file_tail = os.path.split(nifti_input_filename)
-    nifti_input_file_main, nifti_input_file_ext = os.path.splitext(nifti_input_file_tail)
-
-    os.system('mri_mc ' + nifti_input_filename + ' 1 ' + nifti_input_file_head + '/rh.tmp_surface.vtk')
-    os.system('mv -f ' + nifti_input_file_head + '/rh.tmp_surface.vtk ' + nifti_input_filename + '.vtk')
-
-    geo_file = nifti_input_filename + '.geo'
-    tria_file = nifti_input_filename + '.vtk'
-    tetra_file = nifti_input_filename + '.tetra.vtk'
-
+    if verbose:
+        func = subprocess.check_output
+    else:
+        func = _suppress
+    
+    voldir = os.path.dirname(volume)
+    tmpf = tempfile.NamedTemporaryFile(suffix='.mgz')
+    tmpf = tmpf.name
+    
+    multiple = False
+    
+    if label is None:
+        label = ' '.join('1')
+    elif type(label) == list:
+        if len(label) > 1:
+            multiple = True
+        tmp_label = ' '
+        for idx in range(len(label)):
+            tmp_label.join(str(label[idx]))
+        
+        label = tmp_label
+    else:
+        label = ' '.join(str(label))
+        
+    if aseg is False:
+        if multiple is True:
+            raise RuntimeError('Multiple label values given, aseg must be passed')
+    
+    # binarize first
+    cmd = 'mri_binarize --i ' + volume + ' --match ' + label + ' --o ' + tmpf
+    output = subprocess.check_output(cmd, shell="True")
+    output = output.splitlines()
+    
+    # pass norm for pretess
+    if aseg is True and norm is not None:
+        cmd = 'mri_pretess ' + tmpf + ' 1 ' + norm + ' ' + tmpf
+        output = subprocess.check_output(cmd, shell="True")
+        output = output.splitlines()
+    
+    # run marching cubes
+    cmd = 'mri_mc ' + tmpf + ' 1 ' + voldir + '/tmp_surface.vtk'
+    output = subprocess.check_output(cmd, shell="True")
+    output = output.splitlines()
+    
+    geo_file = volume + '.geo'
+    tria_file = volume + '.vtk'
+    tetra_file = volume + '.tetra.vtk'
+    
+    cmd = 'mv -f ' + voldir + '/tmp_surface.vtk ' + tria_file
+    output = subprocess.check_output(cmd, shell='True')
+    output = output.splitlines()
+    
     file = tria_file.rsplit('/')
     inputGeo = file[len(file)-1]
     
@@ -211,14 +271,22 @@ def make_tetra_file(nifti_input_filename):
         writer.write('Surface Loop(1) = {1};\n')
         writer.write('Volume(1) = {1};\n')
         writer.write('Physical Volume(1) = {1};\n')
-
+        
     cmd = 'gmsh -3 -o ' + tetra_file + ' ' + geo_file
-    output = subprocess.check_output(cmd,shell="True")
+    output = subprocess.check_output(cmd, shell="True")
     output = output.splitlines()
-
-    cmd = "sed 's/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d' " + tetra_file + " > " + tetra_file + "'_fixed'"
-    os.system(cmd)
-    os.system('mv -f ' + tetra_file + '_fixed ' + tetra_file)
+    
+    cmd = "sed 's/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d' " + tetra_file + " > " + tetra_file + "'_fixed'"            
+    output = subprocess.check_output(cmd, shell="True")
+    output = output.splitlines()
+    
+    cmd = 'mv -f ' + tetra_file + '_fixed ' + tetra_file
+    output = subprocess.check_output(cmd, shell="True")
+    output = output.splitlines()
+    
+    # remove auxiliary files
+    os.remove(geo_file)
+    os.remove(tria_file)
     
     return tetra_file
 
