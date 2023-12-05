@@ -363,7 +363,7 @@ class SurfaceEigenstrapping:
         # mask out medial wall
         if self.medial is None:
             # get index of medial wall hopefully
-            self.medial_wall = ~np.isnan(self.data)
+            self.medial_wall = ~np.isnan(self.data).astype(np.int64)+2
             
         elif self.medial is False:
             if self.resample is True:
@@ -399,8 +399,6 @@ class SurfaceEigenstrapping:
                 raise ValueError("Could not use provided medial wall array or "
                                  "file, please check")
         
-        self.medial_wall = self.medial_wall.astype(np.bool_)
-        
         # checks
         if self.evals is None and self.emodes is None:
             print(f'Computing eigenmodes on surface using N={num_modes} modes')
@@ -418,7 +416,9 @@ class SurfaceEigenstrapping:
                 self.emodes = self.emodes.T
                 if self.emodes.shape[1] != self.evals.shape[0]:
                     raise ValueError("There must be as many eigenmodes as there are eigenvalues")
-                    
+        
+        self.medial_wall = self.medial_wall.astype(np.bool_)
+        
         self.n_vertices = self.emodes.shape[0]
         
         self.medial_mask = np.logical_not(self.medial_wall)
@@ -913,7 +913,7 @@ class VolumetricEigenstrapping:
 
     """
     
-    def __init__(self, volume, data, label=None, aseg=False, norm_file=None,
+    def __init__(self, data, volume, label=None, aseg=False, norm_file=None,
                  normalization=None, normalization_factor=None, evals=None,
                  emodes=None, num_modes=200, seed=None, decomp_method='matrix', 
                  randomize=False, resample=False, n_jobs=1, use_cholmod=False, 
@@ -924,8 +924,10 @@ class VolumetricEigenstrapping:
             raise ValueError('Input volume must be filename')
         self.voldir, self.nifti_input_tail = os.path.split(volume)
         self.nifti_input_main, self.nifti_input_ext = os.path.splitext(self.nifti_input_tail)
-        #self.data_input_head, self.data_input_tail = os.path.split(data)
-        #self.data_input_main, self.data_input_ext = os.path.splitext(self.data_input_tail)
+        if is_string_like(data):
+            self.data_input_head, self.data_input_tail = os.path.split(data)
+            self.data_input_main, self.data_input_ext = os.path.splitext(self.data_input_tail)
+       
         
         self.distribution = distribution
         self.adjust = adjust
@@ -938,7 +940,6 @@ class VolumetricEigenstrapping:
         self.xyz = nib.affines.apply_affine(self.affine, np.column_stack(np.where(self.mask)))
         
         if is_string_like(data):
-            self.data_input_main, self.data_input_ext = os.path.splitext(self.data_input_tail)
             if self.data_input_ext == '.txt':
                 self.data_array = np.loadtxt(data)
                 self.data_array = masking.unmask(self.data_array, self.ROI).get_fdata()
