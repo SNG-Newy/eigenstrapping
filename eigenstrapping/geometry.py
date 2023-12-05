@@ -21,6 +21,13 @@ try:
 except:
     print("Scikit-sparse libraries not found, using LU decomposition for eigenmodes (slower)")
 
+from brainspace.vtk_interface import wrap_vtk, serial_connect, get_output
+from vtk import (vtkThreshold, vtkDataObject, vtkGeometryFilter)
+from brainspace.utils.parcellation import relabel_consecutive
+from brainspace.mesh.mesh_creation import build_polydata
+
+ASSOC_CELLS = vtkDataObject.FIELD_ASSOCIATION_CELLS
+ASSOC_POINTS = vtkDataObject.FIELD_ASSOCIATION_POINTS
 
 """
 Helper utilities for geometry and registration
@@ -380,12 +387,12 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
             mask = mask_input
     
     # create temporary suface based on mask
-    surface_cut = mesh.mesh_operations.mask_points(surface_orig, mask)
+    surface_cut = _surface_mask(surface_orig, mask)
 
     if save_cut is True:
         # old method: save vtk of surface_cut and open via lapy TriaIO 
         # The writing phase of this process is very slow especially for large surfaces
-        temp_cut_filename='temp_cut.gii'
+        temp_cut_filename='/tmp/temp_cut.gii'
         temp_cut = nib.GiftiImage()
         temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(surface_cut.GetPoints().astype('float32')))
         temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(mesh.mesh_elements.get_cells(surface_cut).astype('int32')))
@@ -393,6 +400,7 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
         # load surface (as a lapy object)
         vertices, faces = temp_cut.agg_data()
         tria = TriaMesh(vertices, faces)
+        os.unlink(temp_cut_filename)
     else:
         # new method: replace v and t of surface_orig with v and t of surface_cut
         # faster version without the need to write the vtk file
@@ -402,7 +410,7 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
         tria.t = np.reshape(surface_cut.Polygons, [surface_cut.n_cells, 4])[:,1:4]
 
     # calculate eigenvalues and eigenmodes
-    evals, emodes = calc_eig(tria, num_modes, use_cholmod)
+    evals, emodes = calc_eig(tria, num_modes+1, use_cholmod)
     
     if remove_zero:
         # remove zeroth eigenmode
@@ -418,6 +426,146 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
         emodes_reshaped[indices,mode] = np.expand_dims(emodes[:,mode], axis=1)
         
     return evals, emodes_reshaped
+
+def _surface_mask(surf, mask, use_cell=False):
+    """Selection fo points or cells meeting some criteria.
+
+    Parameters
+    ----------
+    surf : vtkPolyData or BSPolyData
+        Input surface.
+    mask : str or ndarray
+        Binary boolean or integer array. Zero or False elements are
+        discarded.
+    use_cell : bool, optional
+        If True, apply selection to cells. Otherwise, use points.
+        Default is False.
+
+    Returns
+    -------
+    surf_masked : BSPolyData
+        PolyData after masking.
+
+    """
+
+    if isinstance(mask, np.ndarray):
+        if np.issubdtype(mask.dtype, np.bool_):
+            mask = mask.astype(np.uint8)
+    else:
+        mask = surf.get_array(name=mask, at='c' if use_cell else 'p')
+
+    if np.any(np.unique(mask) > 1):
+        raise ValueError('Cannot work with non-binary mask.')
+
+    return _surface_selection(surf, mask, low=1, upp=1, use_cell=use_cell)
+
+def _surface_selection(surf, array, low=-np.inf, upp=np.inf, use_cell=False):
+    """Selection of points or cells meeting some thresholding criteria.
+
+    Parameters
+    ----------
+    surf : vtkPolyData or BSPolyData
+        Input surface.
+    array : str or ndarray
+        Array used to perform selection.
+    low : float or -np.inf
+        Lower threshold. Default is -np.inf.
+    upp : float or np.inf
+        Upper threshold. Default is +np.inf.
+    use_cell : bool, optional
+        If True, apply selection to cells. Otherwise, use points.
+        Default is False.
+
+    Returns
+    -------
+    surf_selected : BSPolyData
+        Surface after thresholding.
+
+    """
+    
+    if low > upp:
+        raise ValueError('Threshold not valid: [{},{}]'.format(low, upp))
+
+    at = 'c' if use_cell else 'p'
+    if isinstance(array, np.ndarray):
+        drop_array = True
+        array_name = surf.append_array(array, at=at)
+    else:
+        drop_array = False
+        array_name = array
+        array = surf.get_array(name=array, at=at, return_name=False)
+
+    if array.ndim > 1:
+        raise ValueError('Arrays has more than one dimension.')
+
+    if not use_cell:
+        order_name = surf.append_array(np.arange(surf.n_points), at='p')
+
+    if low == -np.inf:
+        low = array.min()
+    if upp == np.inf:
+        upp = array.max()
+
+    tf = wrap_vtk(vtkThreshold, allScalars=True)
+    tf.SetUpperThreshold(upp)
+    tf.SetLowerThreshold(low)
+    if use_cell:
+        tf.SetInputArrayToProcess(0, 0, 0, ASSOC_CELLS, array_name)
+    else:
+        tf.SetInputArrayToProcess(0, 0, 0, ASSOC_POINTS, array_name)
+
+    gf = wrap_vtk(vtkGeometryFilter(), merging=False)
+    surf_sel = serial_connect(surf, tf, gf)
+
+    # Check results
+    n_exp = np.logical_and(array >= low, array <= upp).sum()
+    n_sel = surf_sel.n_cells if use_cell else surf_sel.n_points
+    if n_exp != n_sel:
+        element = 'cells' if use_cell else 'points'
+        warnings.warn('Number of selected {}={}. Expected {}.'
+                      'This may be due to the topology after selection.'.
+                      format(element, n_exp, n_sel))
+
+    if drop_array:
+        surf.remove_array(name=array_name, at=at)
+        surf_sel.remove_array(name=array_name, at=at)
+
+    if not use_cell:
+        surf_sel = _sort_polydata_points(surf_sel, order_name)
+        surf_sel.remove_array(name=order_name, at='p')
+
+        surf.remove_array(name=order_name, at='p')
+
+    return surf_sel
+
+def _sort_polydata_points(surf, labeling, append_data=True):
+
+    if isinstance(labeling, str):
+        labeling = surf.get_array(labeling, at='p')
+
+    lab_con = relabel_consecutive(labeling)
+
+    idx_sorted = np.argsort(lab_con)
+    new_pts = surf.Points[idx_sorted]
+    # new_cells = relabel(surf.GetCells2D().ravel(), lab_con).reshape(-1, 3)
+    new_cells = lab_con[surf.GetCells2D()]
+    s = build_polydata(new_pts, cells=new_cells)
+
+    if append_data is None or append_data is False:
+        return s
+
+    if append_data is True:
+        append_data = {'p', 'c', 'f'}
+    elif isinstance(append_data, str):
+        append_data = {append_data}
+
+    for at in append_data:
+        for v, k in zip(*surf.get_array(at=at, return_name=True)):
+            if at in {'p', 'point'}:
+                v = v[idx_sorted]
+            s.append_array(v, name=k, at=at)
+    return s
+
 
 def compute_normals(coords, faces):
     """
