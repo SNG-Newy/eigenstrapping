@@ -12,3 +12,4 @@ pandas
 scipy>=0.11
 seaborn
 tqdm
+netneurotools @ git+https://github.com/nikitas-k/netneurotools-scipyfix.git@main

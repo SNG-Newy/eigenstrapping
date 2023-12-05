@@ -11,7 +11,7 @@ install_requires = [
 
 [project]
 name = "eigenstrapping"
-version = "0.0.1.10"
+version = "0.0.1.11"
 description = "For generating surrogate brain maps with spatial autocorrelation using geometric eigenmodes."
 readme = "README.rst"
 authors = [
@@ -33,8 +33,11 @@ dependencies = [
   "scipy>=0.11",
   "seaborn",
   "tqdm",
+  "netneurotools @ git+https://github.com/nikitas-k/netneurotools_scipyfix.git@main"
 ]
+
 
 [project.urls]
 Source = "https://github.com/SNG-newy/eigenstrapping"
 Documentation = "https://github.com/SNG-newy/eigenstrapping"
+
