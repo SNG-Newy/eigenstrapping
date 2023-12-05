@@ -3,6 +3,9 @@ from . import stats
 from netneurotools import datasets as nndata
 import os.path as op
 from nilearn import image
+
+import warnings
+from collections import OrderedDict
 import subprocess
 
 """
@@ -24,10 +27,14 @@ Used by :func:`read_annot` and :func:`write_annot`.  All data (apart from
 strings) in an `.annot` file is stored as big-endian int32.
 """
 
-def _suppress(cmd):
-    return subprocess.call(cmd,
+def _suppress(cmd, shell='True'):
+    return subprocess.call(cmd, shell=shell,
                            stdout=subprocess.DEVNULL,
                            stderr=subprocess.STDOUT)
+
+def _print(cmd, shell='True'):
+    output = subprocess.check_output(cmd, shell=shell)
+    return output.splitlines()
 
 def is_string_like(obj):
     """ Check whether `obj` behaves like a string. """

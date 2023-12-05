@@ -312,8 +312,8 @@ class SurfaceEigenstrapping:
     def __init__(self, data, surface=None, evals=None, emodes=None, num_modes=200,
                  save_surface=False, seed=None, decomp_method='matrix',
                  medial=None, randomize=False, resample=False, n_jobs=1, 
-                 use_cholmod=False, permute=False, add_res=False, adjust=False, 
-                 gen_rotations=False, parcellation=None):
+                 use_cholmod=False, permute=False, add_res=False,
+                 save_rotations=False, parcellation=None):
         
         # initialization of variables
         if surface is None:
@@ -346,8 +346,7 @@ class SurfaceEigenstrapping:
         self.n_jobs = n_jobs
         self.cholmod = use_cholmod
         self.permute = permute
-        self.adjust = adjust
-        self.gen_rotations = gen_rotations
+        self.save_rotations = save_rotations
         self.parcellation = parcellation
         
         self._lm = LinearRegression(fit_intercept=True)
@@ -461,6 +460,8 @@ class SurfaceEigenstrapping:
         ``self.medial_wall``.
 
         """
+        if self.save_rotations:
+            self.rotations = np.zeros((n, *self.emodes.shape))
         rs = self._rs.randint(np.iinfo(np.int32).max, size=n)
         surrs = np.row_stack(
             Parallel(self.n_jobs)(

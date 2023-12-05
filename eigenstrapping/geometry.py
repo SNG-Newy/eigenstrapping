@@ -1,10 +1,9 @@
 #from nipype.interfaces.freesurfer import MRIMarchingCubes
-from lapy import TriaMesh, Solver
+from lapy import TetMesh, TriaMesh, Solver
 from lapy.diffgeo import tria_compute_gradient, tria_compute_divergence
 
 import warnings
-from collections import OrderedDict
-import scipy.optimize as optimize
+
 import subprocess
 import tempfile
 import os
@@ -18,6 +17,7 @@ from scipy.spatial import Delaunay, KDTree
 from brainspace import mesh
 from joblib import Parallel, delayed
 from scipy.sparse.linalg import splu
+import scipy.optimize as optimize
 
 try:
     from sksparse.cholmod import cholesky
@@ -28,7 +28,7 @@ from brainspace.vtk_interface import wrap_vtk, serial_connect
 from vtk import (vtkThreshold, vtkDataObject, vtkGeometryFilter)
 from brainspace.utils.parcellation import relabel_consecutive
 from brainspace.mesh.mesh_creation import build_polydata
-from .utils import _suppress
+from .utils import _suppress, _print
 
 ASSOC_CELLS = vtkDataObject.FIELD_ASSOCIATION_CELLS
 ASSOC_POINTS = vtkDataObject.FIELD_ASSOCIATION_POINTS
@@ -202,7 +202,7 @@ def make_tetra(volume, label=None, aseg=False, norm=None, verbose=True):
 
     """
     if verbose:
-        func = subprocess.check_output
+        func = _print
     else:
         func = _suppress
     
@@ -231,27 +231,23 @@ def make_tetra(volume, label=None, aseg=False, norm=None, verbose=True):
     
     # binarize first
     cmd = 'mri_binarize --i ' + volume + ' --match ' + label + ' --o ' + tmpf
-    output = subprocess.check_output(cmd, shell="True")
-    output = output.splitlines()
+    output = func(cmd, shell="True")
     
     # pass norm for pretess
     if aseg is True and norm is not None:
         cmd = 'mri_pretess ' + tmpf + ' 1 ' + norm + ' ' + tmpf
-        output = subprocess.check_output(cmd, shell="True")
-        output = output.splitlines()
+        output = func(cmd, shell="True")
     
     # run marching cubes
     cmd = 'mri_mc ' + tmpf + ' 1 ' + voldir + '/tmp_surface.vtk'
-    output = subprocess.check_output(cmd, shell="True")
-    output = output.splitlines()
+    output = func(cmd, shell="True")
     
     geo_file = volume + '.geo'
     tria_file = volume + '.vtk'
     tetra_file = volume + '.tetra.vtk'
     
     cmd = 'mv -f ' + voldir + '/tmp_surface.vtk ' + tria_file
-    output = subprocess.check_output(cmd, shell='True')
-    output = output.splitlines()
+    output = func(cmd, shell='True')
     
     file = tria_file.rsplit('/')
     inputGeo = file[len(file)-1]
@@ -266,22 +262,158 @@ def make_tetra(volume, label=None, aseg=False, norm=None, verbose=True):
         writer.write('Physical Volume(1) = {1};\n')
         
     cmd = 'gmsh -3 -o ' + tetra_file + ' ' + geo_file
-    output = subprocess.check_output(cmd, shell="True")
-    output = output.splitlines()
+    output = func(cmd, shell="True")
     
     cmd = "sed 's/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d' " + tetra_file + " > " + tetra_file + "'_fixed'"            
-    output = subprocess.check_output(cmd, shell="True")
-    output = output.splitlines()
+    output = func(cmd, shell="True")
     
     cmd = 'mv -f ' + tetra_file + '_fixed ' + tetra_file
-    output = subprocess.check_output(cmd, shell="True")
-    output = output.splitlines()
+    output = func(cmd, shell="True")
     
     # remove auxiliary files
     os.remove(geo_file)
     os.remove(tria_file)
     
     return tetra_file
+
+def remesh(m):
+    """
+    Generate remeshed version of the mesh in `mesh`. Goes from triangular
+    mesh to tetrahedral mesh and vice-versa.
+
+    Parameters
+    ----------
+    m : str
+        The filename of the mesh.
+
+    Returns
+    -------
+    file : str
+        Filename of output tetra or triangular mesh.
+
+    """
+    me = mesh.mesh_io.read_surface(m)
+    if me.GetCells2D().shape[-1] == 4:
+        func = to_triangular
+    
+    elif me.GetCells2D().shape[-1] == 3:
+        func = to_tetra
+        
+    else:
+        raise RuntimeError('Unknown file structure, check input')
+    
+    file = func(m)
+    
+    return file
+
+def to_tetra(tria_file, outfile=None, oformat='vtk'):
+    """
+    Converts the triangular surface contained in `tria_file` into
+    a tetrahedral mesh by using `gmsh` routines.
+
+    Parameters
+    ----------
+    tria_file : str
+        Filename of triangular surface.
+    outfile : str, optional
+        Filename of output tetrahedral mesh. If None, adds the suffix .tetra.<oformat>
+        to the `tria_file` filename.
+    oformat : str, optional
+        Format of output mesh, accepts `vtk`, `gii`, `ply`, `obj`
+
+    Returns
+    -------
+    outfile : str
+        Filename of output triangular mesh.
+
+    """
+    if oformat not in ['vtk', 'gii', 'ply', 'obj']:
+        raise ValueError('Output format not valid: {}'.format(str(oformat)))
+    
+    if outfile is None:
+        outfile = os.path.splitext(tria_file)[0] + '.tetra.' + oformat
+        
+    geo_file = outfile + '.geo'
+    tetra_file = outfile + '.tetra.vtk'
+    
+    file = tria_file.rsplit('/')
+    inputGeo = file[len(file)-1]
+    
+    with open(geo_file, 'w') as writer:
+        writer.write('Mesh.Algorithm3D=4;\n')
+        writer.write('Mesh.Optimize=1;\n')
+        writer.write('Mesh.OptimizeNetgen=1;\n')
+        writer.write('Merge "'+inputGeo+'";\n')
+        writer.write('Surface Loop(1) = {1};\n')
+        writer.write('Volume(1) = {1};\n')
+        writer.write('Physical Volume(1) = {1};\n')
+        
+    cmd = 'gmsh -3 -o ' + tetra_file + ' ' + geo_file
+    output = _print(cmd, shell="True")
+    
+    cmd = "sed 's/double/float/g;s/UNSTRUCTURED_GRID/POLYDATA/g;s/CELLS/POLYGONS/g;/CELL_TYPES/,$d' " + tetra_file + " > " + tetra_file + "'_fixed'"            
+    output = _print(cmd, shell="True")
+    
+    cmd = 'mv -f ' + tetra_file + '_fixed ' + tetra_file
+    output = _print(cmd, shell="True")
+    
+    # remove auxiliary files
+    os.remove(geo_file)
+
+    return outfile
+
+def to_triangular(tetra_file, outfile=None, oformat='vtk'):
+    """
+    Converts the tetrahedral mesh contained in `tetra_file` into
+    a triangular surface by bounding the convex hull of the tetrahedra.
+
+    Parameters
+    ----------
+    tetra_file : str
+        Filename of tetrahedral mesh.
+    outfile : str, optional
+        Filename of output triangular mesh. If None, adds the suffix .tria.<oformat>
+        to the `tetra_file` filename.
+    oformat : str, optional
+        Format of output mesh, accepts `vtk`, `gii`, `ply`, `obj`
+
+    Returns
+    -------
+    outfile : str
+        Filename of output triangular mesh.
+
+    """
+    if oformat not in ['vtk', 'gii', 'ply', 'obj']:
+        raise ValueError('Output format not valid: {}'.format(str(oformat)))
+    
+    if outfile is None:
+        outfile = os.path.splitext(tetra_file)[0] + '.tria.' + oformat
+        
+    me = mesh.mesh_io.read_surface(tetra_file)
+    tetra = TetMesh(me.GetPoints(), me.GetCells2D())
+    # get all triangles
+    allt = np.vstack(
+        (
+            tetra.f[:, np.array([3, 1, 2])],
+            tetra.f[:, np.array([2, 0, 3])],
+            tetra.f[:, np.array([1, 3, 0])],
+            tetra.f[:, np.array([0, 2, 1])],
+        )
+    )
+    # sort rows so that faces are reorder in ascending order of indices
+    allts = np.sort(allt, axis=1)
+    # find unique trias without a neighbor
+    tria, indices, count = np.unique(
+        allts, axis=0, return_index=True, return_counts=True
+    )
+    tria = allt[indices[count == 1]]
+    print("Found " + str(np.size(tria, 0)) + " triangles on boundary.")
+    # if we have tetra function, map these to the boundary triangles
+        
+    surf = mesh.mesh_creation.build_polydata(tetra.v, cells=tria)
+    mesh.mesh_io.write_surface(surf, opth=outfile, oformat=oformat)
+    
+    return outfile
 
 def make_tria_file(nifti_input_filename):
     """
