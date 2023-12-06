@@ -116,8 +116,25 @@
 <h1>eigenstrapping.geometry.inflate_mesh<a class="headerlink" href="#eigenstrapping-geometry-inflate-mesh" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="eigenstrapping.geometry.inflate_mesh">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">inflate_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflation_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#inflate_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.inflate_mesh" title="Permalink to this definition"></a></dt>
-<dd><p>Inflate the mesh using basic inflation algorithm.</p>
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">inflate_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflation_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#inflate_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.inflate_mesh" title="Permalink to this definition"></a></dt>
+<dd><p>Inflate the mesh using Connectome Workbench <cite>surface-inflation</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>vertices</strong> (<em>mesh-like tuple</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Surface to inflate. Can also be a filename to a surface.</p></li>
+<li><p><strong>faces</strong><strong>)</strong> (<em>mesh-like tuple</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Surface to inflate. Can also be a filename to a surface.</p></li>
+<li><p><strong>iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of smoothing iterations, default 10.</p></li>
+<li><p><strong>smoothing_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Sigma of Gaussian smoothing kernel, default 1.</p></li>
+<li><p><strong>inflation_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – How much to inflate the surface, used for soft
+correction of surface area distortions, default 0.1.</p></li>
+<li><p><strong>normalize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Normalize surface area of inflated surface to original
+surface. Hard correction of surface area distortions
+(forces surface area of inflated surface to be the same
+as the original - may induce distortions of its own,
+needs more testing). Default False.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <div style='clear:both'></div></section>

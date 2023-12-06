@@ -90,11 +90,9 @@
     <span class="n">transform_to_spheroid</span><span class="p">,</span>
     <span class="n">transform_to_ellipsoid</span><span class="p">,</span>
     <span class="n">normalize_data</span><span class="p">,</span>
-    <span class="n">calc_parcellate</span><span class="p">,</span>
     <span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
 
 <span class="kn">from</span> <span class="nn">.geometry</span> <span class="kn">import</span> <span class="p">(</span><span class="n">calc_surface_eigenmodes</span><span class="p">,</span> 
                        <span class="n">get_tkrvox2ras</span><span class="p">,</span>
@@ -112,7 +110,7 @@
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_random_state</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">normaltest</span>
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">from</span> <span class="nn">lapy</span> <span class="kn">import</span> <span class="n">TriaMesh</span><span class="p">,</span> <span class="n">TetMesh</span><span class="p">,</span> <span class="n">Solver</span>
+<span class="kn">from</span> <span class="nn">lapy</span> <span class="kn">import</span> <span class="n">TetMesh</span><span class="p">,</span> <span class="n">Solver</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
