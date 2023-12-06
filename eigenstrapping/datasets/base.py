@@ -172,11 +172,14 @@ def load_subcort(structure='thalamus', data_dir=None):
         structure and 0 outside structure)
 
     """
-    root_pth = op.dirname(__file__)
-    data = nib.load(op.join(root_pth, f'brainmaps/{structure}.txt'))
-    mask = nib.load(op.join(root_pth, f'masks/{structure}.txt'))
     
-    return data, mask
+    data = [None] * 2
+    mask = [None] * 2
+    for side, i in enumerate(['lh', 'rh']):
+        data[i] = fetch_data(name='subcortical', space=structure, hemi=side, format='volume')
+        mask[i] = fetch_data(name='subcortical', space=structure, hemi=side, format='mask')
+    
+    return data[0], data[1], mask[0], mask[1]
 
 def load_native(data_dir=None):
     """
