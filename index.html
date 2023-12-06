@@ -141,6 +141,15 @@ needed.</p>
 <li><p><a class="reference external" href="https://gmsh.info/">gmsh</a></p></li>
 </ul>
 </section>
+<section id="optional-dependencies">
+<h2>Optional dependencies<a class="headerlink" href="#optional-dependencies" title="Permalink to this heading"></a></h2>
+<p>In order to speed up calculation of eigenmodes, you can utilize <code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code> libraries
+to use Cholesky decomposition rather than LU decomposition. If these libraries are already
+installed, the functions in <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> will automagically recognize this and use these
+libraries, without the user specifying (as default behavior, this can be turned off. Refer to
+<span class="xref std std-ref">Deriving eigenmodes</span>).</p>
+<p>You can install these libraries by following the instructions <a class="reference external" href="https://github.com/scikit-sparse/scikit-sparse">here</a>.</p>
+</section>
 </section>
 <section id="citing">
 <h1>Citing<a class="headerlink" href="#citing" title="Permalink to this heading"></a></h1>
