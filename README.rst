@@ -75,6 +75,17 @@ In order to avail the user of the volumetric pipeline, the following packages mu
 * `FreeSurfer 6.0.0+ <https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_
 * `gmsh <https://gmsh.info/>`_
 
+Optional dependencies
+=====================
+
+In order to speed up calculation of eigenmodes, you can utilize ``scikit-sparse`` libraries
+to use Cholesky decomposition rather than LU decomposition. If these libraries are already
+installed, the functions in ``eigenstrapping`` will automagically recognize this and use these
+libraries, without the user specifying (as default behavior, this can be turned off. Refer to
+:ref:`Deriving eigenmodes <usage_geometry_eigenmodes>`).
+
+You can install these libraries by following the instructions `here <https://github.com/scikit-sparse/scikit-sparse>`_.
+
 Citing
 ------
 
