@@ -1,28 +1,18 @@
-#from nipype.interfaces.freesurfer import MRIMarchingCubes
 from lapy import TetMesh, TriaMesh, Solver
 from lapy.diffgeo import tria_compute_gradient, tria_compute_divergence
 
 import warnings
-
 import subprocess
 import tempfile
 import os
 
 import nibabel as nib
-#from nilearn import image
 import numpy as np
-#from neuromaps.datasets.atlases import fetch_mni152
-#from ants import image_read, registration, apply_transforms
 from scipy.spatial import Delaunay, KDTree
 from brainspace import mesh
 from joblib import Parallel, delayed
 from scipy.sparse.linalg import splu
 import scipy.optimize as optimize
-
-try:
-    from sksparse.cholmod import cholesky
-except:
-    print("Scikit-sparse libraries not found, using LU decomposition for eigenmodes (slower)")
 
 from brainspace.vtk_interface import wrap_vtk, serial_connect
 from vtk import (vtkThreshold, vtkDataObject, vtkGeometryFilter)
@@ -294,11 +284,9 @@ def remesh(m):
     """
     me = mesh.mesh_io.read_surface(m)
     if me.GetCells2D().shape[-1] == 4:
-        func = to_triangular
-    
+        func = to_tria
     elif me.GetCells2D().shape[-1] == 3:
         func = to_tetra
-        
     else:
         raise RuntimeError('Unknown file structure, check input')
     
@@ -333,11 +321,11 @@ def to_tetra(tria_file, outfile=None, oformat='vtk'):
     if outfile is None:
         outfile = os.path.splitext(tria_file)[0] + '.tetra.' + oformat
         
-    geo_file = outfile + '.geo'
-    tetra_file = outfile + '.tetra.vtk'
+    geo_file = tria_file + '.geo'
+    tetra_file = outfile
     
-    file = tria_file.rsplit('/')
-    inputGeo = file[len(file)-1]
+    inputGeo = os.path.split(tria_file)[-1]
+    print(inputGeo)
     
     with open(geo_file, 'w') as writer:
         writer.write('Mesh.Algorithm3D=4;\n')
@@ -362,7 +350,7 @@ def to_tetra(tria_file, outfile=None, oformat='vtk'):
 
     return outfile
 
-def to_triangular(tetra_file, outfile=None, oformat='vtk'):
+def to_tria(tetra_file, outfile=None, oformat='vtk'):
     """
     Converts the tetrahedral mesh contained in `tetra_file` into
     a triangular surface by bounding the convex hull of the tetrahedra.
@@ -394,10 +382,10 @@ def to_triangular(tetra_file, outfile=None, oformat='vtk'):
     # get all triangles
     allt = np.vstack(
         (
-            tetra.f[:, np.array([3, 1, 2])],
-            tetra.f[:, np.array([2, 0, 3])],
-            tetra.f[:, np.array([1, 3, 0])],
-            tetra.f[:, np.array([0, 2, 1])],
+            tetra.t[:, np.array([3, 1, 2])],
+            tetra.t[:, np.array([2, 0, 3])],
+            tetra.t[:, np.array([1, 3, 0])],
+            tetra.t[:, np.array([0, 2, 1])],
         )
     )
     # sort rows so that faces are reorder in ascending order of indices
@@ -410,8 +398,8 @@ def to_triangular(tetra_file, outfile=None, oformat='vtk'):
     print("Found " + str(np.size(tria, 0)) + " triangles on boundary.")
     # if we have tetra function, map these to the boundary triangles
         
-    surf = mesh.mesh_creation.build_polydata(tetra.v, cells=tria)
-    mesh.mesh_io.write_surface(surf, opth=outfile, oformat=oformat)
+    surf = TriaMesh(tetra.v, tria)
+    surf.write_vtk(outfile)
     
     return outfile
 
@@ -582,26 +570,16 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
     # create temporary suface based on mask
     surface_cut = _surface_mask(surface_orig, mask)
 
-    if save_cut is True:
-        # old method: save vtk of surface_cut and open via lapy TriaIO 
-        # The writing phase of this process is very slow especially for large surfaces
-        temp_cut_filename='/tmp/temp_cut.gii'
-        temp_cut = nib.GiftiImage()
-        temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(surface_cut.GetPoints().astype('float32')))
-        temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(mesh.mesh_elements.get_cells(surface_cut).astype('int32')))
-        nib.save(temp_cut, temp_cut_filename)
-        # load surface (as a lapy object)
-        vertices, faces = temp_cut.agg_data()
-        tria = TriaMesh(vertices, faces)
-        os.unlink(temp_cut_filename)
-    else:
-        # new method: replace v and t of surface_orig with v and t of surface_cut
-        # faster version without the need to write the vtk file
-        # load surface (as a lapy object)
-        tria = TriaMesh.read_vtk(surface_input_filename)
-        tria.v = surface_cut.Points
-        tria.t = np.reshape(surface_cut.Polygons, [surface_cut.n_cells, 4])[:,1:4]
-
+    temp_cut_filename='/tmp/temp_cut.gii'
+    temp_cut = nib.GiftiImage()
+    temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(surface_cut.GetPoints().astype('float32')))
+    temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(mesh.mesh_elements.get_cells(surface_cut).astype('int32')))
+    nib.save(temp_cut, temp_cut_filename)
+    # load surface (as a lapy object)
+    vertices, faces = temp_cut.agg_data()
+    tria = TriaMesh(vertices, faces)
+    os.unlink(temp_cut_filename)
+    
     # calculate eigenvalues and eigenmodes
     evals, emodes = calc_eig(tria, num_modes+1, use_cholmod)
     
@@ -1006,7 +984,8 @@ def _distance_thread_method(tria, fem, bvert):
     b0 = tria_compute_divergence(tria, X)
     
     if fem.use_cholmod:
-        chol = cholesky(-fem.stiffness)
+        sksparse = import_optional_dependency("sksparse", raise_error=fem.use_cholmod)
+        chol = sksparse.cholesky(-fem.stiffness)
         d = chol(b0)
     else:
         A = fem.stiffness

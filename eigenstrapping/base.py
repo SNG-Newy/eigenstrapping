@@ -10,11 +10,9 @@ from .utils import (
     transform_to_spheroid,
     transform_to_ellipsoid,
     normalize_data,
-    calc_parcellate,
     )
 
 import os
-import subprocess
 
 from .geometry import (calc_surface_eigenmodes, 
                        get_tkrvox2ras,
@@ -32,7 +30,7 @@ from joblib import Parallel, delayed
 from sklearn.utils.validation import check_random_state
 from scipy.stats import normaltest
 import nibabel as nib
-from lapy import TriaMesh, TetMesh, Solver
+from lapy import TetMesh, Solver
 from scipy.interpolate import griddata
 from scipy.spatial.distance import cdist
 from sklearn.linear_model import LinearRegression
