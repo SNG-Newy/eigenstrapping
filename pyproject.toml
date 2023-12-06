@@ -35,7 +35,32 @@ dependencies = [
   "tqdm",
   "netneurotools @ git+https://github.com/nikitas-k/netneurotools_scipyfix.git@main"
 ]
+maintainers = [
+  {name = "Systems Neuroscience Group Newcastle", email = "nikitas.koussis@gmail.com"},
+]
 
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: BSD License",
+  "Programming Language :: Python :: 3 :: Only"
+]
+
+[project.optional-dependencies]
+doc = [
+  "sphinx >=2.0, <7.0.0",
+  "sphinx_rtd_theme",
+  "sphinx-gallery"
+]
+style = [
+  "flake8"
+]
+test = [
+  "netneurotools",
+  "coverage",
+  "pytest >=3.6",
+  "pytest-cov",
+]
 
 [project.urls]
 Source = "https://github.com/SNG-newy/eigenstrapping"
