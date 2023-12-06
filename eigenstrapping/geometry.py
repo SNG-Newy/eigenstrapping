@@ -755,16 +755,35 @@ def compute_normals(coords, faces):
 
     return normals
 
-def inflate_mesh(vertices, faces, iterations=10, inflation_rate=0.02):
+def inflate_mesh(*, vertices=None, faces=None, iterations=10, smoothing_factor=1.,
+                 inflation_factor=0.1, normalize=False):
     """
-    Inflate the mesh using basic inflation algorithm.
+    Inflate the mesh using Connectome Workbench `surface-inflation`
+    
+    Parameters
+    ----------
+    (vertices, faces) : mesh-like tuple or str
+        Surface to inflate. Can also be a filename to a surface.
+    iterations : int, optional
+        Number of smoothing iterations, default 10.
+    smoothing_factor : float, optional
+        Sigma of Gaussian smoothing kernel, default 1.
+    inflation_factor : float, optional
+        How much to inflate the surface, used for soft 
+        correction of surface area distortions, default 0.1.
+    normalize : bool, optional
+        Normalize surface area of inflated surface to original
+        surface. Hard correction of surface area distortions
+        (forces surface area of inflated surface to be the same
+        as the original - may induce distortions of its own,
+        needs more testing). Default False.
     """
     new_vertices = vertices
     for _ in range(iterations):
 
         normals = compute_normals(vertices, faces)
 
-        new_vertices += normals * inflation_rate
+        new_vertices += normals * inflation_factor
 
     return new_vertices   
 
