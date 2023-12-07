@@ -21,7 +21,7 @@ eigen_args = ['surface', 'evals', 'emodes',
                'randomize', 'find_optimal', 'resample',
                'step', 'n_jobs', 'use_cholmod', 'permute',
                'distribution', 'shuffle', 'gen_rotations',
-               'add_res', 'parcellation']
+               'add_res']
 
 var_args = ['ns', 'pv', 'nh', 'knn', 'pv', 'nh', 'knn', 'n_jobs', 'seed']
 
@@ -94,54 +94,54 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
     # plot variogram
     # Instantiate surrogate map generator
     print('Surrogates computed, computing stats...')
-    if eigen_params['parcellation']:
-        parcellation = eigen_params['parcellation']
-        x = calc_parcellate(parcellation, data_input=x)
-        surrs = calc_parcellate(parcellation, data_input=surrs).T
-        generator = Base(x=x, D=D)
+    # if eigen_params['parcellation']:
+    #     parcellation = eigen_params['parcellation']
+    #     x = calc_parcellate(parcellation, data_input=x)
+    #     surrs = calc_parcellate(parcellation, data_input=surrs).T
+    #     generator = Base(x=x, D=D)
         
-        emp_var, u0 = generator.compute_smooth_variogram(x, return_h=True)
+    #     emp_var, u0 = generator.compute_smooth_variogram(x, return_h=True)
 
-        # Compute surrogate map variograms
-        surr_var = np.empty((nsurrs, generator.nh))
-        for i in range(nsurrs):
-            surr_var[i] = generator.compute_smooth_variogram(surrs[i])
+    #     # Compute surrogate map variograms
+    #     surr_var = np.empty((nsurrs, generator.nh))
+    #     for i in range(nsurrs):
+    #         surr_var[i] = generator.compute_smooth_variogram(surrs[i])
         
-    else:
-        if D or index is None:
-            print('No surface distance matrix given, calculating - may take a while...')
-            distmat = geodesic_distmat(eigen_params['surface'], n_jobs=eigen_params['n_jobs'])
-            d = os.path.dirname(__file__)
-            file = os.path.join(d, 'distmat.txt')
-            np.savetxt(file, distmat)
-            dict_dist = txt2memmap(file, output_dir=d)
-            D = np.load(dict_dist['distmat'])
-            index = np.load(dict_dist['index'])
-        generator = Sampled(x=x, D=D, index=index)
-    
-        nsurrs_var = nsurrs
-        if nsurrs > 50:
-            nsurrs_var = 50
-        # Compute target & surrogate map variograms
-        surr_var = np.empty((nsurrs_var, generator.nh))
-        emp_var_samples = np.empty((nsurrs_var, generator.nh))
-        u0_samples = np.empty((nsurrs_var, generator.nh))
-        for i in range(nsurrs_var):
-            idx = generator.sample()  # Randomly sample a subset of brain areas
-            v = generator.compute_variogram(generator.x, idx)
-            u = generator.D[idx, :]
-            umax = np.percentile(u, generator.pv)
-            uidx = np.where(u < umax)
-            emp_var_i, u0i = generator.smooth_variogram(
-                u=u[uidx], v=v[uidx], return_h=True)
-            emp_var_samples[i], u0_samples[i] = emp_var_i, u0i
-            # Surrogate
-            v_null = generator.compute_variogram(surrs[i], idx)
-            surr_var[i] = generator.smooth_variogram(
-                u=u[uidx], v=v_null[uidx], return_h=False)
+    # else:
+    if D or index is None:
+        print('No surface distance matrix given, calculating - may take a while...')
+        distmat = geodesic_distmat(eigen_params['surface'], n_jobs=eigen_params['n_jobs'])
+        d = os.path.dirname(__file__)
+        file = os.path.join(d, 'distmat.txt')
+        np.savetxt(file, distmat)
+        dict_dist = txt2memmap(file, output_dir=d)
+        D = np.load(dict_dist['distmat'])
+        index = np.load(dict_dist['index'])
+    generator = Sampled(x=x, D=D, index=index)
 
-        u0 = u0_samples.mean(axis=0)
-        emp_var = emp_var_samples.mean(axis=0)
+    nsurrs_var = nsurrs
+    if nsurrs > 50:
+        nsurrs_var = 50
+    # Compute target & surrogate map variograms
+    surr_var = np.empty((nsurrs_var, generator.nh))
+    emp_var_samples = np.empty((nsurrs_var, generator.nh))
+    u0_samples = np.empty((nsurrs_var, generator.nh))
+    for i in range(nsurrs_var):
+        idx = generator.sample()  # Randomly sample a subset of brain areas
+        v = generator.compute_variogram(generator.x, idx)
+        u = generator.D[idx, :]
+        umax = np.percentile(u, generator.pv)
+        uidx = np.where(u < umax)
+        emp_var_i, u0i = generator.smooth_variogram(
+            u=u[uidx], v=v[uidx], return_h=True)
+        emp_var_samples[i], u0_samples[i] = emp_var_i, u0i
+        # Surrogate
+        v_null = generator.compute_variogram(surrs[i], idx)
+        surr_var[i] = generator.smooth_variogram(
+            u=u[uidx], v=v_null[uidx], return_h=False)
+
+    u0 = u0_samples.mean(axis=0)
+    emp_var = emp_var_samples.mean(axis=0)
     
     #u0, emp_var, surr_var = variogram(x, surrs, D, index, **var_params)
 
