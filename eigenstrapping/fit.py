@@ -108,15 +108,15 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
     #         surr_var[i] = generator.compute_smooth_variogram(surrs[i])
         
     # else:
-    if D or index is None:
-        print('No surface distance matrix given, calculating - may take a while...')
-        distmat = geodesic_distmat(eigen_params['surface'], n_jobs=eigen_params['n_jobs'])
-        d = os.path.dirname(__file__)
-        file = os.path.join(d, 'distmat.txt')
-        np.savetxt(file, distmat)
-        dict_dist = txt2memmap(file, output_dir=d)
-        D = np.load(dict_dist['distmat'])
-        index = np.load(dict_dist['index'])
+    # if D or index is None:
+    #     print('No surface distance matrix given, calculating - may take a while...')
+    #     distmat = geodesic_distmat(eigen_params['surface'], n_jobs=eigen_params['n_jobs'])
+    #     d = os.path.dirname(__file__)
+    #     file = os.path.join(d, 'distmat.txt')
+    #     np.savetxt(file, distmat)
+    #     dict_dist = txt2memmap(file, output_dir=d)
+    #     D = np.load(dict_dist['distmat'])
+    #     index = np.load(dict_dist['index'])
     generator = Sampled(x=x, D=D, index=index)
 
     nsurrs_var = nsurrs
