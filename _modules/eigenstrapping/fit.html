@@ -188,15 +188,15 @@
     <span class="c1">#         surr_var[i] = generator.compute_smooth_variogram(surrs[i])</span>
         
     <span class="c1"># else:</span>
-    <span class="k">if</span> <span class="n">D</span> <span class="ow">or</span> <span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No surface distance matrix given, calculating - may take a while...&#39;</span><span class="p">)</span>
-        <span class="n">distmat</span> <span class="o">=</span> <span class="n">geodesic_distmat</span><span class="p">(</span><span class="n">eigen_params</span><span class="p">[</span><span class="s1">&#39;surface&#39;</span><span class="p">],</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">eigen_params</span><span class="p">[</span><span class="s1">&#39;n_jobs&#39;</span><span class="p">])</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s1">&#39;distmat.txt&#39;</span><span class="p">)</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">distmat</span><span class="p">)</span>
-        <span class="n">dict_dist</span> <span class="o">=</span> <span class="n">txt2memmap</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dict_dist</span><span class="p">[</span><span class="s1">&#39;distmat&#39;</span><span class="p">])</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dict_dist</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">])</span>
+    <span class="c1"># if D or index is None:</span>
+    <span class="c1">#     print(&#39;No surface distance matrix given, calculating - may take a while...&#39;)</span>
+    <span class="c1">#     distmat = geodesic_distmat(eigen_params[&#39;surface&#39;], n_jobs=eigen_params[&#39;n_jobs&#39;])</span>
+    <span class="c1">#     d = os.path.dirname(__file__)</span>
+    <span class="c1">#     file = os.path.join(d, &#39;distmat.txt&#39;)</span>
+    <span class="c1">#     np.savetxt(file, distmat)</span>
+    <span class="c1">#     dict_dist = txt2memmap(file, output_dir=d)</span>
+    <span class="c1">#     D = np.load(dict_dist[&#39;distmat&#39;])</span>
+    <span class="c1">#     index = np.load(dict_dist[&#39;index&#39;])</span>
     <span class="n">generator</span> <span class="o">=</span> <span class="n">Sampled</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="n">D</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
 
     <span class="n">nsurrs_var</span> <span class="o">=</span> <span class="n">nsurrs</span>
