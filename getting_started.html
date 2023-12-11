@@ -52,7 +52,6 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#quick-introduction-to-brain-maps-and-eigenmodes">Quick introduction to brain maps and eigenmodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#input-data-types">Input data types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#first-run">First run</a></li>
 </ul>
 </li>
@@ -102,24 +101,6 @@ this method (see <a class="reference internal" href="references.html#references"
 eigenmodes: they are orthogonal. By taking random rotations of them, one can
 create new brain maps with the same smoothness but randomized topology. The steps
 below will help you get started and build your own surrogate maps.</p>
-</section>
-<section id="input-data-types">
-<h2>Input data types<a class="headerlink" href="#input-data-types" title="Permalink to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> requires a few inputs:</p>
-<ul class="simple">
-<li><p>A brain map, i.e., a one-dimensional vector, and either:</p></li>
-<li><p>A surface mesh, i.e., a set of vertices and face indices</p></li>
-<li><p>A set of eigenmodes and corresponding eigenvalues</p></li>
-</ul>
-<p>For the first run, we will load all of these files from the example dataset,
-but let’s assume that these files have already been generated.</p>
-<p><code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> can handle a variety of inputs:</p>
-<ul class="simple">
-<li><p>Delimited <cite>*.txt</cite> files</p></li>
-<li><p>Neuroimaging files such as <cite>*.nii</cite>, <cite>*.gii</cite>, or <cite>*scalar.gii</cite></p></li>
-<li><p>Data and memory-mapped distance matrices written to <cite>*.npy</cite> files</p></li>
-<li><p>Numpy arrays and array-like objects</p></li>
-</ul>
 </section>
 <section id="first-run">
 <h2>First run<a class="headerlink" href="#first-run" title="Permalink to this heading"></a></h2>

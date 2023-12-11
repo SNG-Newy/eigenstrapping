@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meshes and mesh operations &mdash; eigenstrapping 0.0.1.10 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="References" href="../references.html" />
+    <link rel="prev" title="Eigenmode rotations" href="rotations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cortex.html">Tutorial 1: Generating surrogate maps on the cortex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_subcortex.html">Tutorial 2: Generating surrogate subcortical maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ownsurface.html">Tutorial 3: Generating surrogate maps on your own surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Eigenstrapping general usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotations.html">Eigenmode rotations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Meshes and mesh operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#remeshing">Remeshing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deriving-eigenmodes-from-a-mesh">Deriving eigenmodes from a mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transformations-and-co-registration-of-meshes">Transformations and co-registration of meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh-distance-calculations">Mesh distance calculations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-mesh-operations">Other mesh operations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Reference API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../usage.html">Usage</a></li>
+      <li class="breadcrumb-item active">Meshes and mesh operations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="meshes-and-mesh-operations">
+<span id="usage-geometry"></span><h1>Meshes and mesh operations<a class="headerlink" href="#meshes-and-mesh-operations" title="Permalink to this heading"></a></h1>
+<section id="remeshing">
+<span id="usage-geometry-remesh"></span><h2>Remeshing<a class="headerlink" href="#remeshing" title="Permalink to this heading"></a></h2>
+<p>Sometimes it is useful to remesh a triangular surface as a tetrahedral mesh and
+vice-versa - say, if one wants to derive 3D surfaces within subcortex. This routine
+is implemented within the <code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.geometry.remesh()</span></code> function, which
+automatically recognizes the surface type (triangles or tetrahedra) and maps the
+surface to the other type.</p>
+<p>For example, you have a hippocampal volume in MNI152 space (we can load this
+from the <a class="reference internal" href="../generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data" title="eigenstrapping.datasets.fetch_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.datasets.fetch_data()</span></code></a> function), you can remesh
+it from a volume to a triangular mesh. By default these will be generated in the
+same folder that the original volume/mesh is in.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping.datasets</span> <span class="kn">import</span> <span class="n">fetch_data</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_lh</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span>
+<span class="go">                name=&#39;brainmaps&#39;,</span>
+<span class="go">                hemi=&#39;lh&#39;,</span>
+<span class="go">                format=&#39;hippocampus&#39;</span>
+<span class="go">                )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_lh</span>
+<span class="go">&#39;/mnt/eigenstrapping_data/brainmaps/space-MNI152_res-2mm_hemi-lh_hippocampus.nii.gz&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping.geometry</span> <span class="kn">import</span> <span class="n">remesh</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_tria_lh</span> <span class="o">=</span> <span class="n">remesh</span><span class="p">(</span><span class="n">hipp_lh</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_tria_lh</span>
+<span class="go">&#39;/mnt/eigenstrapping_data/brainmaps/space-MNI152_res-2mm_hemi-lh_hippocampus.tria.vtk&#39;</span>
+</pre></div>
+</div>
+<p>You can also remesh from a triangular mesh to a tetrahedral one:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_tetra_lh</span> <span class="o">=</span> <span class="n">remesh</span><span class="p">(</span><span class="n">hipp_tria_lh</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_tetra_lh</span>
+<span class="go">&#39;/mnt/eigenstrapping_data/brainmaps/space-MNI152_res-2mm_hemi-lh_hippocampus.tria.tetra.vtk&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="deriving-eigenmodes-from-a-mesh">
+<span id="usage-geometry-eigenmodes"></span><h2>Deriving eigenmodes from a mesh<a class="headerlink" href="#deriving-eigenmodes-from-a-mesh" title="Permalink to this heading"></a></h2>
+<p>Deriving LBO vector solutions to the Helmholtz equation, or eigenmodes as we refer to them,
+is a fairly trivial process once a mesh has been defined. As graph representations of meshes
+are sparse by their very nature (on a triangular mesh, a single vertex
+only ever has three edges at the most; four in a tetrahedral mesh), we can use
+sparse methods of deriving these modes.</p>
+<p>We use the finite element method as implemented in <code class="docutils literal notranslate"><span class="pre">ShapeDNA</span></code>, the details
+of which can be found in the requisite papers in <a class="reference internal" href="../references.html#references"><span class="std std-ref">References</span></a>.
+The form matrices, A and B, are derived either through Cholesky decomposition
+using the <code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code> libraries, or LU decomposition in <code class="docutils literal notranslate"><span class="pre">scipy.sparse.splu</span></code>
+if the former is not installed. We recommend, if possible, to install the <code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code>
+libraries as Cholesky decomposition is much faster than LU.</p>
+<p>Let’s take our remeshed tetrahedral hippocampus and use <a class="reference internal" href="../generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig" title="eigenstrapping.geometry.calc_eig"><code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_eig()</span></code></a>:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">geometry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tetra</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="n">hipp_tetra_lh</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># in this case, we&#39;ll use eigenstrapping.geometry.calc_eig without sksparse</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">calc_eig</span><span class="p">(</span><span class="n">tetra</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="go">TetMesh with regular Laplace</span>
+<span class="go">Solver: spsolve (LU decomposition) ...</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># by default, this function will remove the first (constant) mode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># this behavior can be changed by setting `return_zero=True` in</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># the calc_eig function</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">emodes</span>
+<span class="go">array([[ 0.01210057,  0.01249517,  0.00465954, ..., -0.00146934,</span>
+<span class="go">        -0.00544099,  0.0271714 ],</span>
+<span class="go">       [ 0.01209385,  0.01253431,  0.00548657, ..., -0.00434336,</span>
+<span class="go">        -0.00504929,  0.0242422 ],</span>
+<span class="go">       [ 0.01198019,  0.01202892,  0.00418164, ..., -0.00095343,</span>
+<span class="go">        -0.0038022 ,  0.02745249],</span>
+<span class="go">       ...,</span>
+<span class="go">       [-0.00412068, -0.01866016,  0.00250916, ...,  0.00476944,</span>
+<span class="go">        -0.00805506, -0.00263126],</span>
+<span class="go">       [ 0.00052041, -0.01061745, -0.00131715, ...,  0.00542975,</span>
+<span class="go">        -0.00041589,  0.01133534],</span>
+<span class="go">       [-0.01403812, -0.0024371 ,  0.00991763, ...,  0.02579329,</span>
+<span class="go">        -0.02810065,  0.00869789]], dtype=float32)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">evals</span>
+<span class="go">array([0.00365112, 0.01341067, 0.02674828, 0.03218102, 0.04489195,</span>
+<span class="go">       0.05093223, 0.06653866, 0.07089102, 0.09374754, 0.09695608,</span>
+<span class="go">       0.10020526, 0.11701339, 0.12567881, 0.13450024, 0.14623912,</span>
+<span class="go">       0.15450524, 0.15965985, 0.16787478, 0.17781733, 0.18272817],</span>
+<span class="go">      dtype=float32)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># as you can see, the first column of `emodes` is not constant.</span>
+</pre></div>
+</div>
+<p>Now, let’s plot the first non-constant eigenmode on the surface of the mesh.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">plotting</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">meshplot</span><span class="p">(</span><span class="n">hipp_tetra_lh</span><span class="p">,</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="tutorials/_static/examples/example_figs/geometry1.png"><img alt="tutorials/_static/examples/example_figs/geometry1.png" class="align-center" src="tutorials/_static/examples/example_figs/geometry1.png" /></a>
+</section>
+<section id="transformations-and-co-registration-of-meshes">
+<span id="usage-geometry-transform"></span><h2>Transformations and co-registration of meshes<a class="headerlink" href="#transformations-and-co-registration-of-meshes" title="Permalink to this heading"></a></h2>
+<p>Beyond operations on a single mesh, <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> has implemented transformations
+and resampling of meshes to standard spaces (fsLR, fsaverage, MNI152).
+Additionally, you can resample one mesh in one space to another mesh-space,
+or co-register two meshes to the same space.</p>
+<p>We use Connectome Workbench tools to perform this task, wrapped in the
+<a class="reference internal" href="../api.html#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> module.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="mesh-distance-calculations">
+<span id="usage-geometry-distance"></span><h2>Mesh distance calculations<a class="headerlink" href="#mesh-distance-calculations" title="Permalink to this heading"></a></h2>
+<p>We also provide geodesic (surface) and Euclidean (volumetric) distance calculations
+for meshes</p>
+</section>
+<section id="other-mesh-operations">
+<h2>Other mesh operations<a class="headerlink" href="#other-mesh-operations" title="Permalink to this heading"></a></h2>
+<p>Alongside the above functions, there are several useful tools within
+the <a class="reference internal" href="../api.html#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> module, including inflation of
+surfaces (using Connectome Workbench tools):</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>There is also</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rotations.html" class="btn btn-neutral float-left" title="Eigenmode rotations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../references.html" class="btn btn-neutral float-right" title="References" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
