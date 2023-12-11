@@ -111,45 +111,96 @@ Now, let's plot the first non-constant eigenmode on the surface of the mesh.
     >>> plotting.meshplot(hipp_tetra_lh, emodes[0], vrange=0.01, colorbar=True)
     
 .. image:: ../_static/examples/example_figs/geometry1.png
-   :scale: 70%
+   :scale: 110%
    :align: center
 
-.. _usage_geometry_transform:
-
-Transformations and co-registration of meshes
----------------------------------------------
-
-Beyond operations on a single mesh, ``eigenstrapping`` has implemented transformations
-and resampling of meshes to standard spaces (fsLR, fsaverage, MNI152).
-Additionally, you can resample one mesh in one space to another mesh-space,
-or co-register two meshes to the same space.
-
-We use Connectome Workbench tools to perform this task, wrapped in the
-:mod:`eigenstrapping.geometry` module.
-
-.. code-block:: py
-
-    >>> 
-    
 .. _usage_geometry_distance:
 
 Mesh distance calculations
 --------------------------
 
 We also provide geodesic (surface) and Euclidean (volumetric) distance calculations
-for meshes
+for meshes. Geodesic distance calculation is performed using a heat kernel on
+each vertex, and takes about 2 hours for a 32k standard hemisphere (fsLR). See the
+paper in :ref:`References <references>` for specific details on the implementation.
+
+In order to calculate the geodesic distance matrix, we use the :func:`eigenstrapping.geometry.geodesic_distmat`
+function, which takes an input mesh:
+
+.. code-block:: py
+
+    >>> from eigenstrapping import datasets
     
+    >>> surf_lh, *_ = datasets.load_surface_examples(with_surface=True)
+    >>> surf_lh
+    '/mnt/eigenstrapping-data/surfaces/space-fsaverage_den-10k_hemi-lh_pial.surf.gii'
+    
+    >>> mesh = geometry.load_mesh(surf_lh)
+    >>> # for our purposes, we won't use sksparse libraries, but to do so, we
+    >>> # pass `use_cholmod=True` to the function
+    >>> distmat_lh = geometry.geodesic_distmat(mesh, use_cholmod=False)
+    # eventually ...
+    
+    >>> distmat_lh.shape
+    (10242, 10242)
+    
+    >>> distmat_lh
+    array([[  0.        ,  91.41330719,  73.28165436, ..., 184.62254333,
+            186.47727966, 187.92669678],
+           [ 91.41330719,   0.        ,  81.62067413, ..., 127.93047333,
+            129.78521729, 131.2346344 ],
+           [ 73.28165436,  81.62067413,   0.        , ..., 114.22114563,
+            116.07588959, 117.52529907],
+           ...,
+           [184.62254333, 127.93047333, 114.22114563, ...,   0.        ,
+              2.80057883,   4.78903866],
+           [186.47727966, 129.78521729, 116.07588959, ...,   2.80057883,
+              0.        ,   1.98845983],
+           [187.92669678, 131.2346344 , 117.52529907, ...,   4.78903866,
+              1.98845983,   0.        ]])
+              
+You can speed things up in the :func:`eigenstrapping.geometry.geodesic_distmat`
+function by passing `n_jobs=<number of workers>`. For instance, to use eight threads,
+you would pass `n_jobs=8`. To use every available thread, pass `n_jobs=-1`.
+
+Euclidean distance calculation is performed in a similar way:
+
+.. code-block:: py
+
+    >>> distmat_lh = geometry.euclidean_distmat(mesh) # much quicker than geodesic
+    >>> distmat_lh.shape
+    (10242, 10242)
+    
+    >>> distmat_lh
+    array([[ 0.        , 54.72087326, 37.01728554, ..., 94.95060009,
+            93.16259385, 92.16275463],
+           [54.72087326,  0.        , 61.99785175, ..., 98.85110323,
+            98.2701815 , 98.01616578],
+           [37.01728554, 61.99785175,  0.        , ..., 78.64858645,
+            77.51088511, 77.12512891],
+           ...,
+           [94.95060009, 98.85110323, 78.64858645, ...,  0.        ,
+             2.80057878,  4.7547238 ],
+           [93.16259385, 98.2701815 , 77.51088511, ...,  2.80057878,
+             0.        ,  1.98845989],
+           [92.16275463, 98.01616578, 77.12512891, ...,  4.7547238 ,
+             1.98845989,  0.        ]])
+             
+Notice the pronounced difference between the two methods. This is because the
+cortex is constructed as a 2D sheet (basically the surface of a sphere), so it
+is not advisable to use Euclidean distance calculations. For the subcortical
+volumes, you would use the Euclidean distance.    
+
+.. _usage_geometry_other:
 
 Other mesh operations
 ---------------------
 
 Alongside the above functions, there are several useful tools within
-the :mod:`eigenstrapping.geometry` module, including inflation of
-surfaces (using Connectome Workbench tools):
+the :mod:`eigenstrapping.geometry` module, including calculation of vertex
+normals, which may be useful for calculating the action of a function on the mesh:
 
 .. code-block:: py
 
-    >>>
+    >>> 
     
-    
-There is also 
