@@ -89,6 +89,7 @@
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Delaunay</span><span class="p">,</span> <span class="n">KDTree</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">squareform</span><span class="p">,</span> <span class="n">pdist</span>
 <span class="kn">from</span> <span class="nn">brainspace</span> <span class="kn">import</span> <span class="n">mesh</span> <span class="k">as</span> <span class="n">me</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">splu</span>
@@ -98,10 +99,13 @@
 <span class="kn">from</span> <span class="nn">vtk</span> <span class="kn">import</span> <span class="p">(</span><span class="n">vtkThreshold</span><span class="p">,</span> <span class="n">vtkDataObject</span><span class="p">,</span> <span class="n">vtkGeometryFilter</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">brainspace.utils.parcellation</span> <span class="kn">import</span> <span class="n">relabel_consecutive</span>
 <span class="kn">from</span> <span class="nn">brainspace.mesh.mesh_creation</span> <span class="kn">import</span> <span class="n">build_polydata</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_suppress</span><span class="p">,</span> <span class="n">_print</span><span class="p">,</span> <span class="n">is_string_like</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_suppress</span><span class="p">,</span> <span class="n">_print</span><span class="p">,</span> <span class="n">is_string_like</span><span class="p">,</span>
+                    <span class="n">enablePrint</span><span class="p">,</span> <span class="n">blockPrint</span><span class="p">)</span>
 
 <span class="n">ASSOC_CELLS</span> <span class="o">=</span> <span class="n">vtkDataObject</span><span class="o">.</span><span class="n">FIELD_ASSOCIATION_CELLS</span>
 <span class="n">ASSOC_POINTS</span> <span class="o">=</span> <span class="n">vtkDataObject</span><span class="o">.</span><span class="n">FIELD_ASSOCIATION_POINTS</span>
+
+<span class="n">blockPrint</span><span class="p">()</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Helper utilities for geometry and registration</span>
@@ -176,10 +180,10 @@
     
 <span class="c1">#     return transformed_image</span>
 
-<div class="viewcode-block" id="gaussian"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.gaussian.html#eigenstrapping.geometry.gaussian">[docs]</a><span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stddev</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">stddev</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span></div>
+<span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stddev</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">stddev</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
 
-<div class="viewcode-block" id="estimate_fwhm"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.estimate_fwhm.html#eigenstrapping.geometry.estimate_fwhm">[docs]</a><span class="k">def</span> <span class="nf">estimate_fwhm</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">estimate_fwhm</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
     <span class="c1"># Find the maximum value and its position in the image</span>
     <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="n">max_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -206,11 +210,11 @@
     <span class="c1"># take the average</span>
     <span class="n">fwhm</span> <span class="o">=</span> <span class="p">(</span><span class="n">row_fwhm</span> <span class="o">+</span> <span class="n">col_fwhm</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
     
-    <span class="k">return</span> <span class="n">fwhm</span></div>
+    <span class="k">return</span> <span class="n">fwhm</span>
     
-<div class="viewcode-block" id="resel_count"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.resel_count.html#eigenstrapping.geometry.resel_count">[docs]</a><span class="k">def</span> <span class="nf">resel_count</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">fwhm</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">resel_count</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">fwhm</span><span class="p">):</span>
     <span class="c1"># returns resel count of image given FWHM</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">/</span> <span class="n">fwhm</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">/</span> <span class="n">fwhm</span><span class="p">)</span>
         
 <div class="viewcode-block" id="get_tkrvox2ras"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.get_tkrvox2ras.html#eigenstrapping.geometry.get_tkrvox2ras">[docs]</a><span class="k">def</span> <span class="nf">get_tkrvox2ras</span><span class="p">(</span><span class="n">voldim</span><span class="p">,</span> <span class="n">voxres</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate transformation matrix to switch between tetrahedral and volume space.</span>
@@ -272,8 +276,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">enablePrint</span><span class="p">()</span>
         <span class="n">func</span> <span class="o">=</span> <span class="n">_print</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="n">blockPrint</span><span class="p">()</span>
         <span class="n">func</span> <span class="o">=</span> <span class="n">_suppress</span>
     
     <span class="n">voldir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
@@ -414,8 +420,10 @@
         <span class="n">outfile</span> <span class="o">=</span> <span class="n">volname</span> <span class="o">+</span> <span class="s1">&#39;.tria.&#39;</span> <span class="o">+</span> <span class="n">oformat</span>
     
     <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">enablePrint</span><span class="p">()</span>
         <span class="n">func</span> <span class="o">=</span> <span class="n">_print</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="n">blockPrint</span><span class="p">()</span>
         <span class="n">func</span> <span class="o">=</span> <span class="n">_suppress</span>
     
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;mri_binarize --i &#39;</span> <span class="o">+</span> <span class="n">volume</span> <span class="o">+</span> <span class="s1">&#39; --match 1&#39;</span> <span class="o">+</span> <span class="s1">&#39; --o &#39;</span> <span class="o">+</span> <span class="n">tmpf</span>
@@ -535,7 +543,9 @@
         <span class="n">allts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="n">tria</span> <span class="o">=</span> <span class="n">allt</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="n">blockPrint</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">enablePrint</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; triangles on boundary.&quot;</span><span class="p">)</span>
     <span class="c1"># if we have tetra function, map these to the boundary triangles</span>
         
@@ -590,7 +600,7 @@
     
     <span class="k">return</span> <span class="n">tria_file</span></div>
 
-<span class="k">def</span> <span class="nf">load_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+<div class="viewcode-block" id="load_mesh"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.load_mesh.html#eigenstrapping.geometry.load_mesh">[docs]</a><span class="k">def</span> <span class="nf">load_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mesh loader function.</span>
 
@@ -621,7 +631,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown file structure, check input&#39;</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">GetPoints</span><span class="p">(),</span> <span class="n">m</span><span class="o">.</span><span class="n">GetCells2D</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">GetPoints</span><span class="p">(),</span> <span class="n">m</span><span class="o">.</span><span class="n">GetCells2D</span><span class="p">())</span></div>
     
 
 <div class="viewcode-block" id="create_temp_surface"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.create_temp_surface.html#eigenstrapping.geometry.create_temp_surface">[docs]</a><span class="k">def</span> <span class="nf">create_temp_surface</span><span class="p">(</span><span class="n">surface_input</span><span class="p">,</span> <span class="n">surface_output_filename</span><span class="p">):</span>
@@ -651,7 +661,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="get_indices"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.get_indices.html#eigenstrapping.geometry.get_indices">[docs]</a><span class="k">def</span> <span class="nf">get_indices</span><span class="p">(</span><span class="n">surface_original</span><span class="p">,</span> <span class="n">surface_new</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_indices</span><span class="p">(</span><span class="n">surface_original</span><span class="p">,</span> <span class="n">surface_new</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract indices of vertices of the two surfaces that match.</span>
 
 <span class="sd">    Parameters</span>
@@ -672,7 +682,7 @@
         <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">surface_new</span><span class="o">.</span><span class="n">Points</span><span class="p">[</span><span class="n">i</span><span class="p">,:],</span><span class="n">surface_original</span><span class="o">.</span><span class="n">Points</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">indices</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="n">indices</span></div>
+    <span class="k">return</span> <span class="n">indices</span>
 
 <div class="viewcode-block" id="calc_eig"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig">[docs]</a><span class="k">def</span> <span class="nf">calc_eig</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">num_modes</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the eigenvalues and eigenmodes of a surface.</span>
@@ -1118,7 +1128,7 @@
 
     <span class="k">return</span> <span class="n">tet_norm</span></div>
 
-<div class="viewcode-block" id="geodesic_distmat"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat">[docs]</a><span class="k">def</span> <span class="nf">geodesic_distmat</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="geodesic_distmat"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat">[docs]</a><span class="k">def</span> <span class="nf">geodesic_distmat</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute geodesic distance using the heat diffusion method built into LaPy</span>
 <span class="sd">        Based on: doi/10.1145/2516971.2516977</span>
@@ -1127,7 +1137,7 @@
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    surf : Shape class</span>
+<span class="sd">    surf : lapy compatible object</span>
 <span class="sd">        Input surface</span>
 <span class="sd">    n_jobs : int, optional</span>
 <span class="sd">        Number of workers to use for parallel calls to ._thread_method(),</span>
@@ -1139,14 +1149,10 @@
 <span class="sd">        Distance matrix of every vertex to every other vertex</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">surf</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">surf</span><span class="p">)</span><span class="o">.</span><span class="n">agg_data</span><span class="p">()</span>
-    <span class="n">tria</span> <span class="o">=</span> <span class="n">TriaMesh</span><span class="p">(</span><span class="n">surf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">import_optional_dependency</span><span class="p">(</span><span class="s1">&#39;sksparse&#39;</span><span class="p">)</span>
-        <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">True</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span>
-    
+    <span class="n">blockPrint</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">enablePrint</span><span class="p">()</span>
+        
     <span class="n">fem</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">lump</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="n">use_cholmod</span><span class="p">)</span>
         
     <span class="n">D</span> <span class="o">=</span> <span class="n">__distance_threading__</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
@@ -1194,7 +1200,7 @@
         
     <span class="k">return</span> <span class="n">d</span>
 
-<div class="viewcode-block" id="diffusion"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.diffusion.html#eigenstrapping.geometry.diffusion">[docs]</a><span class="k">def</span> <span class="nf">diffusion</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">vids</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">diffusion</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">fem</span><span class="p">,</span> <span class="n">vids</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes heat diffusion from initial vertices in vids using</span>
 <span class="sd">    backward Euler solution for time t [MO2]:</span>
@@ -1237,7 +1243,26 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solver: spsolve (LU decomposition) ...&quot;</span><span class="p">)</span>
         <span class="n">lu</span> <span class="o">=</span> <span class="n">splu</span><span class="p">(</span><span class="n">hmat</span><span class="p">)</span>
         <span class="n">vfunc</span> <span class="o">=</span> <span class="n">lu</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">b0</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">vfunc</span></div>
+    <span class="k">return</span> <span class="n">vfunc</span>
+
+<div class="viewcode-block" id="euclidean_distmat"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.euclidean_distmat.html#eigenstrapping.geometry.euclidean_distmat">[docs]</a><span class="k">def</span> <span class="nf">euclidean_distmat</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates Euclidean distance matrix of the mesh in `mesh`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : lapy compatible object</span>
+<span class="sd">        TriaMesh or TetMesh</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray of shape (N,N)</span>
+<span class="sd">        Euclidean distance matrix of mesh with `N` vertices.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">verts</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">v</span>
+    
+    <span class="k">return</span> <span class="n">squareform</span><span class="p">(</span><span class="n">pdist</span><span class="p">(</span><span class="n">verts</span><span class="p">))</span></div>
 
 <span class="sd">&quot;&quot;&quot;Handle optional dependency imports.</span>
 

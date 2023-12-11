@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.geometry.get_indices &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.geometry.euclidean_distmat &mdash; eigenstrapping 0.0.1.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
@@ -26,8 +26,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eigenstrapping.geometry.calc_eig" href="eigenstrapping.geometry.calc_eig.html" />
-    <link rel="prev" title="eigenstrapping.geometry.create_temp_surface" href="eigenstrapping.geometry.create_temp_surface.html" /> 
+    <link rel="next" title="eigenstrapping.plotting.vrange" href="eigenstrapping.plotting.vrange.html" />
+    <link rel="prev" title="eigenstrapping.geometry.geodesic_distmat" href="eigenstrapping.geometry.geodesic_distmat.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,25 +59,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.gaussian.html">eigenstrapping.geometry.gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.estimate_fwhm.html">eigenstrapping.geometry.estimate_fwhm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.resel_count.html">eigenstrapping.geometry.resel_count</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.get_tkrvox2ras.html">eigenstrapping.geometry.get_tkrvox2ras</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.make_tria_file.html">eigenstrapping.geometry.make_tria_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.create_temp_surface.html">eigenstrapping.geometry.create_temp_surface</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.geometry.get_indices</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.geometry.get_indices"><code class="docutils literal notranslate"><span class="pre">get_indices()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_eig.html">eigenstrapping.geometry.calc_eig</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_surface_eigenmodes.html">eigenstrapping.geometry.calc_surface_eigenmodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.load_mesh.html">eigenstrapping.geometry.load_mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.compute_normals.html">eigenstrapping.geometry.compute_normals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.inflate_mesh.html">eigenstrapping.geometry.inflate_mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.nearest_neighbor.html">eigenstrapping.geometry.nearest_neighbor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_volume.html">eigenstrapping.geometry.calc_volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.normalize_vtk.html">eigenstrapping.geometry.normalize_vtk</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.geodesic_distmat.html">eigenstrapping.geometry.geodesic_distmat</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.diffusion.html">eigenstrapping.geometry.diffusion</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.geometry.euclidean_distmat</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.geometry.euclidean_distmat"><code class="docutils literal notranslate"><span class="pre">euclidean_distmat()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></li>
@@ -103,7 +100,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api.html">Reference API</a></li>
-      <li class="breadcrumb-item active">eigenstrapping.geometry.get_indices</li>
+      <li class="breadcrumb-item active">eigenstrapping.geometry.euclidean_distmat</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -112,24 +109,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="eigenstrapping-geometry-get-indices">
-<h1>eigenstrapping.geometry.get_indices<a class="headerlink" href="#eigenstrapping-geometry-get-indices" title="Permalink to this heading"></a></h1>
+  <section id="eigenstrapping-geometry-euclidean-distmat">
+<h1>eigenstrapping.geometry.euclidean_distmat<a class="headerlink" href="#eigenstrapping-geometry-euclidean-distmat" title="Permalink to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="eigenstrapping.geometry.get_indices">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">get_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface_original</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#get_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.get_indices" title="Permalink to this definition"></a></dt>
-<dd><p>Extract indices of vertices of the two surfaces that match.</p>
+<dt class="sig sig-object py" id="eigenstrapping.geometry.euclidean_distmat">
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">euclidean_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#euclidean_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.euclidean_distmat" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates Euclidean distance matrix of the mesh in <cite>mesh</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>surface_original</strong> (<em>brainspace compatible object</em>) – Loaded vtk object corresponding to a surface triangular mesh</p></li>
-<li><p><strong>surface_new</strong> (<em>brainspace compatible object</em>) – Loaded vtk object corresponding to a surface triangular mesh</p></li>
-</ul>
+<dd class="field-odd"><p><strong>mesh</strong> (<em>lapy compatible object</em>) – TriaMesh or TetMesh</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>indices</strong> – indices of vertices</p>
+<dd class="field-even"><p>Euclidean distance matrix of mesh with <cite>N</cite> vertices.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>array</p>
+<dd class="field-odd"><p>ndarray of shape (N,N)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -140,8 +134,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="eigenstrapping.geometry.create_temp_surface.html" class="btn btn-neutral float-left" title="eigenstrapping.geometry.create_temp_surface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="eigenstrapping.geometry.calc_eig.html" class="btn btn-neutral float-right" title="eigenstrapping.geometry.calc_eig" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="eigenstrapping.geometry.geodesic_distmat.html" class="btn btn-neutral float-left" title="eigenstrapping.geometry.geodesic_distmat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eigenstrapping.plotting.vrange.html" class="btn btn-neutral float-right" title="eigenstrapping.plotting.vrange" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

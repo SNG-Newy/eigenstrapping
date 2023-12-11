@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.plotting.flatplot &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.plotting.meshplot &mdash; eigenstrapping 0.0.1.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
@@ -26,8 +26,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eigenstrapping.plotting.meshplot" href="eigenstrapping.plotting.meshplot.html" />
-    <link rel="prev" title="eigenstrapping.plotting.csplot" href="eigenstrapping.plotting.csplot.html" /> 
+    <link rel="next" title="eigenstrapping.rotations.direct_method" href="eigenstrapping.rotations.direct_method.html" />
+    <link rel="prev" title="eigenstrapping.plotting.flatplot" href="eigenstrapping.plotting.flatplot.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -62,11 +62,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.plotting.vrange.html">eigenstrapping.plotting.vrange</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.plotting.csplot.html">eigenstrapping.plotting.csplot</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.plotting.flatplot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.plotting.flatplot"><code class="docutils literal notranslate"><span class="pre">flatplot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.plotting.flatplot.html">eigenstrapping.plotting.flatplot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eigenstrapping.plotting.meshplot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.plotting.meshplot"><code class="docutils literal notranslate"><span class="pre">meshplot()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.plotting.meshplot.html">eigenstrapping.plotting.meshplot</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a></li>
@@ -91,7 +91,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api.html">Reference API</a></li>
-      <li class="breadcrumb-item active">eigenstrapping.plotting.flatplot</li>
+      <li class="breadcrumb-item active">eigenstrapping.plotting.meshplot</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -100,24 +100,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="eigenstrapping-plotting-flatplot">
-<h1>eigenstrapping.plotting.flatplot<a class="headerlink" href="#eigenstrapping-plotting-flatplot" title="Permalink to this heading"></a></h1>
+  <section id="eigenstrapping-plotting-meshplot">
+<h1>eigenstrapping.plotting.meshplot<a class="headerlink" href="#eigenstrapping-plotting-meshplot" title="Permalink to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="eigenstrapping.plotting.flatplot">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.plotting.</span></span><span class="sig-name descname"><span class="pre">flatplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scalars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hemisphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/plotting.html#flatplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.plotting.flatplot" title="Permalink to this definition"></a></dt>
-<dd><p>Automated plotting of cortical surfaces. Generates a figure of
-a scalar brainmap <cite>y</cite> and returns <cite>fig</cite> and <cite>ax</cite> handles for
-further use (if needed). Plots on the fs_LR_32k freesurfer-type “flat” surface.
-Suitable for use with data registered to CIFTI 32k space only.</p>
+<dt class="sig sig-object py" id="eigenstrapping.plotting.meshplot">
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.plotting.</span></span><span class="sig-name descname"><span class="pre">meshplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/plotting.html#meshplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.plotting.meshplot" title="Permalink to this definition"></a></dt>
+<dd><p>Automated plotting of surface in <cite>mesh</cite>. <cite>mesh</cite> must be a <cite>*.vtk</cite>-like file
+or a list-like of arrays (<cite>vertices</cite>, <cite>faces</cite>). If given, <cite>scalars</cite> must be a 1D vector
+and have the same number of entries as the longest axis of <cite>vertices</cite>. If
+not given as default, function simply plots gray surface (<cite>cmap</cite>, <cite>vrange</cite> do
+nothing)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scalars</strong> (<em>np.ndarray</em><em> of </em><em>shape=</em><em>(</em><em>32492</em><em>,</em><em>)</em>) – Brainmap to visualize registered to standard fs_LR_32k CIFTI space.</p></li>
-<li><p><strong>hemisphere</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Hemisphere to plot. The default is ‘left’.</p></li>
-<li><p><strong>vrange</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>, </em><em>optional</em>) – Maximum range of values to plot. Values higher or lower are truncated.
-Default is (-4, 4).</p></li>
-<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – matplotlib.cm color types. The default is ‘viridis’.</p></li>
-<li><p><strong>colorbar</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, plots the colorbar.</p></li>
+<li><p><strong>mesh</strong> (<em>file</em><em> or </em><em>list-like</em>) – Surface mesh to plot <cite>scalars</cite> on.</p></li>
+<li><p><strong>scalars</strong> (<em>1D ndarray</em><em>, </em><em>optional</em>) – 1D vector on mesh. Default None (not given)</p></li>
+<li><p><strong>vrange</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>, </em><em>optional</em>) – Min and max range to visualize <cite>scalars</cite>. Anything higher or lower is truncated.
+If one number is given (positive or negative) then assumed to be maximum
+and sign of <cite>vrange</cite> is flipped to give minimum. Default is (-4, 4).</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap of <cite>scalars</cite>. Accepts recognized <code class="docutils literal notranslate"><span class="pre">matplotlib.cm</span></code> types.
+Default is ‘viridis’.</p></li>
+<li><p><strong>colorbar</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Add colorbar to plot. Default is False.</p></li>
+<li><p><strong>cam</strong> (<em>list-like</em><em>, </em><em>optional</em>) – Elevation and azimuthal angle for camera. Default [30, 60] i.e., elev=30, azim=60.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -128,9 +132,6 @@ Default is (-4, 4).</p></li>
 </p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>If there are NaNs present in the brainmap <cite>y</cite>, these are masked out
-of the plotting. See <code class="docutils literal notranslate"><span class="pre">nilearn.plotting</span></code></p>
 </dd></dl>
 
 <div style='clear:both'></div></section>
@@ -139,8 +140,8 @@ of the plotting. See <code class="docutils literal notranslate"><span class="pre
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="eigenstrapping.plotting.csplot.html" class="btn btn-neutral float-left" title="eigenstrapping.plotting.csplot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="eigenstrapping.plotting.meshplot.html" class="btn btn-neutral float-right" title="eigenstrapping.plotting.meshplot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="eigenstrapping.plotting.flatplot.html" class="btn btn-neutral float-left" title="eigenstrapping.plotting.flatplot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eigenstrapping.rotations.direct_method.html" class="btn btn-neutral float-right" title="eigenstrapping.rotations.direct_method" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

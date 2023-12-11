@@ -83,6 +83,8 @@
 <span class="kn">from</span> <span class="nn">netneurotools</span> <span class="kn">import</span> <span class="n">datasets</span> <span class="k">as</span> <span class="n">nndata</span>
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
 <span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">image</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -106,6 +108,14 @@
 <span class="sd">Used by :func:`read_annot` and :func:`write_annot`.  All data (apart from</span>
 <span class="sd">strings) in an `.annot` file is stored as big-endian int32.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Disable</span>
+<span class="k">def</span> <span class="nf">blockPrint</span><span class="p">():</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    
+<span class="c1"># Restore</span>
+<span class="k">def</span> <span class="nf">enablePrint</span><span class="p">():</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span>
 
 <span class="k">def</span> <span class="nf">_suppress</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">,</span>

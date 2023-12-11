@@ -179,7 +179,7 @@
     
     <span class="k">return</span> <span class="n">data_lh</span><span class="p">,</span> <span class="n">data_rh</span></div>
 
-<div class="viewcode-block" id="load_distmat"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat">[docs]</a><span class="k">def</span> <span class="nf">load_distmat</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">parcellated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="load_distmat"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat">[docs]</a><span class="k">def</span> <span class="nf">load_distmat</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">parcellated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Downloads geodesic distance matrices. If the dense distance matrix is retrieved, </span>
 <span class="sd">    there is an option to return the sorted distance matrix and index memmapped, ala</span>
@@ -226,11 +226,15 @@
     <span class="n">distmat</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distmat&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span>
                          <span class="n">hemi</span><span class="o">=</span><span class="n">hemi</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;dense&#39;</span><span class="p">)</span>
     
-    <span class="n">outfiles</span> <span class="o">=</span> <span class="n">txt2memmap</span><span class="p">(</span><span class="n">distmat</span><span class="p">,</span> <span class="n">get_data_dir</span><span class="p">(</span><span class="n">data_dir</span><span class="p">))</span>
-    <span class="n">D</span> <span class="o">=</span> <span class="n">load_memmap</span><span class="p">(</span><span class="n">outfiles</span><span class="p">[</span><span class="s1">&#39;distmat&#39;</span><span class="p">])</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="n">load_memmap</span><span class="p">(</span><span class="n">outfiles</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">])</span>
-        
-    <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">index</span></div>
+    <span class="k">if</span> <span class="n">sort</span><span class="p">:</span>
+        <span class="n">outfiles</span> <span class="o">=</span> <span class="n">txt2memmap</span><span class="p">(</span><span class="n">distmat</span><span class="p">,</span> <span class="n">get_data_dir</span><span class="p">(</span><span class="n">data_dir</span><span class="p">))</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">load_memmap</span><span class="p">(</span><span class="n">outfiles</span><span class="p">[</span><span class="s1">&#39;distmat&#39;</span><span class="p">])</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">load_memmap</span><span class="p">(</span><span class="n">outfiles</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">])</span>
+            
+        <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">index</span>
+    
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">distmat</span></div>
 
 <div class="viewcode-block" id="load_subcort"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort">[docs]</a><span class="k">def</span> <span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;thalamus&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>

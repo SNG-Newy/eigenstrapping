@@ -100,16 +100,13 @@ Reference API
    :template: function.rst
    :toctree: generated/
 
-   eigenstrapping.geometry.gaussian
-   eigenstrapping.geometry.estimate_fwhm
-   eigenstrapping.geometry.resel_count
    eigenstrapping.geometry.get_tkrvox2ras
    eigenstrapping.geometry.make_tetra_file
    eigenstrapping.geometry.make_tria_file
    eigenstrapping.geometry.create_temp_surface
-   eigenstrapping.geometry.get_indices
    eigenstrapping.geometry.calc_eig
    eigenstrapping.geometry.calc_surface_eigenmodes
+   eigenstrapping.geometry.load_mesh
    eigenstrapping.geometry.compute_normals
    eigenstrapping.geometry.inflate_mesh
    eigenstrapping.geometry.nearest_neighbor
@@ -121,7 +118,7 @@ Reference API
    eigenstrapping.geometry.write_label
    eigenstrapping.geometry.read_morph_data
    eigenstrapping.geometry.geodesic_distmat
-   eigenstrapping.geometry.diffusion
+   eigenstrapping.geometry.euclidean_distmat
    
 .. _ref_plotting::
 
@@ -141,6 +138,7 @@ Reference API
    
    eigenstrapping.plotting.csplot
    eigenstrapping.plotting.flatplot
+   eigenstrapping.plotting.meshplot
 
 .. _ref_rotations::
 

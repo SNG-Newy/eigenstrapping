@@ -26,7 +26,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eigenstrapping.geometry.diffusion" href="eigenstrapping.geometry.diffusion.html" />
+    <link rel="next" title="eigenstrapping.geometry.euclidean_distmat" href="eigenstrapping.geometry.euclidean_distmat.html" />
     <link rel="prev" title="eigenstrapping.geometry.normalize_vtk" href="eigenstrapping.geometry.normalize_vtk.html" /> 
 </head>
 
@@ -59,15 +59,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.gaussian.html">eigenstrapping.geometry.gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.estimate_fwhm.html">eigenstrapping.geometry.estimate_fwhm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.resel_count.html">eigenstrapping.geometry.resel_count</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.get_tkrvox2ras.html">eigenstrapping.geometry.get_tkrvox2ras</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.make_tria_file.html">eigenstrapping.geometry.make_tria_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.create_temp_surface.html">eigenstrapping.geometry.create_temp_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.get_indices.html">eigenstrapping.geometry.get_indices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_eig.html">eigenstrapping.geometry.calc_eig</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.calc_surface_eigenmodes.html">eigenstrapping.geometry.calc_surface_eigenmodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.load_mesh.html">eigenstrapping.geometry.load_mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.compute_normals.html">eigenstrapping.geometry.compute_normals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.inflate_mesh.html">eigenstrapping.geometry.inflate_mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.nearest_neighbor.html">eigenstrapping.geometry.nearest_neighbor</a></li>
@@ -77,7 +74,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.geometry.geodesic_distmat"><code class="docutils literal notranslate"><span class="pre">geodesic_distmat()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.diffusion.html">eigenstrapping.geometry.diffusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.geometry.euclidean_distmat.html">eigenstrapping.geometry.euclidean_distmat</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></li>
@@ -116,7 +113,7 @@
 <h1>eigenstrapping.geometry.geodesic_distmat<a class="headerlink" href="#eigenstrapping-geometry-geodesic-distmat" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="eigenstrapping.geometry.geodesic_distmat">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">geodesic_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cholmod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#geodesic_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.geodesic_distmat" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">geodesic_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tria</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cholmod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#geodesic_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.geodesic_distmat" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Compute geodesic distance using the heat diffusion method built into LaPy</dt><dd><p>Based on: doi/10.1145/2516971.2516977
 Crane et al., “Geodesics in heat: A new approach to computing distance
@@ -126,7 +123,7 @@ based on heat flow”</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>surf</strong> (<em>Shape class</em>) – Input surface</p></li>
+<li><p><strong>surf</strong> (<em>lapy compatible object</em>) – Input surface</p></li>
 <li><p><strong>n_jobs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of workers to use for parallel calls to ._thread_method(),
 default is 1.</p></li>
 </ul>
@@ -147,7 +144,7 @@ default is 1.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="eigenstrapping.geometry.normalize_vtk.html" class="btn btn-neutral float-left" title="eigenstrapping.geometry.normalize_vtk" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="eigenstrapping.geometry.diffusion.html" class="btn btn-neutral float-right" title="eigenstrapping.geometry.diffusion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="eigenstrapping.geometry.euclidean_distmat.html" class="btn btn-neutral float-right" title="eigenstrapping.geometry.euclidean_distmat" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
