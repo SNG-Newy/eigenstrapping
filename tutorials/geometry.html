@@ -184,7 +184,7 @@ libraries as Cholesky decomposition is much faster than LU.</p>
 <p>Now, let’s plot the first non-constant eigenmode on the surface of the mesh.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">plotting</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">meshplot</span><span class="p">(</span><span class="n">hipp_tetra_lh</span><span class="p">,</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">meshplot</span><span class="p">(</span><span class="n">hipp_tetra_lh</span><span class="p">,</span> <span class="n">emodes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../_images/geometry1.png"><img alt="../_images/geometry1.png" class="align-center" src="../_images/geometry1.png" style="width: 346.5px; height: 322.3px;" /></a>
