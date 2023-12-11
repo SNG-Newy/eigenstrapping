@@ -3,6 +3,8 @@ from . import stats
 from netneurotools import datasets as nndata
 import os.path as op
 from nilearn import image
+import sys
+import os
 
 import warnings
 from collections import OrderedDict
@@ -26,6 +28,14 @@ _ANNOT_DT = ">i4"
 Used by :func:`read_annot` and :func:`write_annot`.  All data (apart from
 strings) in an `.annot` file is stored as big-endian int32.
 """
+
+# Disable
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+    
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
 
 def _suppress(cmd, shell='True'):
     return subprocess.call(cmd, shell=shell,

@@ -99,7 +99,7 @@ def load_genepc(join=False):
     
     return data_lh, data_rh
 
-def load_distmat(space='fsaverage', den='10k', data_dir=None, hemi='lh', parcellated=False, sort=True):
+def load_distmat(space='fsaverage', den='10k', data_dir=None, hemi='lh', parcellated=False, sort=False):
     """
     Downloads geodesic distance matrices. If the dense distance matrix is retrieved, 
     there is an option to return the sorted distance matrix and index memmapped, ala
@@ -146,11 +146,15 @@ def load_distmat(space='fsaverage', den='10k', data_dir=None, hemi='lh', parcell
     distmat = fetch_data(name='distmat', space=space, den=den,
                          hemi=hemi, format='dense')
     
-    outfiles = txt2memmap(distmat, get_data_dir(data_dir))
-    D = load_memmap(outfiles['distmat'])
-    index = load_memmap(outfiles['index'])
-        
-    return D, index
+    if sort:
+        outfiles = txt2memmap(distmat, get_data_dir(data_dir))
+        D = load_memmap(outfiles['distmat'])
+        index = load_memmap(outfiles['index'])
+            
+        return D, index
+    
+    else:
+        return distmat
 
 def load_subcort(structure='thalamus', data_dir=None):
     """

@@ -9,6 +9,7 @@ import os
 import nibabel as nib
 import numpy as np
 from scipy.spatial import Delaunay, KDTree
+from scipy.spatial.distance import squareform, pdist
 from brainspace import mesh as me
 from joblib import Parallel, delayed
 from scipy.sparse.linalg import splu
@@ -18,10 +19,13 @@ from brainspace.vtk_interface import wrap_vtk, serial_connect
 from vtk import (vtkThreshold, vtkDataObject, vtkGeometryFilter)
 from brainspace.utils.parcellation import relabel_consecutive
 from brainspace.mesh.mesh_creation import build_polydata
-from .utils import _suppress, _print, is_string_like
+from .utils import (_suppress, _print, is_string_like,
+                    enablePrint, blockPrint)
 
 ASSOC_CELLS = vtkDataObject.FIELD_ASSOCIATION_CELLS
 ASSOC_POINTS = vtkDataObject.FIELD_ASSOCIATION_POINTS
+
+blockPrint()
 
 """
 Helper utilities for geometry and registration
@@ -192,8 +196,10 @@ def make_tetra(volume, label=None, aseg=False, norm=None, verbose=True):
 
     """
     if verbose:
+        enablePrint()
         func = _print
     else:
+        blockPrint()
         func = _suppress
     
     voldir = os.path.dirname(volume)
@@ -334,8 +340,10 @@ def vol_to_tria(volume, outfile=None, oformat='vtk', verbose=False):
         outfile = volname + '.tria.' + oformat
     
     if verbose is True:
+        enablePrint()
         func = _print
     else:
+        blockPrint()
         func = _suppress
     
     cmd = 'mri_binarize --i ' + volume + ' --match 1' + ' --o ' + tmpf
@@ -455,7 +463,9 @@ def to_tria(tetra_file, outfile=None, oformat='vtk', verbose=True):
         allts, axis=0, return_index=True, return_counts=True
     )
     tria = allt[indices[count == 1]]
+    blockPrint()
     if verbose:
+        enablePrint()
         print("Found " + str(np.size(tria, 0)) + " triangles on boundary.")
     # if we have tetra function, map these to the boundary triangles
         
@@ -1038,7 +1048,7 @@ def normalize_vtk(tet, nifti_input_filename, normalization_type='none', normaliz
 
     return tet_norm
 
-def geodesic_distmat(surf, parc=None, n_jobs=1, use_cholmod=True):
+def geodesic_distmat(tria, parc=None, n_jobs=1, use_cholmod=False, verbose=False):
     """
     Compute geodesic distance using the heat diffusion method built into LaPy
         Based on: doi/10.1145/2516971.2516977
@@ -1047,7 +1057,7 @@ def geodesic_distmat(surf, parc=None, n_jobs=1, use_cholmod=True):
     
     Parameters
     ----------
-    surf : Shape class
+    surf : lapy compatible object
         Input surface
     n_jobs : int, optional
         Number of workers to use for parallel calls to ._thread_method(),
@@ -1059,14 +1069,10 @@ def geodesic_distmat(surf, parc=None, n_jobs=1, use_cholmod=True):
         Distance matrix of every vertex to every other vertex
     
     """
-    surf = nib.load(surf).agg_data()
-    tria = TriaMesh(surf[0], surf[1])
-    try:
-        import_optional_dependency('sksparse')
-        use_cholmod=True
-    except:
-        use_cholmod=False
-    
+    blockPrint()
+    if verbose:
+        enablePrint()
+        
     fem = Solver(tria, lump=True, use_cholmod=use_cholmod)
         
     D = __distance_threading__(tria, fem, n_jobs=n_jobs)
@@ -1114,7 +1120,7 @@ def _distance_thread_method(tria, fem, bvert):
         
     return d
 
-def diffusion(geometry, fem, vids, m=1.0, use_cholmod=True):
+def diffusion(geometry, fem, vids, m=1.0, use_cholmod=False):
     """
     Computes heat diffusion from initial vertices in vids using
     backward Euler solution for time t [MO2]:
@@ -1158,6 +1164,25 @@ def diffusion(geometry, fem, vids, m=1.0, use_cholmod=True):
         lu = splu(hmat)
         vfunc = lu.solve(np.float32(b0))
     return vfunc
+
+def euclidean_distmat(mesh):
+    """
+    Calculates Euclidean distance matrix of the mesh in `mesh`
+
+    Parameters
+    ----------
+    mesh : lapy compatible object
+        TriaMesh or TetMesh
+
+    Returns
+    -------
+    ndarray of shape (N,N)
+        Euclidean distance matrix of mesh with `N` vertices.
+
+    """
+    verts = mesh.v
+    
+    return squareform(pdist(verts))
 
 """Handle optional dependency imports.
 
