@@ -60,7 +60,6 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Meshes and mesh operations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#remeshing">Remeshing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deriving-eigenmodes-from-a-mesh">Deriving eigenmodes from a mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#transformations-and-co-registration-of-meshes">Transformations and co-registration of meshes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mesh-distance-calculations">Mesh distance calculations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#other-mesh-operations">Other mesh operations</a></li>
 </ul>
@@ -188,34 +187,84 @@ libraries as Cholesky decomposition is much faster than LU.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">meshplot</span><span class="p">(</span><span class="n">hipp_tetra_lh</span><span class="p">,</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/geometry1.png"><img alt="../_images/geometry1.png" class="align-center" src="../_images/geometry1.png" style="width: 220.5px; height: 205.1px;" /></a>
-</section>
-<section id="transformations-and-co-registration-of-meshes">
-<span id="usage-geometry-transform"></span><h2>Transformations and co-registration of meshes<a class="headerlink" href="#transformations-and-co-registration-of-meshes" title="Permalink to this heading"></a></h2>
-<p>Beyond operations on a single mesh, <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> has implemented transformations
-and resampling of meshes to standard spaces (fsLR, fsaverage, MNI152).
-Additionally, you can resample one mesh in one space to another mesh-space,
-or co-register two meshes to the same space.</p>
-<p>We use Connectome Workbench tools to perform this task, wrapped in the
-<a class="reference internal" href="../api.html#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> module.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
-</pre></div>
-</div>
+<a class="reference internal image-reference" href="../_images/geometry1.png"><img alt="../_images/geometry1.png" class="align-center" src="../_images/geometry1.png" style="width: 346.5px; height: 322.3px;" /></a>
 </section>
 <section id="mesh-distance-calculations">
 <span id="usage-geometry-distance"></span><h2>Mesh distance calculations<a class="headerlink" href="#mesh-distance-calculations" title="Permalink to this heading"></a></h2>
 <p>We also provide geodesic (surface) and Euclidean (volumetric) distance calculations
-for meshes</p>
+for meshes. Geodesic distance calculation is performed using a heat kernel on
+each vertex, and takes about 2 hours for a 32k standard hemisphere (fsLR). See the
+paper in <a class="reference internal" href="../references.html#references"><span class="std std-ref">References</span></a> for specific details on the implementation.</p>
+<p>In order to calculate the geodesic distance matrix, we use the <a class="reference internal" href="../generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat" title="eigenstrapping.geometry.geodesic_distmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.geometry.geodesic_distmat()</span></code></a>
+function, which takes an input mesh:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">datasets</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">surf_lh</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_surface_examples</span><span class="p">(</span><span class="n">with_surface</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">surf_lh</span>
+<span class="go">&#39;/mnt/eigenstrapping-data/surfaces/space-fsaverage_den-10k_hemi-lh_pial.surf.gii&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="n">surf_lh</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># for our purposes, we won&#39;t use sksparse libraries, but to do so, we</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># pass `use_cholmod=True` to the function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">geodesic_distmat</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go"># eventually ...</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(10242, 10242)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span>
+<span class="go">array([[  0.        ,  91.41330719,  73.28165436, ..., 184.62254333,</span>
+<span class="go">        186.47727966, 187.92669678],</span>
+<span class="go">       [ 91.41330719,   0.        ,  81.62067413, ..., 127.93047333,</span>
+<span class="go">        129.78521729, 131.2346344 ],</span>
+<span class="go">       [ 73.28165436,  81.62067413,   0.        , ..., 114.22114563,</span>
+<span class="go">        116.07588959, 117.52529907],</span>
+<span class="go">       ...,</span>
+<span class="go">       [184.62254333, 127.93047333, 114.22114563, ...,   0.        ,</span>
+<span class="go">          2.80057883,   4.78903866],</span>
+<span class="go">       [186.47727966, 129.78521729, 116.07588959, ...,   2.80057883,</span>
+<span class="go">          0.        ,   1.98845983],</span>
+<span class="go">       [187.92669678, 131.2346344 , 117.52529907, ...,   4.78903866,</span>
+<span class="go">          1.98845983,   0.        ]])</span>
+</pre></div>
+</div>
+<p>You can speed things up in the <a class="reference internal" href="../generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat" title="eigenstrapping.geometry.geodesic_distmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.geometry.geodesic_distmat()</span></code></a>
+function by passing <cite>n_jobs=&lt;number of workers&gt;</cite>. For instance, to use eight threads,
+you would pass <cite>n_jobs=8</cite>. To use every available thread, pass <cite>n_jobs=-1</cite>.</p>
+<p>Euclidean distance calculation is performed in a similar way:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">euclidean_distmat</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span> <span class="c1"># much quicker than geodesic</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(10242, 10242)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span>
+<span class="go">array([[ 0.        , 54.72087326, 37.01728554, ..., 94.95060009,</span>
+<span class="go">        93.16259385, 92.16275463],</span>
+<span class="go">       [54.72087326,  0.        , 61.99785175, ..., 98.85110323,</span>
+<span class="go">        98.2701815 , 98.01616578],</span>
+<span class="go">       [37.01728554, 61.99785175,  0.        , ..., 78.64858645,</span>
+<span class="go">        77.51088511, 77.12512891],</span>
+<span class="go">       ...,</span>
+<span class="go">       [94.95060009, 98.85110323, 78.64858645, ...,  0.        ,</span>
+<span class="go">         2.80057878,  4.7547238 ],</span>
+<span class="go">       [93.16259385, 98.2701815 , 77.51088511, ...,  2.80057878,</span>
+<span class="go">         0.        ,  1.98845989],</span>
+<span class="go">       [92.16275463, 98.01616578, 77.12512891, ...,  4.7547238 ,</span>
+<span class="go">         1.98845989,  0.        ]])</span>
+</pre></div>
+</div>
+<p>Notice the pronounced difference between the two methods. This is because the
+cortex is constructed as a 2D sheet (basically the surface of a sphere), so it
+is not advisable to use Euclidean distance calculations. For the subcortical
+volumes, you would use the Euclidean distance.</p>
 </section>
 <section id="other-mesh-operations">
-<h2>Other mesh operations<a class="headerlink" href="#other-mesh-operations" title="Permalink to this heading"></a></h2>
+<span id="usage-geometry-other"></span><h2>Other mesh operations<a class="headerlink" href="#other-mesh-operations" title="Permalink to this heading"></a></h2>
 <p>Alongside the above functions, there are several useful tools within
-the <a class="reference internal" href="../api.html#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> module, including inflation of
-surfaces (using Connectome Workbench tools):</p>
+the <a class="reference internal" href="../api.html#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> module, including calculation of vertex
+normals, which may be useful for calculating the action of a function on the mesh:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
-<p>There is also</p>
 </section>
 </section>
 
