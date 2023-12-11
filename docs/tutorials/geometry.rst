@@ -108,7 +108,7 @@ Now, let's plot the first non-constant eigenmode on the surface of the mesh.
 
     >>> from eigenstrapping import plotting
     
-    >>> plotting.meshplot(hipp_tetra_lh, emodes[0], vrange=0.01, colorbar=True)
+    >>> plotting.meshplot(hipp_tetra_lh, emodes[:, 0], vrange=0.01, colorbar=True)
     
 .. image:: ../_static/examples/example_figs/geometry1.png
    :scale: 110%
