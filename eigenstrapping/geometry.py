@@ -9,7 +9,7 @@ import os
 import nibabel as nib
 import numpy as np
 from scipy.spatial import Delaunay, KDTree
-from brainspace import mesh
+from brainspace import mesh as me
 from joblib import Parallel, delayed
 from scipy.sparse.linalg import splu
 import scipy.optimize as optimize
@@ -18,7 +18,7 @@ from brainspace.vtk_interface import wrap_vtk, serial_connect
 from vtk import (vtkThreshold, vtkDataObject, vtkGeometryFilter)
 from brainspace.utils.parcellation import relabel_consecutive
 from brainspace.mesh.mesh_creation import build_polydata
-from .utils import _suppress, _print
+from .utils import _suppress, _print, is_string_like
 
 ASSOC_CELLS = vtkDataObject.FIELD_ASSOCIATION_CELLS
 ASSOC_POINTS = vtkDataObject.FIELD_ASSOCIATION_POINTS
@@ -266,15 +266,20 @@ def make_tetra(volume, label=None, aseg=False, norm=None, verbose=True):
     
     return tetra_file
 
-def remesh(m):
+def remesh(m, outfile=None, oformat='vtk'):
     """
-    Generate remeshed version of the mesh in `mesh`. Goes from triangular
-    mesh to tetrahedral mesh and vice-versa.
+    Generate (re)meshed version of the volume/mesh in `m`. Goes from volume to 
+    triangular mesh, or goes from triangular to tetrahedral mesh (and vice-versa).
+    Function does not go back from triangular or tetrahedral mesh to volume.
 
     Parameters
     ----------
     m : str
-        The filename of the mesh.
+        The filename of the volume/mesh.
+    outfile : str, optional
+        The filename of the output mesh, default None.
+    oformat : str, optional
+        Output format of mesh, default "vtk"
 
     Returns
     -------
@@ -282,17 +287,72 @@ def remesh(m):
         Filename of output tetra or triangular mesh.
 
     """
-    me = mesh.mesh_io.read_surface(m)
-    if me.GetCells2D().shape[-1] == 4:
+    _, ext = os.path.splitext(m)
+    if ext == '.nii':
+        return vol_to_tria(m, outfile=outfile, oformat=oformat)
+    
+    mesh = me.mesh_io.read_surface(m)
+    if mesh.GetCells2D().shape[-1] == 4:
         func = to_tria
-    elif me.GetCells2D().shape[-1] == 3:
+    elif mesh.GetCells2D().shape[-1] == 3:
         func = to_tetra
     else:
         raise RuntimeError('Unknown file structure, check input')
     
-    file = func(m)
+    file = func(m, outfile=outfile, oformat=oformat)
     
     return file
+
+def vol_to_tria(volume, outfile=None, oformat='vtk', verbose=False):
+    """
+    Converts the volume in `volume` to a triangular surface using
+    FreeSurfer `mri_mc` and other libraries.
+
+    Parameters
+    ----------
+    volume : str
+        Path to file to convert to triangular mesh.
+    outfile : str, optional
+        The filename of the output mesh, default None.
+    oformat : str, optional
+        Output format of mesh, default "vtk"
+    verbose : bool, optional
+        Print output messages, default False
+
+    Returns
+    -------
+    tria_file : str
+        Filename of saved triangular mesh.
+
+    """
+    tmpf = tempfile.NamedTemporaryFile(suffix='.mgz')
+    tmpf = tmpf.name
+    voldir = os.path.dirname(volume)
+    volname = os.splitext(volume)[0]
+    
+    if outfile is None:
+        outfile = volname + '.tria.' + oformat
+    
+    if verbose is True:
+        func = _print
+    else:
+        func = _suppress
+    
+    cmd = 'mri_binarize --i ' + volume + ' --match 1' + ' --o ' + tmpf
+    output = func(cmd, shell="True")
+    
+    # run marching cubes
+    tmp_tria = voldir + '/tmp_surface.' + oformat
+    cmd = 'mri_mc ' + tmpf + ' 1 ' + tmp_tria
+    output = func(cmd, shell="True")
+    
+    cmd = 'mv -f ' + voldir + '/tmp_surface.' + oformat + ' ' + outfile
+    output = func(cmd, shell='True')
+    
+    os.unlink(tmpf)
+    os.unlink(tmp_tria)
+    
+    return outfile
 
 def to_tetra(tria_file, outfile=None, oformat='vtk'):
     """
@@ -350,7 +410,7 @@ def to_tetra(tria_file, outfile=None, oformat='vtk'):
 
     return outfile
 
-def to_tria(tetra_file, outfile=None, oformat='vtk'):
+def to_tria(tetra_file, outfile=None, oformat='vtk', verbose=True):
     """
     Converts the tetrahedral mesh contained in `tetra_file` into
     a triangular surface by bounding the convex hull of the tetrahedra.
@@ -377,8 +437,8 @@ def to_tria(tetra_file, outfile=None, oformat='vtk'):
     if outfile is None:
         outfile = os.path.splitext(tetra_file)[0] + '.tria.' + oformat
         
-    me = mesh.mesh_io.read_surface(tetra_file)
-    tetra = TetMesh(me.GetPoints(), me.GetCells2D())
+    m = me.mesh_io.read_surface(tetra_file)
+    tetra = TetMesh(m.GetPoints(), m.GetCells2D())
     # get all triangles
     allt = np.vstack(
         (
@@ -395,7 +455,8 @@ def to_tria(tetra_file, outfile=None, oformat='vtk'):
         allts, axis=0, return_index=True, return_counts=True
     )
     tria = allt[indices[count == 1]]
-    print("Found " + str(np.size(tria, 0)) + " triangles on boundary.")
+    if verbose:
+        print("Found " + str(np.size(tria, 0)) + " triangles on boundary.")
     # if we have tetra function, map these to the boundary triangles
         
     surf = TriaMesh(tetra.v, tria)
@@ -449,6 +510,40 @@ def make_tria_file(nifti_input_filename):
     
     return tria_file
 
+def load_mesh(mesh):
+    """
+    Mesh loader function.
+
+    Parameters
+    ----------
+    mesh : str or array-like
+        Filename 'vtk'-like, or tuple of surface (expecting two arrays of `vertices`
+        and `faces`)
+
+    Returns
+    -------
+    ``lapy`` compatible object : `TetMesh` or `TriaMesh`
+        Loaded mesh in ``lapy`` format
+
+    """
+    
+    if isinstance(mesh, tuple) or isinstance(mesh, list):
+        m = build_polydata(mesh[0], mesh[1])
+    elif is_string_like(mesh):
+        m = me.mesh_io.read_surface(mesh)
+    else:
+        raise ValueError('Unknown file type, check input')
+        
+    if m.GetCells2D().shape[-1] == 4:
+        func = TetMesh
+    elif m.GetCells2D().shape[-1] == 3:
+        func = TriaMesh
+    else:
+        raise RuntimeError('Unknown file structure, check input')
+    
+    return func(m.GetPoints(), m.GetCells2D())
+    
+
 def create_temp_surface(surface_input, surface_output_filename):
     """Write surface to a new vtk file.
 
@@ -499,13 +594,13 @@ def get_indices(surface_original, surface_new):
     
     return indices
 
-def calc_eig(tria, num_modes, use_cholmod=False):
+def calc_eig(mesh, num_modes, use_cholmod=False, return_zero=False):
     """Calculate the eigenvalues and eigenmodes of a surface.
 
     Parameters
     ----------
-    tria : lapy compatible object
-        Loaded vtk object corresponding to a surface triangular mesh
+    mesh : lapy compatible object
+        Loaded vtk object corresponding to a surface mesh
     num_modes : int
         Number of eigenmodes to be calculated
 
@@ -517,10 +612,13 @@ def calc_eig(tria, num_modes, use_cholmod=False):
         Eigenmodes
     """
     
-    fem = Solver(tria, use_cholmod=use_cholmod)
-    evals, emodes = fem.eigs(k=num_modes)
+    fem = Solver(mesh, use_cholmod=use_cholmod)
+    evals, emodes = fem.eigs(k=num_modes+1)
     
-    return evals, emodes
+    if return_zero:
+        return evals[:-1], emodes[:, :-1]
+    
+    return evals[1:], emodes[:, 1:]
     
 def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, num_modes=200, use_cholmod=False, remove_zero=True):
     """Main function to calculate the eigenmodes of a cortical surface with 
@@ -552,7 +650,7 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
     """
 
     # load surface (as a brainspace object)
-    surface_orig = mesh.mesh_io.read_surface(surface_input_filename)
+    surface_orig = me.mesh_io.read_surface(surface_input_filename)
     
     # load mask
     # can be any ROI (even whole cortex)
@@ -573,7 +671,7 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
     temp_cut_filename='/tmp/temp_cut.gii'
     temp_cut = nib.GiftiImage()
     temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(surface_cut.GetPoints().astype('float32')))
-    temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(mesh.mesh_elements.get_cells(surface_cut).astype('int32')))
+    temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(me.mesh_elements.get_cells(surface_cut).astype('int32')))
     nib.save(temp_cut, temp_cut_filename)
     # load surface (as a lapy object)
     vertices, faces = temp_cut.agg_data()

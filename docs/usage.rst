@@ -23,3 +23,8 @@ on `GitHub <https://github.com/SNG-newy/eigenstrapping/issues>`_.
    tutorials/tutorial_cortex.rst
    tutorials/tutorial_subcortex.rst
    tutorials/tutorial_ownsurface.rst
+   tutorials/base.rst
+   tutorials/fetchers.rst
+   tutorials/comparisons.rst
+   tutorials/rotations.rst
+   tutorials/geometry.rst
