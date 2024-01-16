@@ -26,18 +26,17 @@ def direct_method(n, seed=None):
 def indirect_method(n, seed=None):
     
     rs = check_random_state(seed)
-    # 1. Generate matrix A
-    A = rs.normal(size=(n, n))
     
-    # 2. Compute the QR decomposition
-    Q, R = qr(A)
+    # Compute the QR decomposition
+    # rotate, temp = np.linalg.qr(rs.normal(size=(n, n)))
+    # rotate = rotate @ np.diag(np.sign(np.diag(temp)))
+    # if np.linalg.det(rotate) < 0:
+    #     rotate[:, 0] = -rotate[:, 0]
+    if n < 2:
+        return rs.normal(size=(n, n))
+    rotate = special_ortho_group.rvs(dim=n, random_state=rs)
     
-    # 3. Check the determinant of Q
-    if np.linalg.det(Q) <= 0:
-        A[:, 0] = -A[:, 0]  # Flip the sign of the first column
-        Q, R = qr(A)
-    
-    return Q
+    return rotate
 
 def rotate_matrix(M, method='indirect'):
     """
