@@ -84,8 +84,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">qr</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-
-<span class="n">modes</span> <span class="o">=</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">special_ortho_group</span>
 
 <div class="viewcode-block" id="direct_method"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.direct_method.html#eigenstrapping.rotations.direct_method">[docs]</a><span class="k">def</span> <span class="nf">direct_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">rs</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
@@ -106,18 +105,17 @@
 <div class="viewcode-block" id="indirect_method"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.indirect_method.html#eigenstrapping.rotations.indirect_method">[docs]</a><span class="k">def</span> <span class="nf">indirect_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     
     <span class="n">rs</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-    <span class="c1"># 1. Generate matrix A</span>
-    <span class="n">A</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
     
-    <span class="c1"># 2. Compute the QR decomposition</span>
-    <span class="n">Q</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">qr</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="c1"># Compute the QR decomposition</span>
+    <span class="c1"># rotate, temp = np.linalg.qr(rs.normal(size=(n, n)))</span>
+    <span class="c1"># rotate = rotate @ np.diag(np.sign(np.diag(temp)))</span>
+    <span class="c1"># if np.linalg.det(rotate) &lt; 0:</span>
+    <span class="c1">#     rotate[:, 0] = -rotate[:, 0]</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rs</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">rotate</span> <span class="o">=</span> <span class="n">special_ortho_group</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rs</span><span class="p">)</span>
     
-    <span class="c1"># 3. Check the determinant of Q</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">A</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">A</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Flip the sign of the first column</span>
-        <span class="n">Q</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">qr</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">Q</span></div>
+    <span class="k">return</span> <span class="n">rotate</span></div>
 
 <div class="viewcode-block" id="rotate_matrix"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.rotate_matrix.html#eigenstrapping.rotations.rotate_matrix">[docs]</a><span class="k">def</span> <span class="nf">rotate_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;indirect&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
