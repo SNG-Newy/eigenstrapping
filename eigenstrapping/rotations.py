@@ -4,8 +4,7 @@ Generate random rotation matrices of arbitrary size and rotate matrices
 import numpy as np
 from numpy.linalg import qr
 from sklearn.utils.validation import check_random_state
-
-modes = np
+from scipy.stats import special_ortho_group
 
 def direct_method(n, seed=None):
     rs = check_random_state(seed)
