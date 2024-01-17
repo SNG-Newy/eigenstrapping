@@ -68,17 +68,17 @@ below will help you get started and build your own surrogate maps.
  .. code-block:: none
 
     Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/65668144aa3a762736d6ab2b ...
-     ...done. (1 seconds, 0 min)
+     ...done. (3 seconds, 0 min)
     Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/6566812ff0b8e24c97a9d80c ...
-    Downloaded 1327104 of 260655724 bytes (0.5%,  3.3min remaining)    Downloaded 17760256 of 260655724 bytes (6.8%,   27.4s remaining)    Downloaded 35069952 of 260655724 bytes (13.5%,   19.6s remaining)    Downloaded 54648832 of 260655724 bytes (21.0%,   15.3s remaining)    Downloaded 72318976 of 260655724 bytes (27.7%,   13.2s remaining)    Downloaded 91242496 of 260655724 bytes (35.0%,   11.3s remaining)    Downloaded 110034944 of 260655724 bytes (42.2%,    9.7s remaining)    Downloaded 127483904 of 260655724 bytes (48.9%,    8.5s remaining)    Downloaded 147267584 of 260655724 bytes (56.5%,    7.0s remaining)    Downloaded 165093376 of 260655724 bytes (63.3%,    5.9s remaining)    Downloaded 184459264 of 260655724 bytes (70.8%,    4.6s remaining)    Downloaded 202039296 of 260655724 bytes (77.5%,    3.5s remaining)    Downloaded 221315072 of 260655724 bytes (84.9%,    2.3s remaining)    Downloaded 237608960 of 260655724 bytes (91.2%,    1.4s remaining)    Downloaded 257269760 of 260655724 bytes (98.7%,    0.2s remaining) ...done. (16 seconds, 0 min)
+    Downloaded 1376256 of 260655724 bytes (0.5%,  3.1min remaining)    Downloaded 17891328 of 260655724 bytes (6.9%,   27.1s remaining)    Downloaded 35749888 of 260655724 bytes (13.7%,   19.0s remaining)    Downloaded 55255040 of 260655724 bytes (21.2%,   14.9s remaining)    Downloaded 73695232 of 260655724 bytes (28.3%,   12.9s remaining)    Downloaded 91791360 of 260655724 bytes (35.2%,   11.2s remaining)    Downloaded 110256128 of 260655724 bytes (42.3%,    9.7s remaining)    Downloaded 126369792 of 260655724 bytes (48.5%,    8.6s remaining)    Downloaded 147062784 of 260655724 bytes (56.4%,    7.0s remaining)    Downloaded 164405248 of 260655724 bytes (63.1%,    6.0s remaining)    Downloaded 184156160 of 260655724 bytes (70.7%,    4.6s remaining)    Downloaded 201924608 of 260655724 bytes (77.5%,    3.5s remaining)    Downloaded 221339648 of 260655724 bytes (84.9%,    2.3s remaining)    Downloaded 236568576 of 260655724 bytes (90.8%,    1.4s remaining)    Downloaded 255467520 of 260655724 bytes (98.0%,    0.3s remaining) ...done. (18 seconds, 0 min)
     Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/6566812479d42829de3e864c ...
      ...done. (1 seconds, 0 min)
     Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/65668144932b9f48b2760891 ...
      ...done. (3 seconds, 0 min)
     Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/6566812ef0b8e24c97a9d80a ...
-    Downloaded 1277952 of 261166559 bytes (0.5%,  3.4min remaining)    Downloaded 17432576 of 261166559 bytes (6.7%,   28.1s remaining)    Downloaded 35315712 of 261166559 bytes (13.5%,   19.6s remaining)    Downloaded 54673408 of 261166559 bytes (20.9%,   15.4s remaining)    Downloaded 72171520 of 261166559 bytes (27.6%,   13.3s remaining)    Downloaded 90071040 of 261166559 bytes (34.5%,   11.6s remaining)    Downloaded 109821952 of 261166559 bytes (42.1%,    9.9s remaining)    Downloaded 127262720 of 261166559 bytes (48.7%,    8.6s remaining)    Downloaded 147423232 of 261166559 bytes (56.4%,    7.1s remaining)    Downloaded 163233792 of 261166559 bytes (62.5%,    6.1s remaining)    Downloaded 182501376 of 261166559 bytes (69.9%,    4.8s remaining)    Downloaded 200253440 of 261166559 bytes (76.7%,    3.7s remaining)    Downloaded 219693056 of 261166559 bytes (84.1%,    2.5s remaining)    Downloaded 236781568 of 261166559 bytes (90.7%,    1.5s remaining)    Downloaded 255827968 of 261166559 bytes (98.0%,    0.3s remaining) ...done. (16 seconds, 0 min)
+    Downloaded 1212416 of 261166559 bytes (0.5%,  3.6min remaining)    Downloaded 17014784 of 261166559 bytes (6.5%,   28.7s remaining)    Downloaded 35053568 of 261166559 bytes (13.4%,   19.9s remaining)    Downloaded 54525952 of 261166559 bytes (20.9%,   15.5s remaining)    Downloaded 72556544 of 261166559 bytes (27.8%,   13.2s remaining)    Downloaded 90529792 of 261166559 bytes (34.7%,   11.5s remaining)    Downloaded 110034944 of 261166559 bytes (42.1%,    9.8s remaining)    Downloaded 129032192 of 261166559 bytes (49.4%,    8.4s remaining)    Downloaded 149094400 of 261166559 bytes (57.1%,    6.9s remaining)    Downloaded 165322752 of 261166559 bytes (63.3%,    5.9s remaining)    Downloaded 182845440 of 261166559 bytes (70.0%,    4.8s remaining)    Downloaded 202252288 of 261166559 bytes (77.4%,    3.6s remaining)    Downloaded 220151808 of 261166559 bytes (84.3%,    2.5s remaining)    Downloaded 237289472 of 261166559 bytes (90.9%,    1.4s remaining)    Downloaded 257523712 of 261166559 bytes (98.6%,    0.2s remaining) ...done. (16 seconds, 0 min)
     Downloading data from https://files.osf.io/v1/resources/mabr9/providers/osfstorage/65668124932b9f48b276087f ...
-     ...done. (3 seconds, 0 min)
+     ...done. (1 seconds, 0 min)
     /home/runner/eigenstrapping-data/surfaces/space-fsaverage_den-10k_hemi-lh_pial.surf.gii
     (10242,)
     (10242, 1000)
@@ -160,7 +160,7 @@ below will help you get started and build your own surrogate maps.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 51.326 seconds)
+   **Total running time of the script:** (0 minutes 52.953 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_surface_examples.py:
