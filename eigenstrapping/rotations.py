@@ -31,8 +31,8 @@ def indirect_method(n, seed=None):
     rotate = rotate @ np.diag(np.sign(np.diag(temp)))
     if np.linalg.det(rotate) < 0:
          rotate[:, 0] = -rotate[:, 0]
-    if n < 2:
-        return rs.normal(size=(n, n))
+    #if n < 2:
+    #    return rs.normal(size=(n, n))
     #rotate = special_ortho_group.rvs(dim=n, random_state=rs)
     
     return rotate
