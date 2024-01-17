@@ -4,7 +4,7 @@ Generate random rotation matrices of arbitrary size and rotate matrices
 import numpy as np
 from numpy.linalg import qr
 from sklearn.utils.validation import check_random_state
-from scipy.stats import special_ortho_group
+#from scipy.stats import special_ortho_group
 
 def direct_method(n, seed=None):
     rs = check_random_state(seed)
@@ -27,13 +27,13 @@ def indirect_method(n, seed=None):
     rs = check_random_state(seed)
     
     # Compute the QR decomposition
-    # rotate, temp = np.linalg.qr(rs.normal(size=(n, n)))
-    # rotate = rotate @ np.diag(np.sign(np.diag(temp)))
-    # if np.linalg.det(rotate) < 0:
-    #     rotate[:, 0] = -rotate[:, 0]
+    rotate, temp = np.linalg.qr(rs.normal(size=(n, n)))
+    rotate = rotate @ np.diag(np.sign(np.diag(temp)))
+    if np.linalg.det(rotate) < 0:
+         rotate[:, 0] = -rotate[:, 0]
     if n < 2:
         return rs.normal(size=(n, n))
-    rotate = special_ortho_group.rvs(dim=n, random_state=rs)
+    #rotate = special_ortho_group.rvs(dim=n, random_state=rs)
     
     return rotate
 
