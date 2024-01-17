@@ -71,15 +71,12 @@ def rotate_matrix(M, method='indirect'):
     n = M.shape[1]
     if method == 'indirect':
         rot = indirect_method(n)
-        M_rotated = np.dot(M, rot)
-    
     elif method == 'direct':
-        rot = direct_method(n)
-        M_rotated = np.dot(M, rot)
-    
+        rot = direct_method(n)    
     else:
         raise ValueError("Method must be one of 'indirect' or 'direct'")
         
+    M_rotated = M @ rot
     return M_rotated
     
 class RotationMatrix:
