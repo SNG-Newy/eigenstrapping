@@ -535,10 +535,6 @@ class SurfaceEigenstrapping:
         # Mask the data and surrogate_data excluding the medial wall
         surr_no_mwall = copy.deepcopy(surrogate)
         surr_no_mwall = surr_no_mwall[mask]
-        
-        # now add the residuals of the original data
-        if self.permute:
-            surr_no_mwall += self._rs.permutation(residuals)
             
         if self.add_res:
             surr_no_mwall += residuals
@@ -552,11 +548,15 @@ class SurfaceEigenstrapping:
         #     surr_no_mwall[surr_ranks] = data[data_ranks]
         
         if self.resample:  # resample values from empirical map
-            sorted_map = np.sort(data)
+            sorted_map = np.sort(reconstructed_data)
             ii = np.argsort(surr_no_mwall)
             np.put(surr_no_mwall, ii, sorted_map)
         else: # demean
             surr_no_mwall = surr_no_mwall - np.nanmean(surr_no_mwall)
+
+        # now add the residuals of the original data
+        if self.permute:
+            surr_no_mwall += self._rs.permutation(residuals)
             
         # else: # force match the minima
         #     indices = np.nonzero(surr_no_mwall)[0]  # Indices where s is non-zero
