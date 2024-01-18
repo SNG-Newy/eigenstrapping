@@ -84,7 +84,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">qr</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-<span class="c1">#from scipy.stats import special_ortho_group</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">special_ortho_group</span>
 
 <div class="viewcode-block" id="direct_method"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.direct_method.html#eigenstrapping.rotations.direct_method">[docs]</a><span class="k">def</span> <span class="nf">direct_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">rs</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
@@ -107,17 +107,14 @@
     <span class="n">rs</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     
     <span class="c1"># Compute the QR decomposition</span>
-    <span class="n">rotate</span><span class="p">,</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)))</span>
-    <span class="n">rotate</span> <span class="o">=</span> <span class="n">rotate</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">temp</span><span class="p">)))</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">rotate</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-         <span class="n">rotate</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">rotate</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="c1">#if n &lt; 2:</span>
-    <span class="c1">#    return rs.normal(size=(n, n))</span>
-    <span class="c1">#rotate = special_ortho_group.rvs(dim=n, random_state=rs)</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rs</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">rotate</span> <span class="o">=</span> <span class="n">special_ortho_group</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rs</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">rotate</span></div>
 
-<div class="viewcode-block" id="rotate_matrix"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.rotate_matrix.html#eigenstrapping.rotations.rotate_matrix">[docs]</a><span class="k">def</span> <span class="nf">rotate_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;indirect&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="rotate_matrix"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.rotate_matrix.html#eigenstrapping.rotations.rotate_matrix">[docs]</a><span class="k">def</span> <span class="nf">rotate_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;indirect&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rotate an (n/m)-by-n matrix of arbitrary length n by the two methods </span>
 <span class="sd">    as outlined in [1].</span>
@@ -150,7 +147,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;indirect&#39;</span><span class="p">:</span>
-        <span class="n">rot</span> <span class="o">=</span> <span class="n">indirect_method</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="n">indirect_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
         <span class="n">M_rotated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">rot</span><span class="p">)</span>
     
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;direct&#39;</span><span class="p">:</span>
