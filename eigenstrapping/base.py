@@ -324,9 +324,9 @@ class SurfaceEigenstrapping:
                 raise ValueError("Input surface must be a filename")
             self.surface_file = surface
             self.surface = load_surface(self.surface_file)
-            self.n_vertices = self.surface[0].shape[0]
         
         self.data = copy.deepcopy(data)
+        self.n_vertices = self.data.shape[0]
         
         if emodes is not None and evals is not None:
             self.evals = evals[:num_modes]
