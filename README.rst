@@ -93,7 +93,12 @@ When using ``eigenstrapping``, please cite the following manuscript:
 
 * null
 
-And please also cite the papers for the method that we use to calculate eigenmodes
+The core functions are heavily based on code from `BrainEigenmodes <https://github.com/NSBLab/BrainEigenmodes>`_, and their
+paper:
+
+* Geometric constraints on human brain function. Pang, J. C., Aquino, K. M., Oldehinkel, M., Robinson, P. A., Fulcher, B. D., Breakspear, M., & Fornito, A. (2023). Nature, 1-9. `<https://doi.org/10.1038/s41586-023-06098-1>`_
+
+Please also cite the papers for the method that we use to calculate eigenmodes
 on the surface:
 
 * Laplace-Beltrami spectra as 'Shape-DNA' of surfaces and solids. Reuter M, Wolter F-E, Peinecke N. Computer-Aided Design. 2006;38(4):342-366. `<http://dx.doi.org/10.1016/j.cad.2005.10.011>`_
