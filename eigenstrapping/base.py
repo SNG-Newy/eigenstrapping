@@ -311,7 +311,7 @@ class SurfaceEigenstrapping:
                  save_surface=False, seed=None, decomp_method='matrix',
                  medial=None, randomize=False, resample=False, n_jobs=1, 
                  use_cholmod=False, permute=False, add_res=False,
-                 save_rotations=False, parcellation=None):
+                 save_rotations=False, parcellation=None, normalize=True):
         
         # initialization of variables
         if surface is None:
@@ -346,6 +346,7 @@ class SurfaceEigenstrapping:
         self.permute = permute
         self.save_rotations = save_rotations
         self.parcellation = parcellation
+        self.normalize = normalize
         
         self._lm = LinearRegression(fit_intercept=True)
         self.add_res = add_res
@@ -507,16 +508,18 @@ class SurfaceEigenstrapping:
                 gen = True
             group_modes = emodes[:, groups[idx]]
             group_evals = evals[groups[idx]]
-            
+            p = group_modes
             # else, transform to spheroid and index the angles properly
-            p = transform_to_spheroid(group_evals, group_modes)
+            if self.normalize:
+                p = transform_to_spheroid(group_evals, group_modes)
             
             p_rot = self.rotate_modes(p, gen=True)
             
             # transform back to ellipsoid
-            group_ellipsoid_modes = transform_to_ellipsoid(group_evals, p_rot)
+            if self.normalize:
+                p_rot = transform_to_ellipsoid(group_evals, p_rot)
             
-            new_modes[:, groups[idx]] = group_ellipsoid_modes
+            new_modes[:, groups[idx]] = p_rot
         
         if output_modes:
             return new_modes

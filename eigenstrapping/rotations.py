@@ -4,6 +4,7 @@ Generate random rotation matrices of arbitrary size and rotate matrices
 import numpy as np
 from numpy.linalg import qr
 from sklearn.utils.validation import check_random_state
+from scipy.stats import special_ortho_group
 
 modes = np
 
@@ -26,20 +27,19 @@ def direct_method(n, seed=None):
 def indirect_method(n, seed=None):
     
     rs = check_random_state(seed)
-    # 1. Generate matrix A
-    A = rs.normal(size=(n, n))
     
-    # 2. Compute the QR decomposition
-    Q, R = qr(A)
+    # Compute the QR decomposition
+    # rotate, temp = np.linalg.qr(rs.normal(size=(n, n)))
+    # rotate = rotate @ np.diag(np.sign(np.diag(temp)))
+    # if np.linalg.det(rotate) < 0:
+    #     rotate[:, 0] = -rotate[:, 0]
+    if n < 2:
+        return rs.normal(size=(n, n))
+    rotate = special_ortho_group.rvs(dim=n, random_state=rs)
     
-    # 3. Check the determinant of Q
-    if np.linalg.det(Q) <= 0:
-        A[:, 0] = -A[:, 0]  # Flip the sign of the first column
-        Q, R = qr(A)
-    
-    return Q
+    return rotate
 
-def rotate_matrix(M, method='indirect'):
+def rotate_matrix(M, method='indirect', seed=None):
     """
     Rotate an (n/m)-by-n matrix of arbitrary length n by the two methods 
     as outlined in [1].
@@ -72,7 +72,7 @@ def rotate_matrix(M, method='indirect'):
     """
     n = M.shape[1]
     if method == 'indirect':
-        rot = indirect_method(n)
+        rot = indirect_method(n, seed=seed)
         M_rotated = np.dot(M, rot)
     
     elif method == 'direct':
