@@ -235,7 +235,7 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
     if return_data:
         return surrs
     
-def volumetric_fit(volume, x, nsurrs=10, num_modes=100, 
+def volumetric_fit(x, volume, nsurrs=10, num_modes=100, 
                    return_data=False, extra_diags=False, **params):
     """
     Evaluate variogram fits for :class: `eigenstrapping.VolumetricEigenstrapping` 
@@ -282,7 +282,7 @@ def volumetric_fit(volume, x, nsurrs=10, num_modes=100,
             var_params[arg] = params[arg]
             
     # initialize
-    eigen = VolumetricEigenstrapping(volume, x, num_modes=num_modes, **eigen_params)
+    eigen = VolumetricEigenstrapping(x, volume, num_modes=num_modes, **eigen_params)
     
     # surrogates
     surrs = eigen(n=nsurrs)

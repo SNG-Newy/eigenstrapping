@@ -939,7 +939,8 @@ class VolumetricEigenstrapping:
         self.mask = np.logical_not(np.logical_or(np.isclose(self.roi, 0),
                                             np.isnan(self.roi)))
         self.xyz = nib.affines.apply_affine(self.affine, np.column_stack(np.where(self.mask)))
-        
+        self.use_cholmod = False
+                     
         if is_string_like(data):
             if self.data_input_ext == '.txt':
                 self.data_array = np.loadtxt(data)

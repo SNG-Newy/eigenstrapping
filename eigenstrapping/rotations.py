@@ -6,8 +6,6 @@ from numpy.linalg import qr
 from sklearn.utils.validation import check_random_state
 from scipy.stats import special_ortho_group
 
-modes = np
-
 def direct_method(n, seed=None):
     rs = check_random_state(seed)
     # 1. Draw n independent random normal N(0, 1) variates
@@ -29,10 +27,7 @@ def indirect_method(n, seed=None):
     rs = check_random_state(seed)
     
     # Compute the QR decomposition
-    # rotate, temp = np.linalg.qr(rs.normal(size=(n, n)))
-    # rotate = rotate @ np.diag(np.sign(np.diag(temp)))
-    # if np.linalg.det(rotate) < 0:
-    #     rotate[:, 0] = -rotate[:, 0]
+
     if n < 2:
         return rs.normal(size=(n, n))
     rotate = special_ortho_group.rvs(dim=n, random_state=rs)
