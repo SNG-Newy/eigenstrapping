@@ -6,6 +6,7 @@ Eigenmode resampling on the cortex
 
 from .utils import (
     _get_eigengroups,
+    _get_eigengroups_from_num,
     eigen_decomposition,
     transform_to_spheroid,
     transform_to_ellipsoid,
@@ -34,7 +35,8 @@ from lapy import TetMesh, Solver
 from scipy.interpolate import griddata
 from scipy.spatial.distance import cdist
 from sklearn.linear_model import LinearRegression
-from .rotations import rotate_matrix
+from .rotations import gen_rotations, load_rotation_blocks
+from scipy.sparse import csr_matrix
 
 cmap = plt.get_cmap('viridis')
 
@@ -311,7 +313,7 @@ class SurfaceEigenstrapping:
                  save_surface=False, seed=None, decomp_method='matrix',
                  medial=None, randomize=False, resample=False, n_jobs=1, 
                  use_cholmod=False, permute=False, add_res=False,
-                 save_rotations=False, parcellation=None, normalize=True):
+                 save_rotations=False, savedir='/tmp', parcellation=None, normalize=True):
         
         # initialization of variables
         if surface is None:
@@ -345,8 +347,10 @@ class SurfaceEigenstrapping:
         self.cholmod = use_cholmod
         self.permute = permute
         self.save_rotations = save_rotations
+        self.savedir = savedir
         self.parcellation = parcellation
         self.normalize = normalize
+        self.rotations_fn = None
         
         self._lm = LinearRegression(fit_intercept=True)
         self.add_res = add_res
@@ -438,6 +442,15 @@ class SurfaceEigenstrapping:
         
         # find eigengroups
         self.groups = _get_eigengroups(self._emodes)
+        self.num_groups = len(self.groups) + 1
+        
+        # generate rotations
+        if self.save_rotations:
+            if self.rotations_fn is None:
+                self.rotations_fn = gen_rotations(self.num_groups, seed=self._rs, 
+                                           save_rotations=True, savedir=self.savedir)
+        
+        self.rotations = load_rotation_blocks(self.rotations_fn)
         
     def __call__(self, n=1):
         """
@@ -459,8 +472,7 @@ class SurfaceEigenstrapping:
         ``self.medial_wall``.
 
         """
-        if self.save_rotations:
-            self.rotations = np.zeros((n, *self.emodes.shape))
+                
         rs = self._rs.randint(np.iinfo(np.int32).max, size=n)
         surrs = np.row_stack(
             Parallel(self.n_jobs)(
@@ -498,31 +510,35 @@ class SurfaceEigenstrapping:
         coeffs = copy.deepcopy(self.coeffs)
         reconstructed_data = copy.deepcopy(self.reconstructed_data)
         residuals = copy.deepcopy(self.residuals)
+        if self.rotations:
+            # pull random index from rotation list
+            ind = self._rs.randint(len(self.rotations))
+            rotation = self.rotations[ind][:self.num_modes, :self.num_modes]
         
-        # initialize the new modes
-        new_modes = np.zeros_like(emodes)
+        # # initialize the new modes
+        new_modes = csr_matrix(emodes)
         
         # resample the hypersphere (except for groups 1 and 2)
-        for idx in range(len(groups)):
-            if idx > 100:
-                gen = True
-            group_modes = emodes[:, groups[idx]]
-            group_evals = evals[groups[idx]]
-            p = group_modes
-            # else, transform to spheroid and index the angles properly
-            if self.normalize:
-                p = transform_to_spheroid(group_evals, group_modes)
+        # for idx in range(len(groups)):
+        #     if idx > 100:
+        #         gen = True
+        #     group_modes = emodes[:, groups[idx]]
+        #     group_evals = evals[groups[idx]]
+        #     p = group_modes
+        #     # else, transform to spheroid and index the angles properly
+        if self.normalize:
+            new_modes = transform_to_spheroid(evals, new_modes)
+        
+        new_modes = new_modes @ rotation #self.rotate_modes(p, gen=True)
+        
+        # transform back to ellipsoid
+        if self.normalize:
+            new_modes = transform_to_ellipsoid(evals, new_modes)
             
-            p_rot = self.rotate_modes(p, gen=True)
-            
-            # transform back to ellipsoid
-            if self.normalize:
-                p_rot = transform_to_ellipsoid(group_evals, p_rot)
-            
-            new_modes[:, groups[idx]] = p_rot
+            #new_modes[:, groups[idx]] = p_rot
         
         if output_modes:
-            return new_modes
+            return new_modes.to_array()
         
         # matrix multiply the estimated coefficients by the new modes
         surrogate = np.zeros_like(self.data)*np.nan # original data
@@ -600,30 +616,30 @@ class SurfaceEigenstrapping:
     def shuffle_modes(self, emodes):
         return self._rs.permutation(emodes)
     
-    def rotate_modes(self, emodes, gen=True):
-        """
-        Rotate modes using random rotations.
+    # def rotate_modes(self, emodes, gen=True):
+    #     """
+    #     Rotate modes using random rotations.
 
-        Parameters
-        ----------
-        vectors : np.ndarray of (n_vertices, mu)
-            Orthogonal vectors of n_vertices and mu modes
+    #     Parameters
+    #     ----------
+    #     vectors : np.ndarray of (n_vertices, mu)
+    #         Orthogonal vectors of n_vertices and mu modes
         
-        Returns
-        -------
-        rotated_vectors : np.ndarray of (n_vertices, mu)
-            Array containing rotated vectors for each pair.
+    #     Returns
+    #     -------
+    #     rotated_vectors : np.ndarray of (n_vertices, mu)
+    #         Array containing rotated vectors for each pair.
 
-        """
-        if gen is True:
-            return rotate_matrix(emodes)
+    #     """
+    #     if gen is True:
+    #         return rotate_matrix(emodes)
         
-        mu = emodes.shape[1]
-        if mu % 2 == 0 or mu == 1:
-            return rotate_matrix(emodes)
+    #     mu = emodes.shape[1]
+    #     if mu % 2 == 0 or mu == 1:
+    #         return rotate_matrix(emodes)
         
-        l = (mu - 1) // 2
-        return np.dot(emodes, self._loader.get_random_rotation(l))
+    #     l = (mu - 1) // 2
+    #     return np.dot(emodes, self._loader.get_random_rotation(l))
         
     def resample_eigenspace(self, emodes, distribution='normal'):
         """
