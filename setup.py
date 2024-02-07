@@ -12,4 +12,6 @@ setup(name='eigenstrapping',
       author_email='nikitas.koussis@gmail.com',
       url='https://github.com/SNG-newy/eigenstrapping',
       packages=find_packages(),
+      package_data={'': ['datasets/osf.json']},
+      include_package_data=True,
       )
