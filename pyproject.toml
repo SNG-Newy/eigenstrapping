@@ -27,7 +27,7 @@ dependencies = [
   "matplotlib",
   "neuromaps",
   "nibabel",
-  "nilearn<=0.10.2",
+  "nilearn",
   "numpy",
   "pandas",
   "scipy>=0.11",

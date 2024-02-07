@@ -134,23 +134,6 @@ def _get_eigengroups(eigs, suppress_message=False):
             return groups
         groups.append(np.arange(i,ii))
         i = ii
-        
-def _get_eigengroups_from_num(num_groups, suppress_message=True):
-    """
-    Helper function to find eigengroups
-    """
-    if suppress_message is False:
-        print("IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION TO WORK")
-    # number of eigenmodes, accounting for discarded non-zero mode
-    l = num_groups
-    
-    groups = []
-    ii = 0
-    for g in range(1, l):
-        ii = 2*g+1
-        groups.append(ii)
-    
-    return groups
     
 
 def reconstruct_data(coeffs, eigenmodes):
