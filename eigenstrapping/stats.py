@@ -4,7 +4,7 @@ import numpy as np
 from joblib import Parallel, delayed
 from scipy.spatial.distance import correlation
 from netneurotools import stats
-from neuromaps import compare_images
+from neuromaps.stats import compare_images
 
 def compare_maps(src, trg, metric='pearsonr', ignore_zero=True, nulls=None,
                    nan_policy='omit', return_nulls=False):
