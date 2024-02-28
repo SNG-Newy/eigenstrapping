@@ -20,11 +20,12 @@ statistically-rigorous models for null hypothesis testing between brain maps usi
 non-local spectral shape descriptors - or geometric eigenmodes.
 Documentation can be found `here <https://eigenstrapping.readthedocs.io/en/latest/>`_. Read our preprint `here <https://dx.doi.org/10.1101/2024.02.07.579070>`_!
 
+.. image:: ./docs/_static/main_figure.jpg
+  :scale: 20%
+  :align: center
+
 Features
 --------
-
-.. image:: https://github.com/SNG-newy/eigenstrapping/docs/_static/main_figure.png
-  :scale: 70%
 
 - A growing library of eigenmodes of standard surfaces and surface densities (fsaverage, fsLR)
 - Cortical and subcortical null models for assessing statistical correspondence between brain maps
