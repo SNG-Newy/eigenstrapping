@@ -325,7 +325,7 @@ class SurfaceEigenstrapping:
             self.surface_file = surface
             self.surface = load_surface(self.surface_file)
         
-        self.data = copy.deepcopy(data)
+        self.data = copy.deepcopy(dataio(data))
         self.n_vertices = self.data.shape[0]
         
         if emodes is not None and evals is not None:
