@@ -25,7 +25,7 @@ from .utils import (_suppress, _print, is_string_like,
 ASSOC_CELLS = vtkDataObject.FIELD_ASSOCIATION_CELLS
 ASSOC_POINTS = vtkDataObject.FIELD_ASSOCIATION_POINTS
 
-blockPrint()
+#blockPrint()
 
 """
 Helper utilities for geometry and registration
