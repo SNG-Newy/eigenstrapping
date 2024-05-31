@@ -1,6 +1,6 @@
 
 |
-   
+
 .. image:: https://zenodo.org/badge/710175458.svg
   :target: https://zenodo.org/doi/10.5281/zenodo.10583040
   :alt: Zenodo DOI
@@ -8,7 +8,7 @@
 .. image:: https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml/badge.svg
   :target: https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml
   :alt: run-tests status
-   
+
 .. image:: https://github.com/SNG-newy/eigenstrapping/actions/workflows/docs.yml/badge.svg
   :target: https://eigenstrapping.readthedocs.io/en/latest/
   :alt: deploy-docs status
@@ -59,10 +59,10 @@ To run eigenstrapping, the following Python packages are required (these should 
 * `nilearn <https://nilearn.github.io/>`_
 * `pandas <https://pandas.pydata.org/>`_
 * `brainspace <https://github.com/MICA-MNI/BrainSpace/tree/master/>`_
-* netneurotools - note: the latest version must be installed directly from this `link here <https://github.com/nikitas-k/netneurotools_scipyfix>`_
+* `netneurotools <https://github.com/netneurolab/netneurotools>`_
 
-``nibabel`` and ``nilearn`` are required for surfaces and volumes. ``matplotlib`` 
-is only required for fitting plots in :mod:`eigenstrapping.fit` and some of the surface 
+``nibabel`` and ``nilearn`` are required for surfaces and volumes. ``matplotlib``
+is only required for fitting plots in :mod:`eigenstrapping.fit` and some of the surface
 plotting functions. Future improvements will reduce the number of dependencies
 needed.
 
