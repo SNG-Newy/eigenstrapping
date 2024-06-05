@@ -29,7 +29,8 @@ dependencies = [
   "numpy",
   "scipy>=0.11",
   "seaborn",
-  "netneurotools>=0.2.4"
+  "netneurotools>=0.2.4",
+  "tqdm"
 ]
 maintainers = [
   {name = "Systems Neuroscience Group Newcastle", email = "nikitas.koussis@gmail.com"},
