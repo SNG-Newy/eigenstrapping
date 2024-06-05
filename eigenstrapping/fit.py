@@ -9,11 +9,7 @@ from eigenstrapping import (
 import matplotlib.pyplot as plt
 import numpy as np
 from netneurotools.stats import efficient_pearsonr
-from brainsmash.mapgen import Base, Sampled
-from brainsmash.mapgen.memmap import txt2memmap
-from .geometry import geodesic_distmat
-from .utils import parcellate_distmat, calc_parcellate
-import os
+from brainspace.null_models.variogram import SampledSurrogateMaps
 
 eigen_args = ['surface', 'evals', 'emodes',
                'num_modes', 'save_surface',
@@ -117,7 +113,8 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
     #     dict_dist = txt2memmap(file, output_dir=d)
     #     D = np.load(dict_dist['distmat'])
     #     index = np.load(dict_dist['index'])
-    generator = Sampled(x=x, D=D, index=index)
+    generator = SampledSurrogateMaps(**var_params)
+    generator.fit(D, index)
 
     nsurrs_var = nsurrs
     if nsurrs > 50:
@@ -127,16 +124,18 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
     emp_var_samples = np.empty((nsurrs_var, generator.nh))
     u0_samples = np.empty((nsurrs_var, generator.nh))
     for i in range(nsurrs_var):
-        idx = generator.sample()  # Randomly sample a subset of brain areas
-        v = generator.compute_variogram(generator.x, idx)
-        u = generator.D[idx, :]
+        xi = generator._check_map(x)
+        idx = generator.sample(xi.size)  # Randomly sample a subset of brain areas
+        v = generator.compute_variogram(xi, idx)
+        u = generator._dist[idx, :]
         umax = np.percentile(u, generator.pv)
         uidx = np.where(u < umax)
         emp_var_i, u0i = generator.smooth_variogram(
             u=u[uidx], v=v[uidx], return_h=True)
         emp_var_samples[i], u0_samples[i] = emp_var_i, u0i
         # Surrogate
-        v_null = generator.compute_variogram(surrs[i], idx)
+        surri = generator._check_map(surrs[i])
+        v_null = generator.compute_variogram(surri, idx)
         surr_var[i] = generator.smooth_variogram(
             u=u[uidx], v=v_null[uidx], return_h=False)
 
@@ -191,46 +190,6 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
     plt.tight_layout()
     
     plt.show()
-    
-    if extra_diags:
-        # compute modal power spectra
-        original_power = eigen.psd
-        surr_psds = [compute_psd(surr[eigen.medial_wall], eigen._emodes) for surr in surrs]
-        # calculate moran
-        original_moran = utils.calc_moran(D, x.reshape(1, -1), medmask=eigen_params['medial'] if 'medial'
-                                                            in eigen_params else None)
-        surr_moran = utils.calc_moran(D, surrs[:nsurrs//2], medmask=eigen_params['medial'] if 'medial'
-                                                            in eigen_params else None)
-        
-        # now plot
-        fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
-
-        # Power Spectrum
-        ax = axes[0]
-        ax.semilogy(original_power, label='Original', color='k', linewidth=2, zorder=1000)
-        for i, power in enumerate(surr_psds[:len(surr_psds)//2]):
-            ax.semilogy(power, alpha=0.3, linestyle='dashed')
-        ax.set_title('Power Spectrum')
-        ax.set_xlabel('Mode')
-        ax.set_ylabel('Normalized power')
-        leg = ax.legend(loc=0)
-        leg.get_frame().set_linewidth(0.0)
-        
-        # Moran's I
-        ax = axes[1]
-        labels = ['Original'] + [f'Surrogate {i+1}' for i in range(nsurrs//2)]
-        
-        # Only displaying every second label for clarity
-        visible_labels = [label if idx % 2 == 0 else '' for idx, label in enumerate(labels)]
-        
-        ax.bar(range(len(labels)), np.hstack((original_moran, surr_moran)), color='c', alpha=0.7)
-        ax.set_title("Moran's I")
-        ax.set_ylabel("Moran's I Value")
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(visible_labels, rotation=30, ha='right')
-        
-        plt.tight_layout()
-        plt.show()
         
     if return_data:
         return surrs
@@ -282,7 +241,7 @@ def volumetric_fit(x, volume, nsurrs=10, num_modes=100,
             var_params[arg] = params[arg]
             
     # initialize
-    eigen = VolumetricEigenstrapping(x, volume, num_modes=num_modes, **eigen_params)
+    eigen = VolumetricEigenstrapping(data=x, volume=volume, num_modes=num_modes, **eigen_params)
     
     # surrogates
     surrs = eigen(n=nsurrs)
@@ -290,25 +249,29 @@ def volumetric_fit(x, volume, nsurrs=10, num_modes=100,
     x, D, index = eigen.calculate_distance_matrix(return_data=True)
     
     # Instantiate surrogate map generator
-    generator = Sampled(x=x, D=D, index=index, knn=900)
+    generator = SampledSurrogateMaps(**var_params)
+    generator.fit(D, index)
 
+    nsurrs_var = nsurrs
     if nsurrs > 50:
-        nsurrs = 50
+        nsurrs_var = 50
     # Compute target & surrogate map variograms
-    surr_var = np.empty((nsurrs, generator.nh))
-    emp_var_samples = np.empty((nsurrs, generator.nh))
-    u0_samples = np.empty((nsurrs, generator.nh))
-    for i in range(nsurrs):
-        idx = generator.sample()  # Randomly sample a subset of brain areas
-        v = generator.compute_variogram(generator.x, idx)
-        u = generator.D[idx, :]
+    surr_var = np.empty((nsurrs_var, generator.nh))
+    emp_var_samples = np.empty((nsurrs_var, generator.nh))
+    u0_samples = np.empty((nsurrs_var, generator.nh))
+    for i in range(nsurrs_var):
+        xi = generator._check_map(x)
+        idx = generator.sample(xi.size)  # Randomly sample a subset of brain areas
+        v = generator.compute_variogram(xi, idx)
+        u = generator._dist[idx, :]
         umax = np.percentile(u, generator.pv)
         uidx = np.where(u < umax)
         emp_var_i, u0i = generator.smooth_variogram(
             u=u[uidx], v=v[uidx], return_h=True)
         emp_var_samples[i], u0_samples[i] = emp_var_i, u0i
         # Surrogate
-        v_null = generator.compute_variogram(surrs[i], idx)
+        surri = generator._check_map(surrs[i])
+        v_null = generator.compute_variogram(surri, idx)
         surr_var[i] = generator.smooth_variogram(
             u=u[uidx], v=v_null[uidx], return_h=False)
 
@@ -337,11 +300,11 @@ def volumetric_fit(x, volume, nsurrs=10, num_modes=100,
     # Pairwise correlation plot
     ax = axes[1]
     correlations, _ = efficient_pearsonr(x, surrs.T, nan_policy='omit')
-    ax.hist(correlations, bins=nsurrs//2, color='#377eb8', alpha=0.7)
+    ax.hist(correlations, bins=nsurrs_var//2, color='#377eb8', alpha=0.7)
     ax.axvline(x=np.mean(correlations), color='r', linestyle='dashed', linewidth=1)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.set_title("Pairwise Correlations")
+    ax.set_title("Distribution of correlations")
     ax.set_xlabel("Correlation coefficient")
     ax.set_ylabel("Frequency")
         
@@ -360,44 +323,6 @@ def volumetric_fit(x, volume, nsurrs=10, num_modes=100,
     plt.tight_layout()
     
     plt.show()
-    
-    if extra_diags:
-        # compute modal power spectra
-        original_power = eigen.psd
-        surr_psds = [compute_psd(surr, eigen._emodes) for surr in surrs]
-        # calculate moran
-        original_moran = utils.calc_moran(D, x.reshape(1, -1))
-        surr_moran = utils.calc_moran(D, surrs[:nsurrs//2])
-        
-        # now plot
-        fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
-
-        # Power Spectrum
-        ax = axes[0]
-        ax.semilogy(original_power, label='Original', color='k', linewidth=2, zorder=1000)
-        for i, power in enumerate(surr_psds[:len(surr_psds)//2]):
-            ax.semilogy(power, alpha=0.3, linestyle='dashed')
-        ax.set_title('Power Spectrum')
-        ax.set_xlabel('Mode')
-        ax.set_ylabel('Normalized power')
-        leg = ax.legend(loc=0)
-        leg.get_frame().set_linewidth(0.0)
-        
-        # Moran's I
-        ax = axes[1]
-        labels = ['Original'] + [f'Surrogate {i+1}' for i in range(nsurrs//2)]
-        
-        # Only displaying every second label for clarity
-        visible_labels = [label if idx % 2 == 0 else '' for idx, label in enumerate(labels)]
-        
-        ax.bar(range(len(labels)), np.hstack((original_moran, surr_moran)), color='c', alpha=0.7)
-        ax.set_title("Moran's I")
-        ax.set_ylabel("Moran's I Value")
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(visible_labels, rotation=30, ha='right')
-        
-        plt.tight_layout()
-        plt.show()
     
     if return_data:
         return surrs

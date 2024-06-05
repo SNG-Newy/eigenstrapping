@@ -1,10 +1,10 @@
 .. _getting_started:
 
 Getting Started
----------------
+===============
 
 Quick introduction to brain maps and eigenmodes
-===============================================
+-----------------------------------------------
 
 Patterns on the cortical surface or in the subcortex ("brain maps") more often
 than not express with smoothness - spatial autocorrelation. Accounting
@@ -23,28 +23,8 @@ eigenmodes: they are orthogonal. By taking random rotations of them, one can
 create new brain maps with the same smoothness but randomized topology. The steps
 below will help you get started and build your own surrogate maps.
 
-Input data types
-================
-
-``eigenstrapping`` requires a few inputs:
-
-* A brain map, i.e., a one-dimensional vector, and either:
-
-* A surface mesh, i.e., a set of vertices and face indices
-* A set of eigenmodes and corresponding eigenvalues
-    
-For the first run, we will load all of these files from the example dataset,
-but let's assume that these files have already been generated. 
-
-``eigenstrapping`` can handle a variety of inputs:
-
-* Delimited `*.txt` files
-* Neuroimaging files such as `*.nii`, `*.gii`, or `*scalar.gii`
-* Data and memory-mapped distance matrices written to `*.npy` files
-* Numpy arrays and array-like objects
-
 First run
-=========
+---------
 
 The package comes with example surfaces (and their eigenmodes) and cortical gradient data 
 from Margulies' 2015 paper (see :ref:`References <references>`). Let's start by importing the data (this may take

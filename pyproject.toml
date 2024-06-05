@@ -11,7 +11,7 @@ install_requires = [
 
 [project]
 name = "eigenstrapping"
-version = "0.0.1.11"
+version = "0.0.2"
 description = "For generating surrogate brain maps with spatial autocorrelation using geometric eigenmodes."
 readme = "README.rst"
 authors = [
@@ -19,20 +19,16 @@ authors = [
 ]
 license = { file = "LICENSE" }
 dependencies = [
-  "brainsmash==0.11.0",
-  "brainspace==0.1.10",
+  "brainspace",
   "joblib",
-  "parspin",
-  "lapy==1.0.1",
-  "matplotlib",
+  "lapy>=1.0.1",
+  "matplotlib<=3.8.4",
   "neuromaps",
   "nibabel",
   "nilearn<=0.10.2",
   "numpy",
-  "pandas",
   "scipy>=0.11",
   "seaborn",
-  "tqdm",
   "netneurotools>=0.2.4"
 ]
 maintainers = [

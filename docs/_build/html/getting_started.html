@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started &mdash; eigenstrapping 0.0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Getting Started &mdash; eigenstrapping 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+      <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -20,7 +27,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Usage" href="usage.html" />
-    <link rel="prev" title="Installation Guide" href="install.html" /> 
+    <link rel="prev" title="Features" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,16 +50,14 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#quick-introduction-to-brain-maps-and-eigenmodes">Quick introduction to brain maps and eigenmodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#input-data-types">Input data types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#first-run">First run</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Reference API</a></li>
 </ul>
 
         </div>
@@ -71,7 +76,6 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Getting Started</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/getting_started.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -97,24 +101,6 @@ this method (see <a class="reference internal" href="references.html#references"
 eigenmodes: they are orthogonal. By taking random rotations of them, one can
 create new brain maps with the same smoothness but randomized topology. The steps
 below will help you get started and build your own surrogate maps.</p>
-</section>
-<section id="input-data-types">
-<h2>Input data types<a class="headerlink" href="#input-data-types" title="Permalink to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> requires a few inputs:</p>
-<ul class="simple">
-<li><p>A brain map, i.e., a one-dimensional vector, and either:</p></li>
-<li><p>A surface mesh, i.e., a set of vertices and face indices</p></li>
-<li><p>A set of eigenmodes and corresponding eigenvalues</p></li>
-</ul>
-<p>For the first run, we will load all of these files from the example dataset,
-but let’s assume that these files have already been generated.</p>
-<p><code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> can handle a variety of inputs:</p>
-<ul class="simple">
-<li><p>Delimited <cite>*.txt</cite> files</p></li>
-<li><p>Neuroimaging files such as <cite>*.nii</cite>, <cite>*.gii</cite>, or <cite>*scalar.gii</cite></p></li>
-<li><p>Data and memory-mapped distance matrices written to <cite>*.npy</cite> files</p></li>
-<li><p>Numpy arrays and array-like objects</p></li>
-</ul>
 </section>
 <section id="first-run">
 <h2>First run<a class="headerlink" href="#first-run" title="Permalink to this heading"></a></h2>
@@ -171,14 +157,14 @@ a few moments):</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="install.html" class="btn btn-neutral float-left" title="Installation Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Nikitas C. Koussis.</p>
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

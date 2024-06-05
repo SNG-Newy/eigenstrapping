@@ -1,5 +1,5 @@
 from lapy import TetMesh, TriaMesh, Solver
-from lapy.diffgeo import tria_compute_gradient, tria_compute_divergence
+from lapy.diffgeo import compute_geodesic_f
 
 import warnings
 import subprocess
@@ -21,6 +21,8 @@ from brainspace.utils.parcellation import relabel_consecutive
 from brainspace.mesh.mesh_creation import build_polydata
 from .utils import (_suppress, _print, is_string_like,
                     enablePrint, blockPrint)
+
+from tqdm import tqdm
 
 ASSOC_CELLS = vtkDataObject.FIELD_ASSOCIATION_CELLS
 ASSOC_POINTS = vtkDataObject.FIELD_ASSOCIATION_POINTS
@@ -99,6 +101,107 @@ from <https://github.com/BMHLab/BrainEigenmodes>, authors J. Pang and K. Aquino.
 #     transformed_image = warped_moving_image.to_nibabel()
     
 #     return transformed_image
+
+def geodesic_distmat(surface, mask_input=None, use_cholmod=False, n_jobs=1, m=1.0):
+    """
+    Compute geodesic distance using the heat diffusion method built into LaPy
+        Based on: doi/10.1145/2516971.2516977
+        Crane et al., "Geodesics in heat: A new approach to computing distance 
+        based on heat flow"
+    
+    Parameters
+    ----------
+    surf : str
+        Path to input surface
+    mask_input : array_like or str
+        Mask to remove from `surf` (i.e. medial wall) during the geodesic distance calculations
+    use_cholmod : bool, optional
+        Specify whether to use ``scikit-sparse`` cholmod libraries (much faster), if False then
+        uses ``scipy.sparse`` libraries instead (much slower). Default False.
+    n_jobs : int, optional
+        Number of workers to use for parallel calls to ._thread_method(),
+        default is 1.
+    m : float, optional
+        Scaling factor for time in the heat kernel calculation. As `m` decreases,
+        distances increase in accuracy (if you care) but increases computation time. Best put between
+        1.0 and 0.1. Default 1.0.
+    
+    Returns
+    -------
+    D : (N,N) np.ndarray
+        Distance matrix of every vertex to every other vertex
+    
+    """
+    # load surface (as a brainspace object)
+    surface_orig = me.mesh_io.read_surface(surface)
+    
+    # load mask
+    # can be any ROI (even whole cortex)
+    if isinstance(mask_input, np.ndarray):
+        mask = mask_input
+    elif mask_input is None:
+        mask = np.ones(len(surface_orig.GetPoints().astype('float32')))
+    else:
+        mask_input_file_main, mask_input_file_ext = os.path.splitext(mask_input)
+        if mask_input_file_ext == '.txt':
+            mask = np.loadtxt(mask_input)
+        elif mask_input_file_ext == '.gii':
+            mask = nib.load(mask_input).darrays[0].data
+        else:
+            mask = mask_input
+
+    # create temporary suface based on mask
+    surface_cut = _surface_mask(surface_orig, mask)
+    # load surface (as a lapy object)
+    vertices = surface_cut.GetPoints().astype('float32')
+    faces = me.mesh_elements.get_cells(surface_cut).astype('int32')
+    tria = TriaMesh(vertices, faces)
+
+    fem = Solver(tria, lump=True, use_cholmod=use_cholmod)
+    # time of heat evolution:
+    t = m * tria.avg_edge_length() ** 2
+    # backward Euler matrix:
+    factor = fem.mass + t * fem.stiffness # keep factor, dummy. the slowest part is the cholmod factorization :grug:
+        
+    D = __distance__(tria, factor, n_jobs=n_jobs)
+    
+    # if parc:
+    #     D = np.row_stack([
+    #         D[parc == lab].mean(axis=0) for lab in np.unique(parc)
+    #     ])
+    #     D[np.diag_indices_from(D)] = 0
+    #     D = D[1:, 1:]
+    
+    return D
+
+def __distance__(tria, factor, n_jobs=1, use_cholmod=False):
+    D = np.column_stack(
+        Parallel(n_jobs=n_jobs, prefer='processes')(
+            delayed(_distance_method)(tria, factor, use_cholmod=use_cholmod, v=v) for v in tqdm(range(tria.v.shape[0]))
+            )
+        )
+    
+    return np.asarray(D.squeeze())
+
+def _distance_method(tria, factor, use_cholmod=False, v=0):
+    b0 = np.zeros((tria.v.shape[0]))
+    b0[np.array(v)] = 1.0
+
+    if use_cholmod:
+        sksparse = import_optional_dependency("sksparse", raise_error=True)
+        importlib.import_module(".cholmod", sksparse.__name__)
+        #print("Solver: Cholesky decomposition from scikit-sparse cholmod ...")
+        factor = sksparse.cholmod.cholesky(factor)
+        u = factor(b0)
+    else:
+        sksparse=None
+        from scipy.sparse.linalg import splu
+        #print("Solver: spsolve (LU decomposition) ...")
+        factor = splu(factor)
+        u = factor.solve(b0)
+    d = compute_geodesic_f(tria, u)
+
+    return d
 
 def gaussian(x, amplitude, mean, stddev):
     return amplitude * np.exp(- ((x - mean) ** 2) / (2 * (stddev ** 2)))
@@ -601,10 +704,13 @@ def get_indices(surface_original, surface_new):
     for i in range(np.shape(surface_new.Points)[0]):
         indices[i] = np.where(np.all(np.equal(surface_new.Points[i,:],surface_original.Points), axis=1))[0][0]
     indices = indices.astype(int)
+
+    # potential target for improved runtime
+    # takes several minutes for a big mesh
     
     return indices
 
-def calc_eig(mesh, num_modes, use_cholmod=False, return_zero=False):
+def calc_eig(mesh, num_modes, use_cholmod=False, remove_zero=False):
     """Calculate the eigenvalues and eigenmodes of a surface.
 
     Parameters
@@ -623,12 +729,12 @@ def calc_eig(mesh, num_modes, use_cholmod=False, return_zero=False):
     """
     
     fem = Solver(mesh, use_cholmod=use_cholmod)
-    evals, emodes = fem.eigs(k=num_modes+1)
+    evals, emodes = fem.eigs(k=num_modes)
     
-    if return_zero:
-        return evals[:-1], emodes[:, :-1]
+    if remove_zero:
+        return evals[1:], emodes[:, 1:]
     
-    return evals[1:], emodes[:, 1:]
+    return evals[:-1], emodes[:, :-1]
     
 def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, num_modes=200, use_cholmod=False, remove_zero=True):
     """Main function to calculate the eigenmodes of a cortical surface with 
@@ -678,23 +784,13 @@ def calc_surface_eigenmodes(surface_input_filename, mask_input, save_cut=False, 
     # create temporary suface based on mask
     surface_cut = _surface_mask(surface_orig, mask)
 
-    temp_cut_filename='/tmp/temp_cut.gii'
-    temp_cut = nib.GiftiImage()
-    temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(surface_cut.GetPoints().astype('float32')))
-    temp_cut.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(me.mesh_elements.get_cells(surface_cut).astype('int32')))
-    nib.save(temp_cut, temp_cut_filename)
     # load surface (as a lapy object)
-    vertices, faces = temp_cut.agg_data()
+    vertices = surface_cut.GetPoints().astype('float32')
+    faces = me.mesh_elements.get_cells(surface_cut).astype('int32')
     tria = TriaMesh(vertices, faces)
-    os.unlink(temp_cut_filename)
     
     # calculate eigenvalues and eigenmodes
-    evals, emodes = calc_eig(tria, num_modes+1, use_cholmod)
-    
-    if remove_zero:
-        # remove zeroth eigenmode
-        evals = evals[1:]
-        emodes = emodes[:, 1:]
+    evals, emodes = calc_eig(tria, num_modes+1, use_cholmod, remove_zero=remove_zero)
     
     # get indices of vertices of surface_orig that match surface_cut
     indices = get_indices(surface_orig, surface_cut)
@@ -1047,123 +1143,6 @@ def normalize_vtk(tet, nifti_input_filename, normalization_type='none', normaliz
         f.close()
 
     return tet_norm
-
-def geodesic_distmat(tria, parc=None, n_jobs=1, use_cholmod=False, verbose=False):
-    """
-    Compute geodesic distance using the heat diffusion method built into LaPy
-        Based on: doi/10.1145/2516971.2516977
-        Crane et al., "Geodesics in heat: A new approach to computing distance 
-        based on heat flow"
-    
-    Parameters
-    ----------
-    surf : lapy compatible object
-        Input surface
-    n_jobs : int, optional
-        Number of workers to use for parallel calls to ._thread_method(),
-        default is 1.
-    
-    Returns
-    -------
-    D : (N,N) np.ndarray
-        Distance matrix of every vertex to every other vertex
-    
-    """
-    blockPrint()
-    if verbose:
-        enablePrint()
-        
-    fem = Solver(tria, lump=True, use_cholmod=use_cholmod)
-        
-    D = __distance_threading__(tria, fem, n_jobs=n_jobs)
-    
-    if parc:
-        D = np.row_stack([
-            D[parc == lab].mean(axis=0) for lab in np.unique(parc)
-        ])
-        D[np.diag_indices_from(D)] = 0
-        D = D[1:, 1:]
-    
-    return D
-
-def __distance_threading__(tria, fem, n_jobs=1):
-
-    D = np.column_stack(
-        Parallel(n_jobs=n_jobs, prefer='threads')(
-            delayed(_distance_thread_method)(tria, fem, bvert=bvert) for bvert in range(tria.v.shape[0])
-            )
-        )
-    
-    return np.asarray(D.squeeze())
-
-def _distance_thread_method(tria, fem, bvert):    
-    u = diffusion(tria, fem, vids=bvert, m=1.0)
-    
-    tfunc = tria_compute_gradient(tria, u)
-    
-    X = -tfunc / np.sqrt((tfunc**2).sum(1))[:,np.newaxis]
-    X = np.nan_to_num(X)
-    
-    b0 = tria_compute_divergence(tria, X)
-    
-    if fem.use_cholmod:
-        sksparse = import_optional_dependency("sksparse", raise_error=fem.use_cholmod)
-        chol = sksparse.cholesky(-fem.stiffness)
-        d = chol(b0)
-    else:
-        A = fem.stiffness
-        H = -A
-        lu = splu(H)
-        d = lu.solve(b0.astype(np.float32))
-    
-    d = d - min(d)
-        
-    return d
-
-def diffusion(geometry, fem, vids, m=1.0, use_cholmod=False):
-    """
-    Computes heat diffusion from initial vertices in vids using
-    backward Euler solution for time t [MO2]:
-    
-      t = m * avg_edge_length^2
-    
-    Parameters
-    ----------
-      geometry      TriaMesh or TetMesh, on which to run diffusion
-      vids          vertex index or indices where initial heat is applied
-      m             factor (default 1) to compute time of heat evolution:
-                    t = m * avg_edge_length^2
-      use_cholmod   (default True), if Cholmod is not found
-                    revert to LU decomposition (slower)
-    
-    Returns
-    -------
-      vfunc         heat diffusion at vertices
-    """
-    sksparse = import_optional_dependency("sksparse", raise_error=use_cholmod)
-    
-    nv = len(geometry.v)
-    fem = fem
-    # time of heat evolution:
-    t = m * geometry.avg_edge_length() ** 2
-    # backward Euler matrix:
-    hmat = fem.mass + t * fem.stiffness
-    # set initial heat
-    b0 = np.zeros((nv,))
-    b0[np.array(vids)] = 1.0
-    # solve H x = b0
-    #print("Matrix Format now:  " + hmat.getformat())
-    if sksparse is not None:
-        print("Solver: Cholesky decomposition from scikit-sparse cholmod ...")
-        chol = sksparse.cholmod.cholesky(hmat)
-        vfunc = chol(b0)
-    else:
-        from scipy.sparse.linalg import splu
-    
-        print("Solver: spsolve (LU decomposition) ...")
-        lu = splu(hmat)
-        vfunc = lu.solve(np.float32(b0))
-    return vfunc
 
 def euclidean_distmat(mesh):
     """

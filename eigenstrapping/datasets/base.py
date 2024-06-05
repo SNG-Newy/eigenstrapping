@@ -40,14 +40,6 @@ def load_surface_examples(data_dir=None, with_surface=False):
     space = 'fsaverage'
     version = 'fsaverage5'
     den = '10k'
-        
-    local_path = op.dirname(__file__)
-    
-    data_fname = '{}_{}.gii'
-    mask_fname = '{}_{}.txt'
-    
-    data_pth = op.join(local_path, 'brainmaps', data_fname)
-    mask_pth = op.join(local_path, 'masks', mask_fname)
     
     surfs = [None] * 2
     data = [None] * 2
@@ -55,16 +47,21 @@ def load_surface_examples(data_dir=None, with_surface=False):
     evals = [None] * 2
     masks = [None] * 2
     for i, side in enumerate(['lh', 'rh']):
+        if side == 'lh':
+            hemi = 'L'
+        else:
+            hemi = 'R'
+
         surfs[i] = fetch_data(name='surfaces', space=space, den=den,
                               hemi=side)
-        data[i] = nib.load(data_pth.format(version, side)).agg_data()
+        data[i] = nib.load(datasets.fetch_annotation(source='abagen', hemi=hemi, return_single=True)).agg_data()
         emodes_file = fetch_data(name='eigenmodes', space=space, den=den, hemi=side,
                    format='emodes')
         emodes[i] = np.loadtxt(emodes_file)
         evals_file = fetch_data(name='eigenmodes', space=space, den=den, hemi=side,
                    format='evals')
         evals[i] = np.loadtxt(evals_file)
-        masks[i] = np.loadtxt(mask_pth.format(version, side)).astype(np.bool_)
+        masks[i] = nib.load(getattr(getattr(datasets.fetch_fsaverage(density='10k'), 'medial'), hemi)).agg_data() 
         data[i][~masks[i]] = np.nan
     
     if with_surface:
@@ -99,7 +96,7 @@ def load_genepc(join=False):
     
     return data_lh, data_rh
 
-def load_distmat(space='fsaverage', den='10k', data_dir=None, hemi='lh', parcellated=False, sort=False):
+def load_distmat(space='fsaverage', den='10k', data_dir=None, hemi='lh', sort=False):
     """
     Downloads geodesic distance matrices. If the dense distance matrix is retrieved, 
     there is an option to return the sorted distance matrix and index memmapped, ala
@@ -138,10 +135,11 @@ def load_distmat(space='fsaverage', den='10k', data_dir=None, hemi='lh', parcell
             Dense geodesic distance matrix
 
     """
-    if parcellated:
-        distmat = fetch_data(name='distmat', space=space, den=den,
-                             hemi=hemi, format='parc')
-        return distmat
+    # rm parcellated?
+    # if parcellated:
+    #     distmat = fetch_data(name='distmat', space=space, den=den,
+    #                          hemi=hemi, format='parc')
+    #     return distmat
     
     distmat = fetch_data(name='distmat', space=space, den=den,
                          hemi=hemi, format='dense')
@@ -156,7 +154,7 @@ def load_distmat(space='fsaverage', den='10k', data_dir=None, hemi='lh', parcell
     else:
         return distmat
 
-def load_subcort(structure='thalamus', data_dir=None):
+def load_subcort(structure='tha', data_dir=None):
     """
     Loads all the files for the subcortical structures used in the paper -
     cortical-subcortical gradients and the subcortical ROIs from the 25% 
@@ -165,7 +163,8 @@ def load_subcort(structure='thalamus', data_dir=None):
     Parameters
     ----------
     structure : str, optional
-        Which subcortical structure to return. Default is 'thalamus'.
+        Which subcortical structure to return. Options are 'tha', 'hippo' or 'stri'.
+        Default is 'tha'.
 
     Returns
     -------
@@ -177,15 +176,13 @@ def load_subcort(structure='thalamus', data_dir=None):
 
     """
     
-    data = [None] * 2
-    mask = [None] * 2
-    for side, i in enumerate(['lh', 'rh']):
-        data[i] = fetch_data(name='subcortical', space=structure, hemi=side, format='volume')
-        mask[i] = fetch_data(name='subcortical', space=structure, hemi=side, format='mask')
-    
-    return data[0], data[1], mask[0], mask[1]
+    path = op.dirname(__file__)
+    data = op.join(path, 'HarvardOxford', f'hcp_{structure}-lh_gradient_1.txt')
+    mask = op.join(path, 'HarvardOxford', f'hcp_{structure}-lh_thr25.nii.gz')
 
-def load_native(data_dir=None):
+    return data, mask
+
+def load_native_tutorial(data_dir=None):
     """
     Download HCP native surface and data for demonstration purposes.
 
@@ -200,10 +197,12 @@ def load_native(data_dir=None):
         Dictionary of filenames 
 
     """
-    native_surface = fetch_data(name='surfaces', space='native', data_dir=data_dir)
-    native_data = fetch_data(name='brainmaps', space='native', data_dir=data_dir)
+    path = op.dirname(__file__)
+    native_surface = op.join(path, 'HCP', '102816.L.midthickness_MSMAll.164k_fs_LR.surf.gii')
+    native_thickness = op.join(path, 'HCP', '102816.L.MyelinMap_BC.164k_fs_LR.func.gii')
+    native_myelin = op.join(path, 'HCP', '102816.L.corrThickness.164k_fs_LR.shape.gii')
     
-    return {'surface' : native_surface[0], 'data' : native_data[0]}
+    return {'surface' : native_surface, 'thickness' : native_thickness, 'myelin': native_myelin}
 
 def fetch_data(*, name=None, space=None, den=None, res=None, hemi=None,
                    tags=None, format=None, data_dir=None, verbose=1):
