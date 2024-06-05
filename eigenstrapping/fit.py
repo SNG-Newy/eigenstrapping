@@ -9,16 +9,7 @@ from eigenstrapping import (
 import matplotlib.pyplot as plt
 import numpy as np
 from netneurotools.stats import efficient_pearsonr
-<<<<<<< HEAD
 from brainspace.null_models.variogram import SampledSurrogateMaps
-=======
-from brainsmash.mapgen import Base, Sampled
-from brainsmash.mapgen.memmap import txt2memmap
-from .geometry import geodesic_distmat
-from .utils import parcellate_distmat, calc_parcellate
-from .dataio import dataio
-import os
->>>>>>> 5e90a88942c498b02bb74183c0f5afcadbfdad7b
 
 eigen_args = ['surface', 'evals', 'emodes',
                'num_modes', 'save_surface',
