@@ -1,9 +1,5 @@
-from brainsmash.config import parcel_labels_lr
 from .utils import is_string_like
-import tempfile
-from os import path, system
 import nibabel as nib
-import pandas as pd
 from pathlib import Path
 import numpy as np
 
@@ -86,68 +82,6 @@ def load(filename):
             return _load_cifti2(filename)
         except AttributeError:
             raise TypeError("This file cannot be loaded: {}".format(filename))
-
-
-def export_cifti_mapping(image=None):
-    """
-    Compute the map from CIFTI indices to surface vertices and volume voxels.
-
-    Parameters
-    ----------
-    image : filename or None, default None
-        Path to NIFTI-2 format (.nii) neuroimaging file. The metadata
-        from this file is used to determine the CIFTI indices and voxel
-        coordinates of elements in the image. This file must include all
-        subcortical volumes and both cortical hemispheres.
-
-    Returns
-    -------
-    maps : dict
-        A dictionary containing the maps between CIFTI indices, surface
-        vertices, and volume voxels. Keys include 'cortex_left',
-        'cortex_right', and 'volume'.
-
-    Notes
-    -----
-    `image` must be a whole-brain NIFTI file for this function to work
-    as-written. See the Workbench documentation here for more details:
-    https://www.humanconnectome.org/software/workbench-command/-cifti-export-dense-mapping.
-
-    """
-
-    # Temporary files written to by Workbench, then loaded and returned
-    tempdir = tempfile.gettempdir()
-
-    if image is None:
-        image = parcel_labels_lr
-
-    basecmd = "wb_command -cifti-export-dense-mapping '{}' COLUMN ".format(
-        image)
-
-    # Subcortex (volume)
-    volume = path.join(tempdir, "volume.txt")
-    system(basecmd + " -volume-all '{}' -structure ".format(volume))
-
-    # Cortex left
-    left = path.join(tempdir, "left.txt")
-    system(basecmd + "-surface CORTEX_LEFT '{}'".format(left))
-
-    # Cortex right
-    right = path.join(tempdir, "right.txt")
-    system(basecmd + "-surface CORTEX_RIGHT '{}'".format(right))
-
-    maps = dict()
-    maps['volume'] = pd.read_table(
-        volume, header=None, index_col=0, sep=' ',
-        names=['structure', 'mni_i', 'mni_j', 'mni_k']).rename_axis('index')
-
-    maps['cortex_left'] = pd.read_table(left, header=None, index_col=0, sep=' ',
-                                        names=['vertex']).rename_axis('index')
-    maps['cortex_right'] = pd.read_table(
-        right, header=None, index_col=0, sep=' ', names=['vertex']).rename_axis(
-        'index')
-
-    return maps
 
 
 def _load_gifti(filename):

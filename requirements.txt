@@ -1,9 +1,7 @@
-brainsmash==0.11.0
 brainspace==0.1.10
 joblib
-parspin
 lapy==1.0.1
-matplotlib
+matplotlib<=3.8.4
 neuromaps
 nibabel
 nilearn
@@ -11,5 +9,4 @@ numpy
 pandas
 scipy>=0.11
 seaborn
-tqdm
 netneurotools>=0.2.4

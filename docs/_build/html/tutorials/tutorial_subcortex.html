@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial 2: Generating surrogate subcortical maps &mdash; eigenstrapping 0.0.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>Tutorial 2: Generating surrogate subcortical maps &mdash; eigenstrapping 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -43,19 +50,17 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tutorial_cortex.html">Tutorial 1: Generating surrogate maps on the cortex</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 2: Generating surrogate subcortical maps</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#nulls-with-labels-or-multiple-labels-label-fusion">Nulls with labels or multiple labels (label fusion)</a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 2: Generating surrogate subcortical maps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial_ownsurface.html">Tutorial 3: Generating surrogate maps on your own surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Eigenstrapping general usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Meshes and mesh operations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Reference API</a></li>
 </ul>
 
         </div>
@@ -75,7 +80,6 @@
           <li class="breadcrumb-item"><a href="../usage.html">Usage</a></li>
       <li class="breadcrumb-item active">Tutorial 2: Generating surrogate subcortical maps</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/tutorials/tutorial_subcortex.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -95,38 +99,55 @@ space. If you have these two things:</p>
 <p>then generating subcortical nulls is simple.</p>
 <p>You would call the function in a similar manner as the cortical fit:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">fit</span><span class="p">,</span> <span class="n">datasets</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">thalamus_data</span><span class="p">,</span> <span class="n">thalamus_mask</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_subcort</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s1">&#39;thalamus&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">thalamus_data</span><span class="p">)</span>
-<span class="go">nib.Nifti1Image</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_data</span><span class="p">,</span> <span class="n">hipp_mask</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;hippo&#39;</span><span class="p">)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">thalamus_mask</span><span class="p">)</span>
-<span class="go">nib.Nifti1Image</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">thal_surrs</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">volumetric_fit</span><span class="p">(</span>
-<span class="go">                    x=thalamus_data,</span>
-<span class="go">                    mask=thalamus_mask,</span>
-<span class="go">                    nsurrs=100,</span>
-<span class="go">                    num_modes=500,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_surrs</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">volumetric_fit</span><span class="p">(</span>
+<span class="go">                    x=hipp_data,</span>
+<span class="go">                    volume=hipp_mask,</span>
+<span class="go">                    nsurrs=1000,</span>
+<span class="go">                    num_modes=100,</span>
 <span class="go">                    resample=True,</span>
 <span class="go">                    return_data=True</span>
 <span class="go">                    )</span>
+
+<span class="go">preprocessing...done</span>
+<span class="go">starting generation of surface...</span>
+<span class="go">slice nb 30...</span>
+<span class="go">slice nb 40...</span>
+<span class="go">constructing final surface...</span>
+<span class="go">(surface with 2056 faces and 1030 vertices)...done</span>
+<span class="go">computing the maximum edge length...2.828427 mm</span>
+<span class="go">reversing orientation of faces...</span>
+<span class="go">checking orientation of surface...</span>
+<span class="go">0.000 % of the vertices (0 vertices) exhibit an orientation change</span>
+
+<span class="go">counting number of connected components...</span>
+<span class="go">1030 voxel in cpt #1: X=2 [v=1030,e=3084,f=2056] located at (-23.000000, -31.722330, 7.277670)</span>
+<span class="go">For the whole surface: X=2 [v=1030,e=3084,f=2056]</span>
+<span class="go">One single component has been found</span>
+<span class="go">nothing to do</span>
+<span class="go">writing out surface...done</span>
+<span class="go">--&gt; VTK format         ...</span>
+<span class="go">--&gt; DONE ( V: 1449 , T: 5168 )</span>
+
+<span class="go">TetMesh with regular Laplace</span>
+<span class="go">Solver: spsolve (LU decomposition) ...</span>
+<span class="go">IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION TO WORK</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_surrs</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(1000, 952)</span>
 </pre></div>
 </div>
-<p>The above function uses some external libraries (<code class="docutils literal notranslate"><span class="pre">gmsh</span></code> and FreeSurfer <code class="docutils literal notranslate"><span class="pre">mri_mc</span></code>)
+<p>IMPORTANT: The above function uses external libraries (<code class="docutils literal notranslate"><span class="pre">gmsh</span></code> and FreeSurfer <code class="docutils literal notranslate"><span class="pre">mri_mc</span></code>)
 to generate the subcortical meshes based on the <cite>volume</cite>. The above code will
-output a few figures as with the <cite>eigenstrapping.fit.surface_fit</cite> function:</p>
-<a class="reference internal image-reference" href="_static/examples/example_figs/tutorial_subcortex1.png"><img alt="_static/examples/example_figs/tutorial_subcortex1.png" class="align-center" src="_static/examples/example_figs/tutorial_subcortex1.png" /></a>
+output a few figures as with the <a class="reference internal" href="../generated/eigenstrapping.fit.surface_fit.html#eigenstrapping.fit.surface_fit" title="eigenstrapping.fit.surface_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.fit.surface_fit()</span></code></a> function:</p>
+<a class="reference internal image-reference" href="../_images/tutorial_subcortex1.png"><img alt="../_images/tutorial_subcortex1.png" class="align-center" src="../_images/tutorial_subcortex1.png" style="width: 744.5px; height: 245.0px;" /></a>
 <p>In the above example, we loaded subcortical data where the data is a volume in
 MNI152 2mm space (based on cortico-subcortical gradients generated using the
 connectopic mapping approach, see <a class="reference internal" href="../references.html#references"><span class="std std-ref">References</span></a>), and the mask
 image is a label volume in MNI152 space where the ROI is labelled as “1” and the
-non-ROI (the rest of the volume) is labelled “0”.</p>
-<section id="nulls-with-labels-or-multiple-labels-label-fusion">
-<h2>Nulls with labels or multiple labels (label fusion)<a class="headerlink" href="#nulls-with-labels-or-multiple-labels-label-fusion" title="Permalink to this heading"></a></h2>
-<p>Functions of <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> also accept non-mask ROIs, such as parcellated
-(labelled) images with a single label or list of labels.</p>
-<p><em>Tutorial forthcoming</em></p>
-</section>
+non-ROI (the rest of the volume) is labelled “0”. It is important to make sure
+this is the case!</p>
 </section>
 
 
@@ -140,7 +161,7 @@ non-ROI (the rest of the volume) is labelled “0”.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Nikitas C. Koussis.</p>
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

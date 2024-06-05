@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Usage &mdash; eigenstrapping 0.0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Usage &mdash; eigenstrapping 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+      <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -43,16 +50,17 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_cortex.html">Tutorial 1: Generating surrogate maps on the cortex</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_subcortex.html">Tutorial 2: Generating surrogate subcortical maps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_ownsurface.html">Tutorial 3: Generating surrogate maps on your own surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/base.html">Eigenstrapping general usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/geometry.html">Meshes and mesh operations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Reference API</a></li>
 </ul>
 
         </div>
@@ -71,7 +79,6 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Usage</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -89,22 +96,30 @@ your first surrogates, and plotting the variogram fits (to check the smoothness)
 These tutorials also show you how to generate eigenmodes on your own surfaces
 and surrogates using that surface, say if you have a pathological cohort that you
 expect has a different geometry to a healthy cohort. If you still have questions after
-going through this guide you can refer to the <a class="reference internal" href="api.html#api"><span class="std std-ref">API</span></a> or ask a question
+going through this guide you can refer to the <a class="reference internal" href="api.html#api"><span class="std std-ref">Reference API</span></a> or ask a question
 on <a class="reference external" href="https://github.com/SNG-newy/eigenstrapping/issues">GitHub</a>.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/tutorial_cortex.html">Tutorial 1: Generating surrogate maps on the cortex</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_cortex.html#nulls-with-non-parcellated-data">Nulls with non-parcellated data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_cortex.html#nulls-with-parcellated-data">Nulls with parcellated data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_cortex.html#nulls-with-surface-data">Nulls with surface data</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/tutorial_subcortex.html">Tutorial 2: Generating surrogate subcortical maps</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_subcortex.html#nulls-with-labels-or-multiple-labels-label-fusion">Nulls with labels or multiple labels (label fusion)</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/tutorial_subcortex.html">Tutorial 2: Generating surrogate subcortical maps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/tutorial_ownsurface.html">Tutorial 3: Generating surrogate maps on your own surfaces</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_ownsurface.html#important">Important</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/base.html">Eigenstrapping general usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/base.html#surface-file-formats">Surface file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/base.html#volumetric-file-formats">Volumetric file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/base.html#general-usage">General usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/geometry.html">Meshes and mesh operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/geometry.html#remeshing">Remeshing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/geometry.html#deriving-eigenmodes-from-a-mesh">Deriving eigenmodes from a mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/geometry.html#mesh-distance-calculations">Mesh distance calculations</a></li>
 </ul>
 </li>
 </ul>
@@ -122,7 +137,7 @@ on <a class="reference external" href="https://github.com/SNG-newy/eigenstrappin
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Nikitas C. Koussis.</p>
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

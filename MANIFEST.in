@@ -1,3 +1,3 @@
 include README.rst LICENSE
-recursive-include eigenstrapping/datasets/data *
+recursive-include eigenstrapping/datasets *
 include eigenstrapping/datasets/osf.json

@@ -363,7 +363,7 @@ class SurfaceEigenstrapping:
         # mask out medial wall
         if self.medial is None:
             # get index of medial wall hopefully
-            self.medial_wall = ~np.isnan(self.data).astype(np.int64)+2
+            self.medial_wall = np.logical_and(~np.isnan(self.data), ~np.isclose(self.data, 0.0, rtol=1e-9, atol=1e-9)).astype(int)
             
         elif self.medial is False:
             if self.resample is True:

@@ -135,10 +135,9 @@ function, which takes an input mesh:
     >>> surf_lh
     '/mnt/eigenstrapping-data/surfaces/space-fsaverage_den-10k_hemi-lh_pial.surf.gii'
     
-    >>> mesh = geometry.load_mesh(surf_lh)
     >>> # for our purposes, we won't use sksparse libraries, but to do so, we
     >>> # pass `use_cholmod=True` to the function
-    >>> distmat_lh = geometry.geodesic_distmat(mesh, use_cholmod=False)
+    >>> distmat_lh = geometry.geodesic_distmat(surf_lh, use_cholmod=False)
     # eventually ...
     
     >>> distmat_lh.shape
@@ -189,18 +188,4 @@ Euclidean distance calculation is performed in a similar way:
 Notice the pronounced difference between the two methods. This is because the
 cortex is constructed as a 2D sheet (basically the surface of a sphere), so it
 is not advisable to use Euclidean distance calculations. For the subcortical
-volumes, you would use the Euclidean distance.    
-
-.. _usage_geometry_other:
-
-Other mesh operations
----------------------
-
-Alongside the above functions, there are several useful tools within
-the :mod:`eigenstrapping.geometry` module, including calculation of vertex
-normals, which may be useful for calculating the action of a function on the mesh:
-
-.. code-block:: py
-
-    >>> 
-    
+volumes, you would use the Euclidean distance.
