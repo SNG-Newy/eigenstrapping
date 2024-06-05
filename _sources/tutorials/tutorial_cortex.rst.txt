@@ -13,29 +13,27 @@ significance of the association between them.
 
 .. _tutorial_nonparc:
 
-Nulls with non-parcellated data
--------------------------------
+Nulls with surface data
+-----------------------
 
-We'll first start by (re)loading the gradient data, another brain maps
-(the Allen Human Brain Atlas gene PC1) and everything we need to
-compute the surrogates:
+We'll first start by loading the Allen Human Brain Atlas gene PC1 and
+everything we need to compute the surrogates:
 
 .. code-block:: py
 
     >>> from eigenstrapping import datasets, fit
-    >>> gradient_lh, gradient_rh, emodes_lh, emodes_rh, evals_lh, evals_rh = datasets.load_surface_examples()
-    >>> genepc_lh, genepc_rh = datasets.load_genepc()
-    >>> distmat, index = datasets.load_distmat('fsaverage', hemi='lh')
+    >>> genepc_lh, genepc_rh, emodes_lh, emodes_rh, evals_lh, evals_rh = datasets.load_surface_examples()
+    >>> distmat, index = datasets.load_distmat('fsaverage', hemi='lh', sort=True)
     >>> # note: this download may take a while
     >>> surrs_lh = fit.surface_fit(
-                        x=gradient_lh,
+                        x=genepc_lh,
                         D=distmat,
                         index=index,
                         emodes=emodes_lh,
                         evals=evals_lh,
                         num_modes=100,
-                        nsurrs=100,
-                        resample=True,
+                        nsurrs=1000,
+                        resample=False,
                         return_data=True,
                         )
     No surface given, expecting precomputed eigenvalues and eigenmodes
@@ -43,7 +41,7 @@ compute the surrogates:
     Surrogates computed, computing stats...
     
     >>> surrs_lh.shape
-    (10242, 100)
+    (1000, 10242)
 
 Those who've completed the :ref:`Getting Started <getting_started>` section might
 notice that we're not using the :class:`eigenstrapping.SurfaceEigenstrapping` class
@@ -52,88 +50,77 @@ control over the parameters as before, but it also gives us an output variogram
 and other helpful info. The above code will give you a figure: 
 
 .. image:: ../_static/examples/example_figs/tutorial_cortex1.png
-   :scale: 70%
+   :scale: 50%
    :align: center
 
 We can see that the variogram of the surrogates doesn't match up with the empirical
-data (they're too smooth, hence a lower variogram curve). To form a proper null, 
-the surrogates should line up with the empirical variogram. This is also why the
-histogram of correlations with the original map is also slightly too narrow. We 
+data (they're too smooth, hence a lower variogram curve). The residuals in the third plot 
+also don't form a low amplitude Gaussian, meaning they have some information in them. It is
+worth noting here that the residuals may never form a low amplitude Gaussian. It depends
+on the structure of the original data, and if that data is highly non-normal. Hence why
+we perform non-parametric statistics in the first place.
+
+To form a proper null, the surrogates should line up with the empirical variogram. We 
 need to increase the number of modes that we use:
 
 .. code-block:: py
 
     >>> surrs_lh = fit.surface_fit(
-    ...                    x=gradient_lh,
-    ...                    D=distmat,
-    ...                    index=index,
-    ...                    emodes=emodes_lh,
-    ...                    evals=evals_lh,
-    ...                    num_modes=1000,
-    ...                    nsurrs=100,
-    ...                    resample=True,
-    ...                    return_data=True,
-    ...                    )
+                            x=genepc_lh,
+                            D=distmat,
+                            index=index,
+                            emodes=emodes_lh,
+                            evals=evals_lh,
+                            num_modes=250,
+                            nsurrs=1000,
+                            resample=False,
+                            return_data=True,
+                            )
     No surface given, expecting precomputed eigenvalues and eigenmodes
     IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION TO WORK
     Surrogates computed, computing stats...
                     
 .. image:: ../_static/examples/example_figs/tutorial_cortex2.png
-   :scale: 70%
+   :scale: 50%
    :align: center
 
-1000 modes seems to be a better fit for the gradient data. You may notice that
-the surrogate distribution is now wider - this is what we want, though not always. 
-Let's compare the two brain maps, now that we've generated the null distribution:
+250 modes seems to be a better fit for the gene PC1 data. You may notice that
+the surrogate distribution is now wider, better reflecting the underlying null.
+
+Let's compare the gene PC1 map to another brain map, now that we've generated the null distribution:
 
 .. code-block:: py
 
     >>> from eigenstrapping import stats
-    >>> corr, pval = stats.compare_maps(gradient_lh, genepc_lh, surrs=surrs_lh)
+    >>> from neuromaps import datasets as ndatasets, transforms, images
+    >>> neurosynth_lh = images.load_data(
+        transforms.mni152_to_fsaverage(
+            ndatasets.fetch_annotation(source='neurosynth', return_single=True),
+            fsavg_density='10k'
+        )
+    )[:10242] # download and load the neurosynth principal gradient, we only want the left hemisphere
+    >>> corr, pval, perms = stats.compare_maps(genepc_lh, neurosynth_lh, nulls=surrs_lh, return_nulls=True)
     >>> print(f'r = {corr:.3f}, p = {pval:.3f}')
-    r = -0.521, p = 0.059
+    r = 0.350, p = 0.401
+
+We can also plot the histogram of null correlations to the target map to make sure it is what we expect 
+(the mean value of correlations should be ~0), while the distribution should follow a roughly-Gaussian shape
+
+.. code-block:: py
+    
+    >>> import matplotlib.pyplot as plt
+    >>> plt.hist(perms, bins=101, density=True)
+    >>> plt.xlim([-1, 1])
+    >>> plt.axvline(perms.mean(), linestyle='dashed', zorder=3, lw=3, color='r', label='mean correlation')
+    >>> plt.xlabel('correlations')
+    >>> plt.ylabel('density')
+    >>> plt.legend(loc=0)
+    >>> plt.show()
+
+.. image:: ../_static/examples/example_figs/tutorial_cortex3.png
+   :scale: 75%
+   :align: center
     
 Make sure that the first argument of the ``stats.compare_maps`` function is the
-map that the surrogate array ``surrs_lh`` were computed on, otherwise you can
-get very strange behavior.
-
-.. _tutorial_parc:
-
-Nulls with parcellated data
----------------------------
-
-The functions in ``eigenstrapping.fit`` can also handle parcellated data, and 
-do so by accepting an optional parameter: ``parcellation``. If this is provided,
-the functions assume this is either a left or right hemisphere array that is in 
-the same space as ``data``. For our purposes, let's fetch one of the parcellations
-that is available for the 10k `fsaverage` surface:
-
-.. code-block:: py
-
-    >>> from eigenstrapping import datasets
-    >>> schaefer = datasets.get_schaefer()
-    >>> print(schaefer)
-    Surface(lh='/mnt/nnt-data/atl-schaefer2018/fsaverage5/atl-Schaefer2018_space-fsaverage5_hemi-L_desc-400Parcels7Networks_deterministic.annot', rh='/mnt/nnt-data/atl-schaefer2018/fsaverage5/atl-Schaefer2018_space-fsaverage5_hemi-R_desc-400Parcels7Networks_deterministic.annot')
-
-We just want the left hemisphere parcellation, and to relabel our data
-with that. As with all of the above functions, if you want to repeat this tutorial
-with the right hemisphere, just switch "lh" for "rh". Let's proceed:
-
-.. code-block:: py
-
-    >>> parcellation = schaefer['lh']
-    >>> gradient_parc = utils.calc_parcellate(parcellation, gradient_lh)
-    >>> genepc_parc = utils.calc_parcellate(parcellation, genepc_lh)
-    >>> print(gradient_parc.shape, genepc_parc.shape)
-    (200,) (200,)
-    
-Now we'll parcellate our null maps:
-
-.. code-block:: py
-
-    >>> surrs_parc = utils.calc_parcellate(parcellation, surrs_lh.T)
-    >>> print(surrs_parc.shape)
-    (200, 100)
-    
-Nulls generated from data that has been pre-parcellated (i.e., on a downsampled
-surface) are a future implementation.
+map that the surrogate array was computed on, otherwise you can
+get strange behavior.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.dataio &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.dataio &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
@@ -19,7 +19,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=855213f0"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -78,12 +78,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for eigenstrapping.dataio</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">brainsmash.config</span> <span class="kn">import</span> <span class="n">parcel_labels_lr</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">is_string_like</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">system</span>
+<span></span><span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">is_string_like</span>
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -166,68 +162,6 @@
             <span class="k">return</span> <span class="n">_load_cifti2</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;This file cannot be loaded: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="export_cifti_mapping"><a class="viewcode-back" href="../../generated/eigenstrapping.dataio.export_cifti_mapping.html#eigenstrapping.dataio.export_cifti_mapping">[docs]</a><span class="k">def</span> <span class="nf">export_cifti_mapping</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the map from CIFTI indices to surface vertices and volume voxels.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    image : filename or None, default None</span>
-<span class="sd">        Path to NIFTI-2 format (.nii) neuroimaging file. The metadata</span>
-<span class="sd">        from this file is used to determine the CIFTI indices and voxel</span>
-<span class="sd">        coordinates of elements in the image. This file must include all</span>
-<span class="sd">        subcortical volumes and both cortical hemispheres.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    maps : dict</span>
-<span class="sd">        A dictionary containing the maps between CIFTI indices, surface</span>
-<span class="sd">        vertices, and volume voxels. Keys include &#39;cortex_left&#39;,</span>
-<span class="sd">        &#39;cortex_right&#39;, and &#39;volume&#39;.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    `image` must be a whole-brain NIFTI file for this function to work</span>
-<span class="sd">    as-written. See the Workbench documentation here for more details:</span>
-<span class="sd">    https://www.humanconnectome.org/software/workbench-command/-cifti-export-dense-mapping.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Temporary files written to by Workbench, then loaded and returned</span>
-    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">parcel_labels_lr</span>
-
-    <span class="n">basecmd</span> <span class="o">=</span> <span class="s2">&quot;wb_command -cifti-export-dense-mapping &#39;</span><span class="si">{}</span><span class="s2">&#39; COLUMN &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">image</span><span class="p">)</span>
-
-    <span class="c1"># Subcortex (volume)</span>
-    <span class="n">volume</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="s2">&quot;volume.txt&quot;</span><span class="p">)</span>
-    <span class="n">system</span><span class="p">(</span><span class="n">basecmd</span> <span class="o">+</span> <span class="s2">&quot; -volume-all &#39;</span><span class="si">{}</span><span class="s2">&#39; -structure &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">volume</span><span class="p">))</span>
-
-    <span class="c1"># Cortex left</span>
-    <span class="n">left</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="s2">&quot;left.txt&quot;</span><span class="p">)</span>
-    <span class="n">system</span><span class="p">(</span><span class="n">basecmd</span> <span class="o">+</span> <span class="s2">&quot;-surface CORTEX_LEFT &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
-
-    <span class="c1"># Cortex right</span>
-    <span class="n">right</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="s2">&quot;right.txt&quot;</span><span class="p">)</span>
-    <span class="n">system</span><span class="p">(</span><span class="n">basecmd</span> <span class="o">+</span> <span class="s2">&quot;-surface CORTEX_RIGHT &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
-
-    <span class="n">maps</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">maps</span><span class="p">[</span><span class="s1">&#39;volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
-        <span class="n">volume</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span>
-        <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;structure&#39;</span><span class="p">,</span> <span class="s1">&#39;mni_i&#39;</span><span class="p">,</span> <span class="s1">&#39;mni_j&#39;</span><span class="p">,</span> <span class="s1">&#39;mni_k&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
-
-    <span class="n">maps</span><span class="p">[</span><span class="s1">&#39;cortex_left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span>
-                                        <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;vertex&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
-    <span class="n">maps</span><span class="p">[</span><span class="s1">&#39;cortex_right&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
-        <span class="n">right</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;vertex&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span>
-        <span class="s1">&#39;index&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">maps</span></div>
 
 
 <span class="k">def</span> <span class="nf">_load_gifti</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>

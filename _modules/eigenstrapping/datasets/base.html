@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.datasets.base &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.datasets.base &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
@@ -19,7 +19,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=855213f0"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=c1dcd045"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -120,14 +120,6 @@
     <span class="n">space</span> <span class="o">=</span> <span class="s1">&#39;fsaverage&#39;</span>
     <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;fsaverage5&#39;</span>
     <span class="n">den</span> <span class="o">=</span> <span class="s1">&#39;10k&#39;</span>
-        
-    <span class="n">local_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-    
-    <span class="n">data_fname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.gii&#39;</span>
-    <span class="n">mask_fname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.txt&#39;</span>
-    
-    <span class="n">data_pth</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s1">&#39;brainmaps&#39;</span><span class="p">,</span> <span class="n">data_fname</span><span class="p">)</span>
-    <span class="n">mask_pth</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s1">&#39;masks&#39;</span><span class="p">,</span> <span class="n">mask_fname</span><span class="p">)</span>
     
     <span class="n">surfs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
@@ -135,16 +127,21 @@
     <span class="n">evals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
     <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">side</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="s1">&#39;rh&#39;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">side</span> <span class="o">==</span> <span class="s1">&#39;lh&#39;</span><span class="p">:</span>
+            <span class="n">hemi</span> <span class="o">=</span> <span class="s1">&#39;L&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hemi</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+
         <span class="n">surfs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surfaces&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span>
                               <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">)</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_pth</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">side</span><span class="p">))</span><span class="o">.</span><span class="n">agg_data</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_annotation</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;abagen&#39;</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="n">hemi</span><span class="p">,</span> <span class="n">return_single</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">agg_data</span><span class="p">()</span>
         <span class="n">emodes_file</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;eigenmodes&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">,</span>
                    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;emodes&#39;</span><span class="p">)</span>
         <span class="n">emodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">emodes_file</span><span class="p">)</span>
         <span class="n">evals_file</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;eigenmodes&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">,</span>
                    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;evals&#39;</span><span class="p">)</span>
         <span class="n">evals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">evals_file</span><span class="p">)</span>
-        <span class="n">masks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mask_pth</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">side</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
+        <span class="n">masks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_fsaverage</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">),</span> <span class="s1">&#39;medial&#39;</span><span class="p">),</span> <span class="n">hemi</span><span class="p">))</span><span class="o">.</span><span class="n">agg_data</span><span class="p">()</span> 
         <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="o">~</span><span class="n">masks</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     
     <span class="k">if</span> <span class="n">with_surface</span><span class="p">:</span>
@@ -179,7 +176,7 @@
     
     <span class="k">return</span> <span class="n">data_lh</span><span class="p">,</span> <span class="n">data_rh</span></div>
 
-<div class="viewcode-block" id="load_distmat"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat">[docs]</a><span class="k">def</span> <span class="nf">load_distmat</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">parcellated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="load_distmat"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat">[docs]</a><span class="k">def</span> <span class="nf">load_distmat</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Downloads geodesic distance matrices. If the dense distance matrix is retrieved, </span>
 <span class="sd">    there is an option to return the sorted distance matrix and index memmapped, ala</span>
@@ -218,10 +215,11 @@
 <span class="sd">            Dense geodesic distance matrix</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">parcellated</span><span class="p">:</span>
-        <span class="n">distmat</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distmat&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span>
-                             <span class="n">hemi</span><span class="o">=</span><span class="n">hemi</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;parc&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">distmat</span>
+    <span class="c1"># rm parcellated?</span>
+    <span class="c1"># if parcellated:</span>
+    <span class="c1">#     distmat = fetch_data(name=&#39;distmat&#39;, space=space, den=den,</span>
+    <span class="c1">#                          hemi=hemi, format=&#39;parc&#39;)</span>
+    <span class="c1">#     return distmat</span>
     
     <span class="n">distmat</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distmat&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="n">den</span><span class="p">,</span>
                          <span class="n">hemi</span><span class="o">=</span><span class="n">hemi</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;dense&#39;</span><span class="p">)</span>
@@ -236,7 +234,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">distmat</span></div>
 
-<div class="viewcode-block" id="load_subcort"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort">[docs]</a><span class="k">def</span> <span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;thalamus&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="load_subcort"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort">[docs]</a><span class="k">def</span> <span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;tha&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads all the files for the subcortical structures used in the paper -</span>
 <span class="sd">    cortical-subcortical gradients and the subcortical ROIs from the 25% </span>
@@ -245,7 +243,8 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    structure : str, optional</span>
-<span class="sd">        Which subcortical structure to return. Default is &#39;thalamus&#39;.</span>
+<span class="sd">        Which subcortical structure to return. Options are &#39;tha&#39;, &#39;hippo&#39; or &#39;stri&#39;.</span>
+<span class="sd">        Default is &#39;tha&#39;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -257,15 +256,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
-    <span class="k">for</span> <span class="n">side</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="s1">&#39;rh&#39;</span><span class="p">]):</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;subcortical&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;volume&#39;</span><span class="p">)</span>
-        <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;subcortical&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="n">side</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;mask&#39;</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mask</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;HarvardOxford&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hcp_</span><span class="si">{</span><span class="n">structure</span><span class="si">}</span><span class="s1">-lh_gradient_1.txt&#39;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;HarvardOxford&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hcp_</span><span class="si">{</span><span class="n">structure</span><span class="si">}</span><span class="s1">-lh_thr25.nii.gz&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="load_native"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_native.html#eigenstrapping.datasets.load_native">[docs]</a><span class="k">def</span> <span class="nf">load_native</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">mask</span></div>
+
+<span class="k">def</span> <span class="nf">load_native_tutorial</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download HCP native surface and data for demonstration purposes.</span>
 
@@ -280,10 +277,12 @@
 <span class="sd">        Dictionary of filenames </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">native_surface</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surfaces&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="n">data_dir</span><span class="p">)</span>
-    <span class="n">native_data</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;brainmaps&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="n">data_dir</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="n">native_surface</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;HCP&#39;</span><span class="p">,</span> <span class="s1">&#39;102816.L.midthickness_MSMAll.164k_fs_LR.surf.gii&#39;</span><span class="p">)</span>
+    <span class="n">native_thickness</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;HCP&#39;</span><span class="p">,</span> <span class="s1">&#39;102816.L.MyelinMap_BC.164k_fs_LR.func.gii&#39;</span><span class="p">)</span>
+    <span class="n">native_myelin</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;HCP&#39;</span><span class="p">,</span> <span class="s1">&#39;102816.L.corrThickness.164k_fs_LR.shape.gii&#39;</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;surface&#39;</span> <span class="p">:</span> <span class="n">native_surface</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;data&#39;</span> <span class="p">:</span> <span class="n">native_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span></div>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;surface&#39;</span> <span class="p">:</span> <span class="n">native_surface</span><span class="p">,</span> <span class="s1">&#39;thickness&#39;</span> <span class="p">:</span> <span class="n">native_thickness</span><span class="p">,</span> <span class="s1">&#39;myelin&#39;</span><span class="p">:</span> <span class="n">native_myelin</span><span class="p">}</span>
 
 <div class="viewcode-block" id="fetch_data"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data">[docs]</a><span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>

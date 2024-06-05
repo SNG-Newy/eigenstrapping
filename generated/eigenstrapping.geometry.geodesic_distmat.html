@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.geometry.geodesic_distmat &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.geometry.geodesic_distmat &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
@@ -20,7 +20,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
@@ -113,7 +113,7 @@
 <h1>eigenstrapping.geometry.geodesic_distmat<a class="headerlink" href="#eigenstrapping-geometry-geodesic-distmat" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="eigenstrapping.geometry.geodesic_distmat">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">geodesic_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tria</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cholmod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#geodesic_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.geodesic_distmat" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.geometry.</span></span><span class="sig-name descname"><span class="pre">geodesic_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cholmod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/geometry.html#geodesic_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.geometry.geodesic_distmat" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Compute geodesic distance using the heat diffusion method built into LaPy</dt><dd><p>Based on: doi/10.1145/2516971.2516977
 Crane et al., “Geodesics in heat: A new approach to computing distance
@@ -123,9 +123,15 @@ based on heat flow”</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>surf</strong> (<em>lapy compatible object</em>) – Input surface</p></li>
+<li><p><strong>surf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to input surface</p></li>
+<li><p><strong>mask_input</strong> (<em>array_like</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Mask to remove from <cite>surf</cite> (i.e. medial wall) during the geodesic distance calculations</p></li>
+<li><p><strong>use_cholmod</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Specify whether to use <code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code> cholmod libraries (much faster), if False then
+uses <code class="docutils literal notranslate"><span class="pre">scipy.sparse</span></code> libraries instead (much slower). Default False.</p></li>
 <li><p><strong>n_jobs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of workers to use for parallel calls to ._thread_method(),
 default is 1.</p></li>
+<li><p><strong>m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Scaling factor for time in the heat kernel calculation. As <cite>m</cite> decreases,
+distances increase in accuracy (if you care) but increases computation time. Best put between
+1.0 and 0.1. Default 1.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

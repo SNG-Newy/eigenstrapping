@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meshes and mesh operations &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>Meshes and mesh operations &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
@@ -20,14 +20,14 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="References" href="../references.html" />
-    <link rel="prev" title="Eigenmode rotations" href="rotations.html" /> 
+    <link rel="prev" title="Eigenstrapping general usage" href="base.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,12 +56,10 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorial_subcortex.html">Tutorial 2: Generating surrogate subcortical maps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial_ownsurface.html">Tutorial 3: Generating surrogate maps on your own surfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html">Eigenstrapping general usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rotations.html">Eigenmode rotations</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Meshes and mesh operations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#remeshing">Remeshing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deriving-eigenmodes-from-a-mesh">Deriving eigenmodes from a mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mesh-distance-calculations">Mesh distance calculations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#other-mesh-operations">Other mesh operations</a></li>
 </ul>
 </li>
 </ul>
@@ -203,10 +201,9 @@ function, which takes an input mesh:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">surf_lh</span>
 <span class="go">&#39;/mnt/eigenstrapping-data/surfaces/space-fsaverage_den-10k_hemi-lh_pial.surf.gii&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="n">surf_lh</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># for our purposes, we won&#39;t use sksparse libraries, but to do so, we</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># pass `use_cholmod=True` to the function</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">geodesic_distmat</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">geodesic_distmat</span><span class="p">(</span><span class="n">surf_lh</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go"># eventually ...</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">distmat_lh</span><span class="o">.</span><span class="n">shape</span>
@@ -257,22 +254,13 @@ cortex is constructed as a 2D sheet (basically the surface of a sphere), so it
 is not advisable to use Euclidean distance calculations. For the subcortical
 volumes, you would use the Euclidean distance.</p>
 </section>
-<section id="other-mesh-operations">
-<span id="usage-geometry-other"></span><h2>Other mesh operations<a class="headerlink" href="#other-mesh-operations" title="Permalink to this heading"></a></h2>
-<p>Alongside the above functions, there are several useful tools within
-the <a class="reference internal" href="../api.html#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> module, including calculation of vertex
-normals, which may be useful for calculating the action of a function on the mesh:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
-</pre></div>
-</div>
-</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rotations.html" class="btn btn-neutral float-left" title="Eigenmode rotations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="base.html" class="btn btn-neutral float-left" title="Eigenstrapping general usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../references.html" class="btn btn-neutral float-right" title="References" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

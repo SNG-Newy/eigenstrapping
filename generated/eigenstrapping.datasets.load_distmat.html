@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.datasets.load_distmat &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.datasets.load_distmat &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
@@ -20,7 +20,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
@@ -64,7 +64,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_subcort.html">eigenstrapping.datasets.load_subcort</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_native.html">eigenstrapping.datasets.load_native</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.fetch_data.html">eigenstrapping.datasets.fetch_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.txt2memmap.html">eigenstrapping.datasets.txt2memmap</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_memmap.html">eigenstrapping.datasets.load_memmap</a></li>
@@ -108,7 +107,7 @@
 <h1>eigenstrapping.datasets.load_distmat<a class="headerlink" href="#eigenstrapping-datasets-load-distmat" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="eigenstrapping.datasets.load_distmat">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.datasets.</span></span><span class="sig-name descname"><span class="pre">load_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fsaverage'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">den</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'10k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hemi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/datasets/base.html#load_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.datasets.load_distmat" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.datasets.</span></span><span class="sig-name descname"><span class="pre">load_distmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fsaverage'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">den</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'10k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hemi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/datasets/base.html#load_distmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.datasets.load_distmat" title="Permalink to this definition"></a></dt>
 <dd><p>Downloads geodesic distance matrices. If the dense distance matrix is retrieved,
 there is an option to return the sorted distance matrix and index memmapped, ala
 variogram calculation in <code class="docutils literal notranslate"><span class="pre">brainsmash</span></code> in <cite>sort=True</cite>. If <cite>sort=False</cite>,

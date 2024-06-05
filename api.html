@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reference API &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>Reference API &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=61a4c737" />
@@ -20,7 +20,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=855213f0"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=c1dcd045"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
@@ -62,7 +62,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.dataio.dataio.html">eigenstrapping.dataio.dataio</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.dataio.load.html">eigenstrapping.dataio.load</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.dataio.export_cifti_mapping.html">eigenstrapping.dataio.export_cifti_mapping</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.dataio.load_surface.html">eigenstrapping.dataio.load_surface</a></li>
 </ul>
 </li>
@@ -71,7 +70,6 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_genepc.html">eigenstrapping.datasets.load_genepc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_distmat.html">eigenstrapping.datasets.load_distmat</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_subcort.html">eigenstrapping.datasets.load_subcort</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_native.html">eigenstrapping.datasets.load_native</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html">eigenstrapping.datasets.fetch_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.txt2memmap.html">eigenstrapping.datasets.txt2memmap</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_memmap.html">eigenstrapping.datasets.load_memmap</a></li>
@@ -207,10 +205,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.dataio.load.html#eigenstrapping.dataio.load" title="eigenstrapping.dataio.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.dataio.load</span></code></a>(filename)</p></td>
 <td><p>Load data contained in a CIFTI2-/GIFTI-format neuroimaging file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.dataio.export_cifti_mapping.html#eigenstrapping.dataio.export_cifti_mapping" title="eigenstrapping.dataio.export_cifti_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.dataio.export_cifti_mapping</span></code></a>([image])</p></td>
-<td><p>Compute the map from CIFTI indices to surface vertices and volume voxels.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.dataio.load_surface.html#eigenstrapping.dataio.load_surface" title="eigenstrapping.dataio.load_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.dataio.load_surface</span></code></a>(filename)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.dataio.load_surface.html#eigenstrapping.dataio.load_surface" title="eigenstrapping.dataio.load_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.dataio.load_surface</span></code></a>(filename)</p></td>
 <td><p>Load data stored in a GIFTI (.gii) neuroimaging file.</p></td>
 </tr>
 </tbody>
@@ -232,16 +227,13 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort" title="eigenstrapping.datasets.load_subcort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_subcort</span></code></a>([...])</p></td>
 <td><p>Loads all the files for the subcortical structures used in the paper - cortical-subcortical gradients and the subcortical ROIs from the 25% probability Harvard-Oxford atlas.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_native.html#eigenstrapping.datasets.load_native" title="eigenstrapping.datasets.load_native"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_native</span></code></a>([data_dir])</p></td>
-<td><p>Download HCP native surface and data for demonstration purposes.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data" title="eigenstrapping.datasets.fetch_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.fetch_data</span></code></a>(*[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data" title="eigenstrapping.datasets.fetch_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.fetch_data</span></code></a>(*[, ...])</p></td>
 <td><p>Downloads files for brain surfaces and eigenmodes matching requested variables</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap" title="eigenstrapping.datasets.txt2memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.txt2memmap</span></code></a>(...[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap" title="eigenstrapping.datasets.txt2memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.txt2memmap</span></code></a>(...[, ...])</p></td>
 <td><p>Export distance matrix to memory-mapped array.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_memmap.html#eigenstrapping.datasets.load_memmap" title="eigenstrapping.datasets.load_memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_memmap</span></code></a>(filename)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_memmap.html#eigenstrapping.datasets.load_memmap" title="eigenstrapping.datasets.load_memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_memmap</span></code></a>(filename)</p></td>
 <td><p>Load a memory-mapped array.</p></td>
 </tr>
 </tbody>
@@ -299,7 +291,7 @@ modes to use to capture the empirical variogram.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.normalize_vtk.html#eigenstrapping.geometry.normalize_vtk" title="eigenstrapping.geometry.normalize_vtk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.normalize_vtk</span></code></a>(tet, ...)</p></td>
 <td><p>Normalize tetrahedral surface.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat" title="eigenstrapping.geometry.geodesic_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.geodesic_distmat</span></code></a>(tria)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat" title="eigenstrapping.geometry.geodesic_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.geodesic_distmat</span></code></a>(surface)</p></td>
 <td><p>Compute geodesic distance using the heat diffusion method built into LaPy</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.euclidean_distmat.html#eigenstrapping.geometry.euclidean_distmat" title="eigenstrapping.geometry.euclidean_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.euclidean_distmat</span></code></a>(mesh)</p></td>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigenstrapping.datasets.load_subcort &mdash; eigenstrapping 0.0.1.10 documentation</title>
+  <title>eigenstrapping.datasets.load_subcort &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
@@ -20,13 +20,13 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=855213f0"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eigenstrapping.datasets.load_native" href="eigenstrapping.datasets.load_native.html" />
+    <link rel="next" title="eigenstrapping.datasets.fetch_data" href="eigenstrapping.datasets.fetch_data.html" />
     <link rel="prev" title="eigenstrapping.datasets.load_distmat" href="eigenstrapping.datasets.load_distmat.html" /> 
 </head>
 
@@ -64,7 +64,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#eigenstrapping.datasets.load_subcort"><code class="docutils literal notranslate"><span class="pre">load_subcort()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_native.html">eigenstrapping.datasets.load_native</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.fetch_data.html">eigenstrapping.datasets.fetch_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.txt2memmap.html">eigenstrapping.datasets.txt2memmap</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eigenstrapping.datasets.load_memmap.html">eigenstrapping.datasets.load_memmap</a></li>
@@ -108,13 +107,14 @@
 <h1>eigenstrapping.datasets.load_subcort<a class="headerlink" href="#eigenstrapping-datasets-load-subcort" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="eigenstrapping.datasets.load_subcort">
-<span class="sig-prename descclassname"><span class="pre">eigenstrapping.datasets.</span></span><span class="sig-name descname"><span class="pre">load_subcort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'thalamus'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/datasets/base.html#load_subcort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.datasets.load_subcort" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eigenstrapping.datasets.</span></span><span class="sig-name descname"><span class="pre">load_subcort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tha'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eigenstrapping/datasets/base.html#load_subcort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eigenstrapping.datasets.load_subcort" title="Permalink to this definition"></a></dt>
 <dd><p>Loads all the files for the subcortical structures used in the paper -
 cortical-subcortical gradients and the subcortical ROIs from the 25%
 probability Harvard-Oxford atlas.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>structure</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which subcortical structure to return. Default is ‘thalamus’.</p>
+<dd class="field-odd"><p><strong>structure</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which subcortical structure to return. Options are ‘tha’, ‘hippo’ or ‘stri’.
+Default is ‘tha’.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -134,7 +134,7 @@ structure and 0 outside structure)</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="eigenstrapping.datasets.load_distmat.html" class="btn btn-neutral float-left" title="eigenstrapping.datasets.load_distmat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="eigenstrapping.datasets.load_native.html" class="btn btn-neutral float-right" title="eigenstrapping.datasets.load_native" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="eigenstrapping.datasets.fetch_data.html" class="btn btn-neutral float-right" title="eigenstrapping.datasets.fetch_data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
