@@ -9,7 +9,16 @@ from eigenstrapping import (
 import matplotlib.pyplot as plt
 import numpy as np
 from netneurotools.stats import efficient_pearsonr
+<<<<<<< HEAD
 from brainspace.null_models.variogram import SampledSurrogateMaps
+=======
+from brainsmash.mapgen import Base, Sampled
+from brainsmash.mapgen.memmap import txt2memmap
+from .geometry import geodesic_distmat
+from .utils import parcellate_distmat, calc_parcellate
+from .dataio import dataio
+import os
+>>>>>>> 5e90a88942c498b02bb74183c0f5afcadbfdad7b
 
 eigen_args = ['surface', 'evals', 'emodes',
                'num_modes', 'save_surface',
@@ -22,7 +31,7 @@ eigen_args = ['surface', 'evals', 'emodes',
 var_args = ['ns', 'pv', 'nh', 'knn', 'pv', 'nh', 'knn', 'n_jobs', 'seed']
 
 def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=False, 
-                extra_diags=False, **params):
+                extra_diags=False, surrs=None, **params):
     """
     Evaluate variogram fits for :class: `eigenstrapping.SurfaceEigenstrapping` 
     to determine how many modes to decompose surface map with. Returns two plots:
@@ -46,6 +55,11 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
         if True, return extra diagnostics
             1. modal power spectra of original and surrogates
             2. Local Moran's I of original and surrogates
+    surrs : (m,N) np.ndarray or np.memmap or path to file
+        If not `None`, skips null generation and calculates the variogram for the
+        given set of surrogates in `surrs`. Expects these to be of shape (m,N) in
+        array-like or `str` of path to file (in .txt or .npy format) containing 
+        this array.
     params :
         Keyword arguments for :class: `eigenstrapping.SurfaceEigenstrapping` or
         :method: `variogram.variogram`. If eigenmodes and eigenvalues have been
@@ -80,12 +94,15 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
             eigen_params[arg] = params[arg]
         if arg in var_args:
             var_params[arg] = params[arg]
-            
-    # initialize
-    eigen = SurfaceEigenstrapping(x, num_modes=num_modes, **eigen_params)
+
+    if surrs is None:
+        # initialize
+        eigen = SurfaceEigenstrapping(x, num_modes=num_modes, **eigen_params)
     
-    # surrogates
-    surrs = eigen(n=nsurrs)
+        # surrogates
+        surrs = eigen(n=nsurrs)
+    else:
+        surrs = dataio(surrs)
     
     # plot variogram
     # Instantiate surrogate map generator
