@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Features &mdash; eigenstrapping 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+      <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Reference API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Features</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="reference external image-reference" href="https://zenodo.org/doi/10.5281/zenodo.10583040"><img alt="Zenodo DOI" src="https://zenodo.org/badge/710175458.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml"><img alt="run-tests status" src="https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://eigenstrapping.readthedocs.io/en/latest/"><img alt="deploy-docs status" src="https://github.com/SNG-newy/eigenstrapping/actions/workflows/docs.yml/badge.svg" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> toolbox is designed to help researchers generate
+statistically-rigorous models for null hypothesis testing between brain maps using
+non-local spectral shape descriptors - or geometric eigenmodes.
+Documentation can be found <a class="reference external" href="https://eigenstrapping.readthedocs.io/en/latest/">here</a>. Read our preprint <a class="reference external" href="https://dx.doi.org/10.1101/2024.02.07.579070">here</a>!</p>
+<a class="reference internal image-reference" href="docs/_static/main_figure.jpg"><img alt="docs/_static/main_figure.jpg" class="align-center" src="docs/_static/main_figure.jpg" /></a>
+<section id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p>A growing library of eigenmodes of standard surfaces and surface densities (fsaverage, fsLR)</p></li>
+<li><p>Cortical and subcortical null models for assessing statistical correspondence between brain maps</p></li>
+<li><p>Generation of geometric eigenmodes on user-derived surfaces</p></li>
+</ul>
+</section>
+<section id="installation-guide">
+<h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this heading"></a></h1>
+<p>Eigenstrapping is available in Python 3.7+. MATLAB version coming soon!</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>eigenstrapping can be installed by downloading the package from the Github repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">SNG</span><span class="o">-</span><span class="n">newy</span><span class="o">/</span><span class="n">eigenstrapping</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">eigenstrapping</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
+<p>To run eigenstrapping, the following Python packages are required (these should be automatically installed with the above command(s), as listed in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file):</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/">numpy</a></p></li>
+<li><p><a class="reference external" href="https://scipy.org/scipylib/index.html">scipy</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/">scikit-learn</a></p></li>
+<li><p><a class="reference external" href="https://github.com/DeepMI/lapy">lapy</a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/">matplotlib</a></p></li>
+<li><p><a class="reference external" href="https://nipy.org/nibabel/index.html">nibabel</a></p></li>
+<li><p><a class="reference external" href="https://nilearn.github.io/">nilearn</a></p></li>
+<li><p><a class="reference external" href="https://pandas.pydata.org/">pandas</a></p></li>
+<li><p><a class="reference external" href="https://github.com/MICA-MNI/BrainSpace/tree/master/">brainspace</a></p></li>
+<li><p><a class="reference external" href="https://github.com/netneurolab/netneurotools">netneurotools</a></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">nibabel</span></code> and <code class="docutils literal notranslate"><span class="pre">nilearn</span></code> are required for surfaces and volumes. <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>
+is only required for fitting plots in <a class="reference internal" href="api.html#module-eigenstrapping.fit" title="eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code></a> and some of the surface
+plotting functions. Future improvements will reduce the number of dependencies
+needed.</p>
+</section>
+<section id="important-additional-dependencies">
+<h2>Important additional dependencies<a class="headerlink" href="#important-additional-dependencies" title="Permalink to this heading"></a></h2>
+<p>In order to avail the user of the volumetric pipeline, the following packages must be installed and sourced correctly:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.humanconnectome.org/software/connectome-workbench">Connectome Workbench</a></p></li>
+<li><p><a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall">FreeSurfer 6.0.0+</a></p></li>
+<li><p><a class="reference external" href="https://gmsh.info/">gmsh</a></p></li>
+</ul>
+</section>
+<section id="optional-dependencies">
+<h2>Optional dependencies<a class="headerlink" href="#optional-dependencies" title="Permalink to this heading"></a></h2>
+<p>In order to speed up calculation of eigenmodes, you can utilize <code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code> libraries
+to use Cholesky decomposition rather than LU decomposition. If these libraries are already
+installed, the functions in <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> will automagically recognize this and use these
+libraries, without the user specifying (as default behavior, this can be turned off. Refer to
+<a class="reference internal" href="tutorials/geometry.html#usage-geometry-eigenmodes"><span class="std std-ref">Deriving eigenmodes</span></a>).</p>
+<p>You can install these libraries by following the instructions <a class="reference external" href="https://github.com/scikit-sparse/scikit-sparse">here</a>.</p>
+</section>
+</section>
+<section id="citing">
+<h1>Citing<a class="headerlink" href="#citing" title="Permalink to this heading"></a></h1>
+<p>When using <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code>, please cite the following manuscript:</p>
+<ul class="simple">
+<li><p>Generation of surrogate brain maps preserving spatial autocorrelation through random rotation of geometric eigenmodes. Koussis, N.C., Pang, J.C., Jeganathan, J., Paton, B., Fornito, A., Robinson, P.A., Misic, B., Breakspear, M. (2024). bioRxiv 2024.02.07.579070 [Preprint]. <a class="reference external" href="https://dx.doi.org/10.1101/2024.02.07.579070">https://dx.doi.org/10.1101/2024.02.07.579070</a></p></li>
+</ul>
+<p>The core functions expand on code from <a class="reference external" href="https://github.com/NSBLab/BrainEigenmodes">BrainEigenmodes</a>, please cite their work if you use our code:</p>
+<ul class="simple">
+<li><p>Geometric constraints on human brain function. Pang, J. C., Aquino, K. M., Oldehinkel, M., Robinson, P. A., Fulcher, B. D., Breakspear, M., &amp; Fornito, A. (2023). Nature, 1-9. <a class="reference external" href="https://doi.org/10.1038/s41586-023-06098-1">https://doi.org/10.1038/s41586-023-06098-1</a></p></li>
+</ul>
+<p>Please also cite the papers for the method that we use to calculate eigenmodes on the surface:</p>
+<ul class="simple">
+<li><p>Laplace-Beltrami spectra as ‘Shape-DNA’ of surfaces and solids. Reuter M, Wolter F-E, Peinecke N. Computer-Aided Design. 2006;38(4):342-366. <a class="reference external" href="http://dx.doi.org/10.1016/j.cad.2005.10.011">http://dx.doi.org/10.1016/j.cad.2005.10.011</a></p></li>
+<li><p>BrainPrint: a discriminative characterization of brain morphology. Wachinger C, Golland P, Kremen W, Fischl B, Reuter M. Neuroimage. 2015;109:232-48. <a class="reference external" href="http://dx.doi.org/10.1016/j.neuroimage.2015.01.032">http://dx.doi.org/10.1016/j.neuroimage.2015.01.032</a> <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pubmed/25613439">http://www.ncbi.nlm.nih.gov/pubmed/25613439</a></p></li>
+</ul>
+<p>And if you use the Heat Kernel for Geodesics method in <a class="reference internal" href="generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat" title="eigenstrapping.geometry.geodesic_distmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.geometry.geodesic_distmat()</span></code></a>:</p>
+<ul class="simple">
+<li><p>Crane, K., Weischedel, C., &amp; Wardetzky, M. (2013). Geodesics in heat: A new approach to computing distance based on heat flow. ACM Transactions on Graphics (TOG), 32(5), 1-11. <a class="reference external" href="https://arxiv.org/pdf/1204.6216">https://arxiv.org/pdf/1204.6216</a></p></li>
+</ul>
+</section>
+<section id="license-information">
+<h1>License information<a class="headerlink" href="#license-information" title="Permalink to this heading"></a></h1>
+<p>This work is licensed under a
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License <code class="docutils literal notranslate"><span class="pre">cc-by-nc-sa</span></code>.
+The full license can be found in the
+<a class="reference external" href="https://github.com/SNG-newy/eigenstrapping/blob/main//LICENSE">LICENSE</a> file in the <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> distribution.</p>
+</section>
+<section id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-introduction-to-brain-maps-and-eigenmodes">Quick introduction to brain maps and eigenmodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#first-run">First run</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_cortex.html">Tutorial 1: Generating surrogate maps on the cortex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_subcortex.html">Tutorial 2: Generating surrogate subcortical maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/tutorial_ownsurface.html">Tutorial 3: Generating surrogate maps on your own surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/base.html">Eigenstrapping general usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/geometry.html">Meshes and mesh operations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Reference API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-eigenstrapping.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

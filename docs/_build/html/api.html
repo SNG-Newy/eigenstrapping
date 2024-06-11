@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reference API &mdash; eigenstrapping 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+      <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="eigenstrapping.SurfaceEigenstrapping" href="generated/eigenstrapping.SurfaceEigenstrapping.html" />
+    <link rel="prev" title="References" href="references.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            eigenstrapping
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reference API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code> - Null models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.SurfaceEigenstrapping.html">eigenstrapping.SurfaceEigenstrapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.VolumetricEigenstrapping.html">eigenstrapping.VolumetricEigenstrapping</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code> - Data helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.dataio.dataio.html">eigenstrapping.dataio.dataio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.dataio.load.html">eigenstrapping.dataio.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.dataio.load_surface.html">eigenstrapping.dataio.load_surface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code> - Dataset fetchers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_surface_examples.html">eigenstrapping.datasets.load_surface_examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_genepc.html">eigenstrapping.datasets.load_genepc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_distmat.html">eigenstrapping.datasets.load_distmat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_subcort.html">eigenstrapping.datasets.load_subcort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html">eigenstrapping.datasets.fetch_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.txt2memmap.html">eigenstrapping.datasets.txt2memmap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.datasets.load_memmap.html">eigenstrapping.datasets.load_memmap</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code> - Variogram fits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.fit.surface_fit.html">eigenstrapping.fit.surface_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.fit.volumetric_fit.html">eigenstrapping.fit.volumetric_fit</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code> - Mesh and eigenmode functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.get_tkrvox2ras.html">eigenstrapping.geometry.get_tkrvox2ras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.make_tria_file.html">eigenstrapping.geometry.make_tria_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.create_temp_surface.html">eigenstrapping.geometry.create_temp_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.calc_eig.html">eigenstrapping.geometry.calc_eig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.calc_surface_eigenmodes.html">eigenstrapping.geometry.calc_surface_eigenmodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.load_mesh.html">eigenstrapping.geometry.load_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.compute_normals.html">eigenstrapping.geometry.compute_normals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.inflate_mesh.html">eigenstrapping.geometry.inflate_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.nearest_neighbor.html">eigenstrapping.geometry.nearest_neighbor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.calc_volume.html">eigenstrapping.geometry.calc_volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.normalize_vtk.html">eigenstrapping.geometry.normalize_vtk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.geodesic_distmat.html">eigenstrapping.geometry.geodesic_distmat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.geometry.euclidean_distmat.html">eigenstrapping.geometry.euclidean_distmat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code> - Plotting functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.plotting.vrange.html">eigenstrapping.plotting.vrange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.plotting.csplot.html">eigenstrapping.plotting.csplot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.plotting.flatplot.html">eigenstrapping.plotting.flatplot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.plotting.meshplot.html">eigenstrapping.plotting.meshplot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code> - Random rotation functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.rotations.direct_method.html">eigenstrapping.rotations.direct_method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.rotations.indirect_method.html">eigenstrapping.rotations.indirect_method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.rotations.rotate_matrix.html">eigenstrapping.rotations.rotate_matrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code> - Statistical functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.compare_maps.html">eigenstrapping.stats.compare_maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.gpd_inference.html">eigenstrapping.stats.gpd_inference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.msle.html">eigenstrapping.stats.msle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.joint_differential_entropy.html">eigenstrapping.stats.joint_differential_entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.conditional_entropy.html">eigenstrapping.stats.conditional_entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.kl.html">eigenstrapping.stats.kl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.distance_correlation.html">eigenstrapping.stats.distance_correlation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.ks.html">eigenstrapping.stats.ks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.spearmanr.html">eigenstrapping.stats.spearmanr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.pearsonr.html">eigenstrapping.stats.pearsonr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.pairwise_r.html">eigenstrapping.stats.pairwise_r</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.nonparp.html">eigenstrapping.stats.nonparp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.stats.normalize.html">eigenstrapping.stats.normalize</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eigenstrapping.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code> - Utility functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.is_string_like.html">eigenstrapping.utils.is_string_like</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.parcify.html">eigenstrapping.utils.parcify</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.get_schaefer.html">eigenstrapping.utils.get_schaefer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.calc_parcellate.html">eigenstrapping.utils.calc_parcellate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.parcellate_distmat.html">eigenstrapping.utils.parcellate_distmat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.reconstruct_data.html">eigenstrapping.utils.reconstruct_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.eigen_decomposition.html">eigenstrapping.utils.eigen_decomposition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.calc_surface_connectivity.html">eigenstrapping.utils.calc_surface_connectivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.compute_axes_ellipsoid.html">eigenstrapping.utils.compute_axes_ellipsoid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.transform_to_spheroid.html">eigenstrapping.utils.transform_to_spheroid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/eigenstrapping.utils.transform_to_ellipsoid.html">eigenstrapping.utils.transform_to_ellipsoid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">eigenstrapping</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Reference API</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="reference-api">
+<span id="api"></span><h1>Reference API<a class="headerlink" href="#reference-api" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="list-of-modules">
+<p class="topic-title"><strong>List of modules</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#module-eigenstrapping" id="id1"><a class="reference internal" href="#module-eigenstrapping" title="eigenstrapping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code></a> - Null models</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.dataio" id="id2"><a class="reference internal" href="#module-eigenstrapping.dataio" title="eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code></a> - Data helpers</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.datasets" id="id3"><a class="reference internal" href="#module-eigenstrapping.datasets" title="eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code></a> - Dataset fetchers</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.fit" id="id4"><a class="reference internal" href="#module-eigenstrapping.fit" title="eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code></a> - Variogram fits</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.geometry" id="id5"><a class="reference internal" href="#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> - Mesh and eigenmode functions</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.plotting" id="id6"><a class="reference internal" href="#module-eigenstrapping.plotting" title="eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code></a> - Plotting functions</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.rotations" id="id7"><a class="reference internal" href="#module-eigenstrapping.rotations" title="eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code></a> - Random rotation functions</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.stats" id="id8"><a class="reference internal" href="#module-eigenstrapping.stats" title="eigenstrapping.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code></a> - Statistical functions</a></p></li>
+<li><p><a class="reference internal" href="#module-eigenstrapping.utils" id="id9"><a class="reference internal" href="#module-eigenstrapping.utils" title="eigenstrapping.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code></a> - Utility functions</a></p></li>
+</ul>
+</nav>
+<section id="module-eigenstrapping">
+<span id="eigenstrapping-null-models"></span><h2><a class="toc-backref" href="#id1" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping" title="eigenstrapping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping</span></code></a> - Null models</a><a class="headerlink" href="#module-eigenstrapping" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.SurfaceEigenstrapping</span></code></a>(data[, ...])</p></td>
+<td><p>Compute the eigenmodes and eigenvalues of the surface in <cite>surface</cite> and resample the hypersphere bounded by the eigengroups contained within <cite>emodes</cite>, to reconstruct the data using coefficients conditioned on the original data Based on the degenerate solutions of solving the Laplace-Beltrami operator on the cortex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.VolumetricEigenstrapping.html#eigenstrapping.VolumetricEigenstrapping" title="eigenstrapping.VolumetricEigenstrapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.VolumetricEigenstrapping</span></code></a>(...)</p></td>
+<td><p>Compute the eigenmodes and eigenvalues of the volume in <cite>volume</cite> and resample the hypersphere bounded by the eigengroups contained within <cite>emodes</cite>, to reconstruct the data using coefficients conditioned on the original data Based on the degenerate solutions of solving the Laplace-Beltrami operator on the cortex.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.dataio">
+<span id="eigenstrapping-dataio-data-helpers"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.dataio" title="eigenstrapping.dataio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.dataio</span></code></a> - Data helpers</a><a class="headerlink" href="#module-eigenstrapping.dataio" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.dataio.dataio.html#eigenstrapping.dataio.dataio" title="eigenstrapping.dataio.dataio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.dataio.dataio</span></code></a>(x)</p></td>
+<td><p>Data I/O for core classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.dataio.load.html#eigenstrapping.dataio.load" title="eigenstrapping.dataio.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.dataio.load</span></code></a>(filename)</p></td>
+<td><p>Load data contained in a CIFTI2-/GIFTI-format neuroimaging file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.dataio.load_surface.html#eigenstrapping.dataio.load_surface" title="eigenstrapping.dataio.load_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.dataio.load_surface</span></code></a>(filename)</p></td>
+<td><p>Load data stored in a GIFTI (.gii) neuroimaging file.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.datasets">
+<span id="eigenstrapping-datasets-dataset-fetchers"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.datasets" title="eigenstrapping.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.datasets</span></code></a> - Dataset fetchers</a><a class="headerlink" href="#module-eigenstrapping.datasets" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples" title="eigenstrapping.datasets.load_surface_examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_surface_examples</span></code></a>([...])</p></td>
+<td><p>Downloads all surface files for fsaverage5 space</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_genepc.html#eigenstrapping.datasets.load_genepc" title="eigenstrapping.datasets.load_genepc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_genepc</span></code></a>([join])</p></td>
+<td><p>Download and return the Allen Human Brain Atlas gene PC1 in fsaverage5 space.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat" title="eigenstrapping.datasets.load_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_distmat</span></code></a>([...])</p></td>
+<td><p>Downloads geodesic distance matrices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort" title="eigenstrapping.datasets.load_subcort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_subcort</span></code></a>([...])</p></td>
+<td><p>Loads all the files for the subcortical structures used in the paper - cortical-subcortical gradients and the subcortical ROIs from the 25% probability Harvard-Oxford atlas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data" title="eigenstrapping.datasets.fetch_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.fetch_data</span></code></a>(*[, ...])</p></td>
+<td><p>Downloads files for brain surfaces and eigenmodes matching requested variables</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap" title="eigenstrapping.datasets.txt2memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.txt2memmap</span></code></a>(...[, ...])</p></td>
+<td><p>Export distance matrix to memory-mapped array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.datasets.load_memmap.html#eigenstrapping.datasets.load_memmap" title="eigenstrapping.datasets.load_memmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.datasets.load_memmap</span></code></a>(filename)</p></td>
+<td><p>Load a memory-mapped array.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.fit">
+<span id="eigenstrapping-fit-variogram-fits"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.fit" title="eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code></a> - Variogram fits</a><a class="headerlink" href="#module-eigenstrapping.fit" title="Permalink to this heading"></a></h2>
+<p>Eigenmode resampling on the cortex. Use fit.surface_fit() to determine how many
+modes to use to capture the empirical variogram.</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.fit.surface_fit.html#eigenstrapping.fit.surface_fit" title="eigenstrapping.fit.surface_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.fit.surface_fit</span></code></a>(x[, D, ...])</p></td>
+<td><p>Evaluate variogram fits for :class: <cite>eigenstrapping.SurfaceEigenstrapping</cite> to determine how many modes to decompose surface map with. Returns two plots:     left - variogram fit     middle - surrogate pairwise correlation with original map <cite>x</cite>     right - histogram of surrogate residuals with original map <cite>x</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.fit.volumetric_fit.html#eigenstrapping.fit.volumetric_fit" title="eigenstrapping.fit.volumetric_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.fit.volumetric_fit</span></code></a>(x, volume)</p></td>
+<td><p>Evaluate variogram fits for :class: <cite>eigenstrapping.VolumetricEigenstrapping</cite> to determine how many modes to decompose volumetric map with.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.geometry">
+<span id="eigenstrapping-geometry-mesh-and-eigenmode-functions"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.geometry" title="eigenstrapping.geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.geometry</span></code></a> - Mesh and eigenmode functions</a><a class="headerlink" href="#module-eigenstrapping.geometry" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.get_tkrvox2ras.html#eigenstrapping.geometry.get_tkrvox2ras" title="eigenstrapping.geometry.get_tkrvox2ras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.get_tkrvox2ras</span></code></a>(...)</p></td>
+<td><p>Generate transformation matrix to switch between tetrahedral and volume space.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.make_tria_file.html#eigenstrapping.geometry.make_tria_file" title="eigenstrapping.geometry.make_tria_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.make_tria_file</span></code></a>(...)</p></td>
+<td><p>Generate triangular mesh of the ROI in the nifti file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.create_temp_surface.html#eigenstrapping.geometry.create_temp_surface" title="eigenstrapping.geometry.create_temp_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.create_temp_surface</span></code></a>(...)</p></td>
+<td><p>Write surface to a new vtk file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig" title="eigenstrapping.geometry.calc_eig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_eig</span></code></a>(mesh, num_modes)</p></td>
+<td><p>Calculate the eigenvalues and eigenmodes of a surface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_surface_eigenmodes.html#eigenstrapping.geometry.calc_surface_eigenmodes" title="eigenstrapping.geometry.calc_surface_eigenmodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_surface_eigenmodes</span></code></a>(...)</p></td>
+<td><p>Main function to calculate the eigenmodes of a cortical surface with application of a mask (e.g., to remove the medial wall).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.load_mesh.html#eigenstrapping.geometry.load_mesh" title="eigenstrapping.geometry.load_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.load_mesh</span></code></a>(mesh)</p></td>
+<td><p>Mesh loader function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.compute_normals.html#eigenstrapping.geometry.compute_normals" title="eigenstrapping.geometry.compute_normals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.compute_normals</span></code></a>(...)</p></td>
+<td><p>Compute the normal for each vertex in the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.inflate_mesh.html#eigenstrapping.geometry.inflate_mesh" title="eigenstrapping.geometry.inflate_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.inflate_mesh</span></code></a>(*[, ...])</p></td>
+<td><p>Inflate the mesh using Connectome Workbench <cite>surface-inflation</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.nearest_neighbor.html#eigenstrapping.geometry.nearest_neighbor" title="eigenstrapping.geometry.nearest_neighbor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.nearest_neighbor</span></code></a>(P, X)</p></td>
+<td><p>Find the one-nearest neighbors of vertices in points <cite>P</cite> on another surface <cite>X</cite> using Delaunay triangulation and KDTree query.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.calc_volume.html#eigenstrapping.geometry.calc_volume" title="eigenstrapping.geometry.calc_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.calc_volume</span></code></a>(...)</p></td>
+<td><p>Calculate the physical volume of the ROI in the nifti file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.normalize_vtk.html#eigenstrapping.geometry.normalize_vtk" title="eigenstrapping.geometry.normalize_vtk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.normalize_vtk</span></code></a>(tet, ...)</p></td>
+<td><p>Normalize tetrahedral surface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat" title="eigenstrapping.geometry.geodesic_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.geodesic_distmat</span></code></a>(surface)</p></td>
+<td><p>Compute geodesic distance using the heat diffusion method built into LaPy</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.geometry.euclidean_distmat.html#eigenstrapping.geometry.euclidean_distmat" title="eigenstrapping.geometry.euclidean_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.geometry.euclidean_distmat</span></code></a>(mesh)</p></td>
+<td><p>Calculates Euclidean distance matrix of the mesh in <cite>mesh</cite></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.plotting">
+<span id="eigenstrapping-plotting-plotting-functions"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.plotting" title="eigenstrapping.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.plotting</span></code></a> - Plotting functions</a><a class="headerlink" href="#module-eigenstrapping.plotting" title="Permalink to this heading"></a></h2>
+<p>Plotting subroutines</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.plotting.vrange.html#eigenstrapping.plotting.vrange" title="eigenstrapping.plotting.vrange"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.plotting.vrange</span></code></a>(scalars[, pv])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot" title="eigenstrapping.plotting.csplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.plotting.csplot</span></code></a>(scalars[, ...])</p></td>
+<td><p>Automated plotting of cortical surfaces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.plotting.flatplot.html#eigenstrapping.plotting.flatplot" title="eigenstrapping.plotting.flatplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.plotting.flatplot</span></code></a>(scalars[, ...])</p></td>
+<td><p>Automated plotting of cortical surfaces.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.plotting.meshplot.html#eigenstrapping.plotting.meshplot" title="eigenstrapping.plotting.meshplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.plotting.meshplot</span></code></a>(mesh[, ...])</p></td>
+<td><p>Automated plotting of surface in <cite>mesh</cite>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.rotations">
+<span id="eigenstrapping-rotations-random-rotation-functions"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.rotations" title="eigenstrapping.rotations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.rotations</span></code></a> - Random rotation functions</a><a class="headerlink" href="#module-eigenstrapping.rotations" title="Permalink to this heading"></a></h2>
+<p>Generate random rotation matrices of arbitrary size and rotate matrices</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.rotations.direct_method.html#eigenstrapping.rotations.direct_method" title="eigenstrapping.rotations.direct_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.rotations.direct_method</span></code></a>(n[, seed])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.rotations.indirect_method.html#eigenstrapping.rotations.indirect_method" title="eigenstrapping.rotations.indirect_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.rotations.indirect_method</span></code></a>(n)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.rotations.rotate_matrix.html#eigenstrapping.rotations.rotate_matrix" title="eigenstrapping.rotations.rotate_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.rotations.rotate_matrix</span></code></a>(M[, ...])</p></td>
+<td><p>Rotate an (n/m)-by-n matrix of arbitrary length n by the two methods as outlined in [1].</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.stats">
+<span id="eigenstrapping-stats-statistical-functions"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.stats" title="eigenstrapping.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.stats</span></code></a> - Statistical functions</a><a class="headerlink" href="#module-eigenstrapping.stats" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.compare_maps.html#eigenstrapping.stats.compare_maps" title="eigenstrapping.stats.compare_maps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.compare_maps</span></code></a>(src, trg)</p></td>
+<td><p>Compares images <cite>src</cite> and <cite>trg</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.gpd_inference.html#eigenstrapping.stats.gpd_inference" title="eigenstrapping.stats.gpd_inference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.gpd_inference</span></code></a>(perms[, ...])</p></td>
+<td><p>Report the tail-estimated p-value for faster inference using a Generalized Pareto distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.msle.html#eigenstrapping.stats.msle" title="eigenstrapping.stats.msle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.msle</span></code></a>(y_true, y_pred)</p></td>
+<td><p>Compute the Mean Squared Logarithmic Error.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.joint_differential_entropy.html#eigenstrapping.stats.joint_differential_entropy" title="eigenstrapping.stats.joint_differential_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.joint_differential_entropy</span></code></a>(x, y)</p></td>
+<td><p>Compute the joint differential entropy of x and y</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.conditional_entropy.html#eigenstrapping.stats.conditional_entropy" title="eigenstrapping.stats.conditional_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.conditional_entropy</span></code></a>(x, ...)</p></td>
+<td><p>Calculates conditional entropy of an empirical array given a set of surrogates</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.kl.html#eigenstrapping.stats.kl" title="eigenstrapping.stats.kl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.kl</span></code></a>(x, array[, b, ...])</p></td>
+<td><p>Computes KL divergence of surrs to empirical array</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.distance_correlation.html#eigenstrapping.stats.distance_correlation" title="eigenstrapping.stats.distance_correlation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.distance_correlation</span></code></a>(x, ...)</p></td>
+<td><p>Distance correlation between empirical and nulls.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.ks.html#eigenstrapping.stats.ks" title="eigenstrapping.stats.ks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.ks</span></code></a>(x, nulls[, flatten])</p></td>
+<td><p>Measures difference in underlying distribution (or non-Gaussianity) of a surrogate dataset using the Kolmogorov-Smirnov test</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.spearmanr.html#eigenstrapping.stats.spearmanr" title="eigenstrapping.stats.spearmanr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.spearmanr</span></code></a>(X, Y)</p></td>
+<td><p>Multi-dimensional Spearman rank correlation between rows of <cite>X</cite> and <cite>Y</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.pearsonr.html#eigenstrapping.stats.pearsonr" title="eigenstrapping.stats.pearsonr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.pearsonr</span></code></a>(X, Y[, ddof, ...])</p></td>
+<td><p>Multi-dimensional Pearson correlation between rows of <cite>X</cite> and <cite>Y</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.pairwise_r.html#eigenstrapping.stats.pairwise_r" title="eigenstrapping.stats.pairwise_r"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.pairwise_r</span></code></a>(X[, ...])</p></td>
+<td><p>Compute pairwise Pearson correlations between rows of <cite>X</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.nonparp.html#eigenstrapping.stats.nonparp" title="eigenstrapping.stats.nonparp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.nonparp</span></code></a>(stat, dist)</p></td>
+<td><p>Compute two-sided non-parametric p-value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.stats.normalize.html#eigenstrapping.stats.normalize" title="eigenstrapping.stats.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.stats.normalize</span></code></a>(x)</p></td>
+<td><p>Normalize a vector to [0, 1] range.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-eigenstrapping.utils">
+<span id="eigenstrapping-utils-utility-functions"></span><h2><a class="toc-backref" href="#id9" role="doc-backlink"><a class="reference internal" href="#module-eigenstrapping.utils" title="eigenstrapping.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.utils</span></code></a> - Utility functions</a><a class="headerlink" href="#module-eigenstrapping.utils" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.is_string_like.html#eigenstrapping.utils.is_string_like" title="eigenstrapping.utils.is_string_like"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.is_string_like</span></code></a>(obj)</p></td>
+<td><p>Check whether <cite>obj</cite> behaves like a string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.parcify.html#eigenstrapping.utils.parcify" title="eigenstrapping.utils.parcify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.parcify</span></code></a>(annotation[, drop])</p></td>
+<td><p>Returns an array of parcel labels for every vertex in the surface of <cite>annotation</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.get_schaefer.html#eigenstrapping.utils.get_schaefer" title="eigenstrapping.utils.get_schaefer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.get_schaefer</span></code></a>([vers, ...])</p></td>
+<td><p>Returns CSchaefer 2018 atlases as dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.calc_parcellate.html#eigenstrapping.utils.calc_parcellate" title="eigenstrapping.utils.calc_parcellate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.calc_parcellate</span></code></a>(parc, ...)</p></td>
+<td><p>Calculate parcellated data given (N,) parcellation for every vertex of shape (N,)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.parcellate_distmat.html#eigenstrapping.utils.parcellate_distmat" title="eigenstrapping.utils.parcellate_distmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.parcellate_distmat</span></code></a>(D, parc)</p></td>
+<td><p>Parcellate a dense distance matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.reconstruct_data.html#eigenstrapping.utils.reconstruct_data" title="eigenstrapping.utils.reconstruct_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.reconstruct_data</span></code></a>(...)</p></td>
+<td><p>Reconstruct a dataset of <cite>n_vertices</cite> given a set of eigenmodes and coeffs conditioned on data using ordinary least squares (OLS)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.eigen_decomposition.html#eigenstrapping.utils.eigen_decomposition" title="eigenstrapping.utils.eigen_decomposition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.eigen_decomposition</span></code></a>(...)</p></td>
+<td><p>Decompose data using eigenmodes and calculate the coefficient of contribution of each vector</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.calc_surface_connectivity.html#eigenstrapping.utils.calc_surface_connectivity" title="eigenstrapping.utils.calc_surface_connectivity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.calc_surface_connectivity</span></code></a>(...)</p></td>
+<td><p>Calculate surface-based connectivity matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.compute_axes_ellipsoid.html#eigenstrapping.utils.compute_axes_ellipsoid" title="eigenstrapping.utils.compute_axes_ellipsoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.compute_axes_ellipsoid</span></code></a>(...)</p></td>
+<td><p>Compute the axes of an ellipsoid given the eigenmodes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.transform_to_spheroid.html#eigenstrapping.utils.transform_to_spheroid" title="eigenstrapping.utils.transform_to_spheroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.transform_to_spheroid</span></code></a>(...)</p></td>
+<td><p>Transform the eigenmodes to a spheroid space</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eigenstrapping.utils.transform_to_ellipsoid.html#eigenstrapping.utils.transform_to_ellipsoid" title="eigenstrapping.utils.transform_to_ellipsoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigenstrapping.utils.transform_to_ellipsoid</span></code></a>(...)</p></td>
+<td><p>Transform the eigenmodes in spheroid space back to ellipsoid by stretching</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="references.html" class="btn btn-neutral float-left" title="References" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generated/eigenstrapping.SurfaceEigenstrapping.html" class="btn btn-neutral float-right" title="eigenstrapping.SurfaceEigenstrapping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, eigenstrapping devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
