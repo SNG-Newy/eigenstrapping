@@ -345,7 +345,7 @@
     
     <span class="k">return</span> <span class="n">_groupby_match</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="txt2memmap"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap">[docs]</a><span class="k">def</span> <span class="nf">txt2memmap</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">maskfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="txt2memmap"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap">[docs]</a><span class="k">def</span> <span class="nf">txt2memmap</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maskfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Export distance matrix to memory-mapped array.</span>
 
@@ -355,6 +355,10 @@
 <span class="sd">        Path to `delimiter`-separated distance matrix file</span>
 <span class="sd">    output_dir : filename</span>
 <span class="sd">        Path to directory in which output files will be written</span>
+<span class="sd">    prefix : str</span>
+<span class="sd">        Prefix to add to start of filenames {&#39;distmat.npy&#39;, &#39;index.npy&#39;}, default None</span>
+<span class="sd">    suffix : str</span>
+<span class="sd">        Suffix to add to end of filenames {&#39;distmat.npy&#39;, &#39;index.npy&#39;}, default None </span>
 <span class="sd">    maskfile : filename or np.ndarray or None, default None</span>
 <span class="sd">        Path to a neuroimaging/txt file containing a mask, or a mask</span>
 <span class="sd">        represented as a numpy array. Mask scalars are cast to boolean, and</span>
@@ -406,9 +410,12 @@
 
     <span class="c1"># Build memory-mapped arrays</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-
-        <span class="n">npydfile</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;distmat.npy&quot;</span><span class="p">)</span>
-        <span class="n">npyifile</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;index.npy&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">npydfile</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">distmat</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">.npy&quot;</span><span class="p">)</span>
+        <span class="n">npyifile</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">index</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">.npy&quot;</span><span class="p">)</span>
         <span class="n">fpd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">open_memmap</span><span class="p">(</span>
             <span class="n">npydfile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nv</span><span class="p">,</span> <span class="n">nv</span><span class="p">))</span>
         <span class="n">fpi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">open_memmap</span><span class="p">(</span>
