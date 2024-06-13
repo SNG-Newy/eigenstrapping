@@ -265,7 +265,7 @@ def fetch_data(*, name=None, space=None, den=None, res=None, hemi=None,
     
     return _groupby_match(data)
 
-def txt2memmap(dist_file, output_dir, maskfile=None, delimiter=' '):
+def txt2memmap(dist_file, output_dir, prefix=None, suffix=None, maskfile=None, delimiter=' '):
     """
     Export distance matrix to memory-mapped array.
 
@@ -275,6 +275,10 @@ def txt2memmap(dist_file, output_dir, maskfile=None, delimiter=' '):
         Path to `delimiter`-separated distance matrix file
     output_dir : filename
         Path to directory in which output files will be written
+    prefix : str
+        Prefix to add to start of filenames {'distmat.npy', 'index.npy'}, default None
+    suffix : str
+        Suffix to add to end of filenames {'distmat.npy', 'index.npy'}, default None 
     maskfile : filename or np.ndarray or None, default None
         Path to a neuroimaging/txt file containing a mask, or a mask
         represented as a numpy array. Mask scalars are cast to boolean, and
@@ -326,9 +330,12 @@ def txt2memmap(dist_file, output_dir, maskfile=None, delimiter=' '):
 
     # Build memory-mapped arrays
     with open(dist_file, 'r') as fp:
-
-        npydfile = op.join(output_dir, "distmat.npy")
-        npyifile = op.join(output_dir, "index.npy")
+        if prefix is None:
+            prefix = ''
+        if suffix is None:
+            suffix = ''
+        npydfile = op.join(output_dir, f"{prefix}distmat{suffix}.npy")
+        npyifile = op.join(output_dir, f"{prefix}index{suffix}.npy")
         fpd = np.lib.format.open_memmap(
             npydfile, mode='w+', dtype=np.float32, shape=(nv, nv))
         fpi = np.lib.format.open_memmap(
