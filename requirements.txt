@@ -10,3 +10,4 @@ pandas
 scipy>=0.11
 seaborn
 netneurotools>=0.2.4
+tqdm
