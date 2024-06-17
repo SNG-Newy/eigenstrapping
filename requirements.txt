@@ -4,7 +4,7 @@ lapy==1.0.1
 matplotlib<=3.8.4
 neuromaps
 nibabel
-nilearn
+nilearn<=0.10.2
 numpy
 pandas
 scipy>=0.11
