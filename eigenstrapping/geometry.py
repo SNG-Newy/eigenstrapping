@@ -1119,7 +1119,7 @@ def truncate_emodes(surface, data, emodes, evals,
             return evals_truncated, emodes_truncated
         
 
-    fwhm = find_fwhm(surface, data, demean=False)
+    fwhm = find_wavelength(surface, data, demean=False)
     
     j = 0
     while j <= len(groups):
