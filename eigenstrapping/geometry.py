@@ -19,8 +19,18 @@ from brainspace.vtk_interface import wrap_vtk, serial_connect
 from vtk import (vtkThreshold, vtkDataObject, vtkGeometryFilter)
 from brainspace.utils.parcellation import relabel_consecutive
 from brainspace.mesh.mesh_creation import build_polydata
-from .utils import (_suppress, _print, is_string_like,
-                    enablePrint, blockPrint)
+from eigenstrapping.utils import (_suppress, _print, is_string_like,
+                    enablePrint, blockPrint, eigen_decomposition)
+
+from eigenstrapping.dataio import dataio
+from sklearn.utils.validation import check_random_state
+from eigenstrapping.rotations import indirect_method
+from eigenstrapping.utils import _get_eigengroups
+from scipy.spatial import distance_matrix
+from sklearn.neighbors import BallTree
+from scipy.optimize import linear_sum_assignment
+import copy
+from parspin import utils as putils
 
 from tqdm import tqdm
 
@@ -941,6 +951,408 @@ def _sort_polydata_points(surf, labeling, append_data=True):
             s.append_array(v, name=k, at=at)
     return s
 
+def find_fwhm(surface, data, roi=None, column=None, demean=True):
+    """
+    Compute the full-width half-maximum of the data in `data`
+    using a kernel density estimate. optimizes the fit of the
+    kernel to find sigma which is then converted to FWHM. Uses
+    a random sampling approach by taking a random vertex and
+    finding `knn` nearest neighbors `ns` times. Returns maximum
+    cost from Kernel Density Estimator and average FWHM from 
+    samples.
+
+    Used to estimate the number of eigengroups to include
+    in the reconstruction of surrogates in 
+    :class:`eigenstrapping.SurfaceEigenstrapping.generate()`
+    based on the relationship of eigenvalue to spatial scale.
+
+    Parameters
+    ----------
+    data : np.ndarray or str to filepath (N,)
+        Surface data to find FWHM
+    surface : nib.GiftiImage like or filepath
+        Surface for `data`. Must have coordinates of shape (N, 3)
+    mask : np.ndarray or str to filepath (N,), optional
+        Mask for values in `data` to include e.g. non-medial wall
+        vertices. Default None
+    ns : int, optional
+        Number of samples for random sampling. Default 100
+    knn : int, optional
+        Number of neighbors to calculate FWHM. Default 100
+    return_cost : bool, optional
+        Return max cost of Kernel Density Estimator. Default True
+    seed : None or int or np.random.RandomState, optional
+        Seed for random number generation. Default None
+    kwargs : dict, optional
+        keyword arguments to pass to ``scipy.stats.gaussian_kde``
+    
+    Returns
+    -------
+    cost : float
+        If `return_cost`, returns maximum cost of kde fit.
+    fwhm : float
+        Value for full-width half-maximum of `data`.
+
+    Notes
+    -----
+    This function uses Euclidean distance to measure nearest
+    neighbors as an approximation, and assumes a Gaussianity 
+    to the smoothness in `data`. It may have unpredictable 
+    effects if the data is highly non-Gaussian. Use with caution. 
+    If the fit is bad (cost is high) then we recommend the 
+    variogram calculation in :func:`eigenstrapping.fit.surface_fit()`
+
+    """
+    data = dataio(data)
+    tmpf = tempfile.NamedTemporaryFile(suffix='.func.gii').name
+    metric = nib.GiftiImage()
+    metric.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(data.astype(np.float32)))
+    nib.save(metric, tmpf)
+
+    if column is not None:
+        colstr = '-column {column}'
+        wholestr = ''
+    else:
+        colstr = ''
+        wholestr = '-whole-file'
+    
+    if demean is True:
+        destr = '-demean'
+    else:
+        destr = ''
+
+    cmd = f'wb_command -metric-estimate-fwhm {surface} {tmpf} {colstr} {wholestr} {destr}'
+    output = subprocess.check_output(cmd, shell="True")
+    output = output.splitlines()
+
+    os.unlink(tmpf)
+
+
+    # mask = dataio(mask).astype(np.bool_)
+    
+    # if mask is not None:
+    #     data = copy.deepcopy(data)
+    #     data = data[mask]
+    #     dist = copy.deepcopy(dist)
+    #     dist = dist[np.ix_(mask, mask)]    
+    
+    # rs = check_random_state(seed)
+
+    # tree = BallTree(dist)
+    # x = rs.choice(np.arange(len(data)), size=ns, replace=False)
+
+    # m = []
+    # for i, xi in enumerate(x):
+    #     inds = tree.query(dist[xi, :][None, ...], k=knn)[1] # don't return zeros
+    #     with np.errstate(all='ignore'):
+    #         s = (data[xi] - data[inds]) / dist[xi, inds]
+    #     # find the minimum distance that is greater than 90% of the
+    #     # maximum value in s
+    #     try:
+    #         m.append(dist[xi, inds][s > 0.9*np.nanmax(s)][0])
+    #     except:
+    #         continue
+
+    # fwhm = 2.355 * np.mean(m)
+
+    return 2*float(output[0].decode('ascii').split(' ')[1])
+
+def truncate_emodes(surface, data, emodes, evals, 
+                    mask=None, ret_fwhm=False, find_group_only=False,
+                    per_spectrum=None):
+    """
+    Uses the estimation of full-width half-maximum to truncate the
+    number of eigenmodes to use for surrogate generation. Provides a
+    heuristic to assist the end-user with number of mode selection.
+    How it works is it finds the first eigenvalue such that:
+
+                2 * pi
+        argmin(--------) <=  2*fwhm
+                 lam
+    
+    Actually truncates at the number of *whole* groups that include
+    this eigenvalue or smaller, corresponding to larger wavelengths.
+    Either "rounds" up or down, depending on whether the eigenvalue
+    index of `lam` is greater or lesser than the total number of
+    eigenvalues in the group G, where G is the group number.
+    
+    In other words,
+
+        floor(G(lam)) if ||lam|| < np.sum(||lam_G||),
+            ceil(G(lam)) if ||lam|| >= np.sum(||lam_G||)
+
+    Also has the ability to truncate modes that account for `per_spectrum` 
+    percentage of the power spectra in `data`, which is quicker
+    and may suit your end-goals better, particularly if small-scale
+    spatial structure doesn't matter to your map. For example,
+    per_spectra=0.9 would truncate the eigenmodes and eigenvalues
+    to the total number of groups that contain 90% or more of the
+    modal power spectrum in `data`.
+
+    Parameters
+    ----------
+    data : np.ndarray or str to filepath (N,)
+        Surface data to find FWHM
+    surface : nib.GiftiImage like or filepath
+        Surface for `data`. Must have coordinates of shape (N, 3)
+    mask : np.ndarray or str to filepath (N,), optional
+        Mask for values in `data` to include e.g. non-medial wall
+        vertices. Default None
+    ns : int, optional
+        Number of samples for random sampling. Default 100
+    knn : int, optional
+        Number of neighbors to calculate FWHM. Default 100
+    seed : None or int or np.random.RandomState, optional
+        Seed for random number generation. Default None
+    ret_fwhm : bool, optional
+        If True, returns estimated `fwhm`.
+        Default False
+    find_group_only : bool, optional
+        If True, this function does not truncate `emodes` and `evals`,
+        and only returns the group number that contains the eigenvalue
+        where the above equation is true.
+    per_spectra : None or float, optional
+        If True, truncates `emodes` and `evals` at whole number of groups
+        with `per_spectrum`
+    
+    Returns
+    -------
+    emodes_truncated, evals_truncated : np.ndarrays
+        Eigenmodes and corresponding eigenvalues as whole groups
+        with higher or equal wavelengths to the smallest `fwhm` in `data`.
+        Group number to truncate `emodes` and `evals` at is rounded to nearest
+        group with full membership.
+    fwhm : float
+        Value for full-width half-maximum of `data`. Only returned
+        if `ret_fwhm` is True. Exclusive with `per_spectra`.
+    group : int
+        Eigengroup number (zero-indexed)
+
+    Notes
+    -----
+    This function assumes a Gaussianity to the smoothness in
+    `data`. It may have unpredictable effects if the data is highly
+    non-Gaussian. Use with caution. If the data is highly non-Gaussian
+    then we recommend the variogram calculation in 
+    :func:`eigenstrapping.fit.surface_fit()`
+
+    """
+    groups = _get_eigengroups(emodes)
+    if per_spectrum is not None:
+        coeffs = eigen_decomposition(data[mask], emodes[mask])
+        power = np.abs(coeffs)**2
+        normed_power = power/np.sum(power)
+        total_power = 0.0
+        j = 0
+        while total_power <= per_spectrum*np.sum(normed_power):
+            total_power += np.sum(normed_power[groups[j]])
+            j += 1
+
+        if find_group_only:
+            return j
+        else:
+            emodes_truncated, evals_truncated = (emodes[:, :groups[j][-1] + 1], evals[:groups[j][-1] + 1])
+            return evals_truncated, emodes_truncated
+        
+
+    fwhm = find_fwhm(surface, data, demean=False)
+    
+    j = 0
+    while j <= len(groups):
+        for k in range(j):
+            l = 2*np.pi/np.sqrt(evals[groups[j]][k])
+            if l <= fwhm:
+                if find_group_only:
+                    if ret_fwhm:
+                        return fwhm, j if (groups[j][k] - groups[j][0]) >= (groups[j][-1] - groups[j][0]) else j-1
+                    return j if (groups[j][k] - groups[j][0]) >= (groups[j][-1] - groups[j][0]) else j-1
+                emodes_truncated, evals_truncated = (emodes[:, :groups[j][-1] + 1], evals[:groups[j][-1] + 1]) if (groups[j][k] - groups[j][0]) >= (groups[j][-1] - groups[j][0]) else (emodes[:, :groups[j-1][-1] + 1], evals[:groups[j-1][-1] + 1])
+                if ret_fwhm:
+                    return fwhm, evals_truncated, emodes_truncated
+                else:
+                    return evals_truncated, emodes_truncated
+        j += 1
+    
+    raise RuntimeError('Could not find eigenvalue for fwhm\n'
+                       'consider using more modes.')
+
+
+def gen_eigensamples(emodes, evals, mask=None, n_rotate=1000, num_modes=100, check_duplicates=True,
+                     method='original', seed=None, n_jobs=1):
+    """
+    compute a permutation matrix for a set of eigenmodes, based on the concept
+    of rotating the eigenmodes in the eigenspace per group. Produces a sparse
+    permutation matrix of (`n_rotate`, N, M).
+    
+    Parameters
+    ----------
+    emodes : np.ndarray of shape (N, M)
+        eigenmodes to resample
+    evals : np.ndarray of shape (M,)
+        eigenvalues corresponding to `emodes`
+    n_rotate : int, optional
+        number of permutations to compute. Default 1000
+    check_duplicates: bool, optional
+        Whether to check for and attempt to avoid duplicate resamplings. A
+        warnings will be raised if duplicates cannot be avoided. Setting to
+        True may increase the runtime of this function! Default: True    
+    seed : None or int or np.random.RandomState, optional
+        seed for random number generation. Default None
+    method : {'original', 'vasa', 'hungarian'}, optional
+        Method by which to match non- and rotated coordinates. Default: 'original'
+    verbose : bool, optional
+        Whether to print occasional status messages. Default: False
+    return_cost : bool, optional
+        Whether to return cost array (specified as Euclidean distance) for each
+        coordinate for each rotation Default: True
+        
+    Returns
+    -------
+    samples : np.ndarray of ints of shape (`n_rotate`, N, M)
+        nearest neighbor remapping matrix
+
+    """
+    from multiprocessing import Pool
+
+    seed = check_random_state(seed)
+
+    # mask emodes
+    emodes_masked = copy.deepcopy(emodes[:, :num_modes])
+    emodes_masked = emodes_masked[mask]
+    evals = copy.deepcopy(evals)
+    evals = evals[:num_modes]
+    groups = _get_eigengroups(emodes_masked)
+
+    # TODO implement costs
+    #cost = np.zeros((n_rotate, len(emodes_masked), len(groups)))
+    inds = np.arange(len(emodes_masked), dtype='int32')
+
+    # empty array to store resampling indices
+    #eigen_spins = np.zeros((n_rotate, len(emodes_masked), len(evals)), dtype='int32')
+
+    # generate resampled modes and fill indexing array
+    def _gen_method(emodes_masked, evals, groups, method='original', seed=0):
+        resampled = np.zeros((len(emodes_masked), len(groups)), dtype='int32')
+        for j in range(len(groups)):
+            group = emodes_masked[:, groups[j]] / np.sqrt(evals[groups[j]])
+            rot = indirect_method(len(groups[j]), seed=seed)
+            new_group = group @ rot * np.sqrt(evals[groups[j]])
+            if method == 'original':
+                dist, col = BallTree(new_group).query(emodes_masked[:, groups[j]], 1)
+                col = col.reshape(-1,)
+                #cols = np.stack(cols, axis=-1)
+                #cost[:, j] = dist
+            elif method == 'hungarian':
+                dist = distance_matrix(group, new_group)
+                row, col = optimize.linear_sum_assignment(dist)
+                #cost[hinds, n] = dist[row, col]
+            elif method == 'vasa':
+                dist = distance_matrix(group, new_group)
+                # min of max a la Vasa et al., 2018
+                col = np.zeros(len(group), dtype='int32')
+                for _ in range(len(dist)):
+                    # find parcel whose closest neighbor is farthest away
+                    # overall; assign to that
+                    row = dist.min(axis=1).argmax()
+                    col[row] = dist[row].argmin()
+                    #cost[inds[hinds][row], n] = dist[row, col[row]]
+                    # set to -inf and inf so they can't be assigned again
+                    dist[row] = -np.inf
+                    dist[:, col[row]] = np.inf
+            else:
+                raise ValueError('unrecognized method {}\n'
+                                 'choose from "original", "hungarian" or "vasa"'.format(method))
+
+            resampled[:, j] = inds[col]
+
+        return resampled
+
+    eigen_spins = Parallel(n_jobs=n_jobs)(
+        delayed(_gen_method)(
+            emodes_masked, evals, groups, method, seed=n) for n in putils.trange(n_rotate)
+    )
+
+    return np.asarray(eigen_spins).squeeze()
+
+def spin_modes(emodes, evals, mask=None, n_rotate=1000, eigen_spins=None, num_modes=100, **kwargs):
+    """
+    compute a permutation matrix for a set of eigenmodes, based on the concept
+    of rotating the eigenmodes in the eigenspace per group. Produces a sparse
+    permutation matrix of (`n_rotate`, N, M).
+    
+    Parameters
+    ----------
+    emodes : np.ndarray of shape (N, M)
+        eigenmodes to resample
+    evals : np.ndarray of shape (M,)
+        eigenvalues corresponding to `emodes`
+    n_rotate : int, optional
+        number of permutations to compute. Default 1000
+    check_duplicates: bool, optional
+        Whether to check for and attempt to avoid duplicate resamplings. A
+        warnings will be raised if duplicates cannot be avoided. Setting to
+        True may increase the runtime of this function! Default: True    
+    seed : None or int or np.random.RandomState, optional
+        seed for random number generation. Default None
+    method : {'original', 'vasa', 'hungarian'}, optional
+        Method by which to match non- and rotated coordinates. Default: 'original'
+    verbose : bool, optional
+        Whether to print occasional status messages. Default: False
+    return_cost : bool, optional
+        Whether to return cost array (specified as Euclidean distance) for each
+        coordinate for each rotation Default: True
+        
+    Returns
+    -------
+    resampled_emodes : np.ndarray of shape (`n_rotate`, N, M)
+        new eigenmodes matrix after resampling procedure
+
+    Notes
+    -----
+    While applicable in most circumstances, resampled modes, especially with
+    ``method='original'`` set, may result in some inaccuracies of reconstructions
+    of surrogates, particularly in the presence of near-white maps or 
+
+    """
+    
+    if eigen_spins is None:
+        eigen_spins = gen_eigensamples(emodes, evals, mask=mask, n_rotate=n_rotate, num_modes=num_modes,
+                                       **kwargs)
+
+    emodes_masked = copy.deepcopy(emodes[:, :num_modes])
+    emodes_masked = emodes_masked[mask]
+    evals = copy.deepcopy(evals[:num_modes])
+    resampled_emodes = np.zeros((n_rotate, len(emodes), len(evals)), dtype=emodes.dtype)
+    groups = _get_eigengroups(emodes_masked)
+    for n in range(n_rotate):
+        resampled_masked = np.zeros((len(emodes_masked), len(evals)), dtype=emodes.dtype)
+        for j in range(len(groups)):
+            resampled_masked[:, groups[j]] = emodes_masked[:, groups[j]][eigen_spins[n, :, j]]
+        
+        resampled_emodes[n, mask] = resampled_masked
+    
+    return resampled_emodes
+
+def spin_single(emodes, evals, mask=None, eigen_spins=None, num_modes=100, return_masked=False, **kwargs):
+    if eigen_spins is None:
+        eigen_spins = gen_eigensamples(emodes, evals, mask=mask, n_rotate=1, num_modes=num_modes,
+                                       **kwargs)[0]
+        
+    emodes_masked = copy.deepcopy(emodes[:, :num_modes])
+    emodes_masked = emodes_masked[mask]
+    evals = copy.deepcopy(evals[:num_modes])
+    resampled_emodes = np.zeros((len(emodes), len(evals)), dtype=emodes.dtype)
+    groups = _get_eigengroups(emodes_masked)
+    resampled_masked = np.zeros((len(emodes_masked), len(evals)), dtype=emodes.dtype)
+    for j in range(len(groups)):
+        resampled_masked[:, groups[j]] = emodes_masked[:, groups[j]][eigen_spins[:, j]]
+    
+    if return_masked is True:
+        return resampled_masked
+    
+    resampled_emodes[mask] = resampled_masked
+    
+    return resampled_emodes
 
 def compute_normals(coords, faces):
     """
