@@ -951,46 +951,33 @@ def _sort_polydata_points(surf, labeling, append_data=True):
             s.append_array(v, name=k, at=at)
     return s
 
-def find_fwhm(surface, data, roi=None, column=None, demean=True):
+def find_wavelength(surface, data, roi=None, column=None, demean=True):
     """
-    Compute the full-width half-maximum of the data in `data`
-    using a kernel density estimate. optimizes the fit of the
-    kernel to find sigma which is then converted to FWHM. Uses
-    a random sampling approach by taking a random vertex and
-    finding `knn` nearest neighbors `ns` times. Returns maximum
-    cost from Kernel Density Estimator and average FWHM from 
-    samples.
+    Compute the characteristic wavelength of the data in `data` based
+    on the full-width half-maximum (FWHM). This is equal to 2*FWHM.
+    This function simply wraps ``wb_command -metric-estimate-fwhm``,
+    converting stdout to a Python float.
 
-    Used to estimate the number of eigengroups to include
+    Can be used to estimate the number of eigengroups to include
     in the reconstruction of surrogates in 
     :class:`eigenstrapping.SurfaceEigenstrapping.generate()`
     based on the relationship of eigenvalue to spatial scale.
 
     Parameters
     ----------
+    surface : str to filepath
+        Surface for `data`.
     data : np.ndarray or str to filepath (N,)
-        Surface data to find FWHM
-    surface : nib.GiftiImage like or filepath
-        Surface for `data`. Must have coordinates of shape (N, 3)
-    mask : np.ndarray or str to filepath (N,), optional
-        Mask for values in `data` to include e.g. non-medial wall
-        vertices. Default None
-    ns : int, optional
-        Number of samples for random sampling. Default 100
-    knn : int, optional
-        Number of neighbors to calculate FWHM. Default 100
-    return_cost : bool, optional
-        Return max cost of Kernel Density Estimator. Default True
-    seed : None or int or np.random.RandomState, optional
-        Seed for random number generation. Default None
-    kwargs : dict, optional
-        keyword arguments to pass to ``scipy.stats.gaussian_kde``
+        Data on `surface` to find FWHM
+    roi : str to filepath, optional
+        Region-of-interest mask. Default None
+    column
     
     Returns
     -------
     cost : float
         If `return_cost`, returns maximum cost of kde fit.
-    fwhm : float
+    wavelength : float
         Value for full-width half-maximum of `data`.
 
     Notes
@@ -1009,6 +996,11 @@ def find_fwhm(surface, data, roi=None, column=None, demean=True):
     metric.add_gifti_data_array(nib.gifti.gifti.GiftiDataArray(data.astype(np.float32)))
     nib.save(metric, tmpf)
 
+    if roi is not None:
+        roistr = '-roi {roi}'
+    else:
+        roistr = ''
+
     if column is not None:
         colstr = '-column {column}'
         wholestr = ''
@@ -1021,39 +1013,11 @@ def find_fwhm(surface, data, roi=None, column=None, demean=True):
     else:
         destr = ''
 
-    cmd = f'wb_command -metric-estimate-fwhm {surface} {tmpf} {colstr} {wholestr} {destr}'
+    cmd = f'wb_command -metric-estimate-fwhm {surface} {tmpf} {roistr} {colstr} {wholestr} {destr}'
     output = subprocess.check_output(cmd, shell="True")
     output = output.splitlines()
 
     os.unlink(tmpf)
-
-
-    # mask = dataio(mask).astype(np.bool_)
-    
-    # if mask is not None:
-    #     data = copy.deepcopy(data)
-    #     data = data[mask]
-    #     dist = copy.deepcopy(dist)
-    #     dist = dist[np.ix_(mask, mask)]    
-    
-    # rs = check_random_state(seed)
-
-    # tree = BallTree(dist)
-    # x = rs.choice(np.arange(len(data)), size=ns, replace=False)
-
-    # m = []
-    # for i, xi in enumerate(x):
-    #     inds = tree.query(dist[xi, :][None, ...], k=knn)[1] # don't return zeros
-    #     with np.errstate(all='ignore'):
-    #         s = (data[xi] - data[inds]) / dist[xi, inds]
-    #     # find the minimum distance that is greater than 90% of the
-    #     # maximum value in s
-    #     try:
-    #         m.append(dist[xi, inds][s > 0.9*np.nanmax(s)][0])
-    #     except:
-    #         continue
-
-    # fwhm = 2.355 * np.mean(m)
 
     return 2*float(output[0].decode('ascii').split(' ')[1])
 
