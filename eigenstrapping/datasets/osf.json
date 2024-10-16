@@ -70,13 +70,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsaverage_den-3k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "a6aa282ce0f0166f9f2caf83bee4e0d0",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123e8e5e51c0f90bc57cb"
+                "668ded7cc727f8001c5b864d"
             ]
         },
         {
@@ -85,13 +85,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsaverage_den-3k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "e92ed624d364b298ac8377b5232d7c1c",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123e68992ec0f987886ae"
+                "6684c5b36f01f301812cf024"
             ]
         },
         {
@@ -100,13 +100,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsaverage_den-3k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "5ecadc7c59df4aceefe31457781cb570",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123e84dfd8c0f3827f864"
+                "668ded7cc727f8001c5b8649"
             ]
         },
         {
@@ -115,13 +115,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsaverage_den-3k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "9df8db72993bb9a9a6a3df06febf1b5d",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123e5719c060f78d49d7d"
+                "6684c5b36f01f301812cf022"
             ]
         },
         {
@@ -130,13 +130,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsaverage_den-10k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "81b1772209132b99d85667f533c4ce7f",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "6566812ff0b8e24c97a9d80c"
+                "668ded7cc727f8001c5b865f"
             ]
         },
         {
@@ -145,13 +145,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsaverage_den-10k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "731e0381d943c7dfb641b3b323c68eff",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "6566812479d42829de3e864c"
+                "6684c5b36f01f301812cf030"
             ]
         },
         {
@@ -160,13 +160,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsaverage_den-10k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "28aa886f8c210c1d30dffac2c2018a8e",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "6566812ef0b8e24c97a9d80a"
+                "668ded7cc727f8001c5b865c"
             ]
         },
         {
@@ -175,13 +175,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsaverage_den-10k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "4bac654fa66eccf2089646c841549ddb",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65668124932b9f48b276087f"
+                "6684c5b36f01f301812cf02e"
             ]
         },
         {
@@ -190,13 +190,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsaverage_den-41k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "e5a9171b8da679d03d0513c80972df32",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f1243e8520370f70880456"
+                "668ded7cc727f8001c5b8658"
             ]
         },
         {
@@ -205,13 +205,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsaverage_den-41k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "24ae270a1c9533143f6114cbbecbaccf",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123eb8520370f74880174"
+                "6684c5b36f01f301812cf02c"
             ]
         },
         {
@@ -220,13 +220,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsaverage_den-41k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "57fe24dca37ac30dd2648e5e2108bb66",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f1243d719c060f78d49da3"
+                "668ded7cc727f8001c5b8656"
             ]
         },
         {
@@ -235,13 +235,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsaverage_den-41k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "5d2a77f359e924a0ec4d9dacba3edbc4",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123ec8520370f70880428"
+                "6684c5b36f01f301812cf02a"
             ]
         },
         {
@@ -250,13 +250,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsaverage_den-164k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "6f2c37cbd2ae979c4570fd662ec58d4b",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f1257ce5e51c0f94bc5508"
+                "668ded7cc727f8001c5b8652"
             ]
         },
         {
@@ -265,13 +265,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsaverage_den-164k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "b7b840ffa52e6660fac5e7705e2b9ebf",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123fa8520370f74880183"
+                "6684c5b36f01f301812cf028"
             ]
         },
         {
@@ -280,13 +280,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsaverage_den-164k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "884ac3d2700af219cb1f0d42de984159",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f1257ee5e51c0f94bc550a"
+                "668ded7cc727f8001c5b864f"
             ]
         },
         {
@@ -295,13 +295,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsaverage_den-164k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "ef654df66341bcfa3c53dc8afa9dbd19",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f123fe4dfd8c0f3827f868"
+                "6684c5b36f01f301812cf026"
             ]
         },
         {
@@ -310,7 +310,7 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsLR_den-4k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "72d4411a3c914de40fd503d3bdf31561",
             "title": null,
             "redir": null,
@@ -325,7 +325,7 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsLR_den-4k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "729d6cbae84aac9b6b06eb405f31dc8c",
             "title": null,
             "redir": null,
@@ -340,7 +340,7 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsLR_den-4k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "a3733cc068ccc5d68f26653445598ac5",
             "title": null,
             "redir": null,
@@ -355,7 +355,7 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsLR_den-4k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "9a814eb3d4f99c8b42fbbe59ec53f2ab",
             "title": null,
             "redir": null,
@@ -370,7 +370,7 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsLR_den-8k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "1bb4a1c7dc6f7e6adc38d36772d8a0a7",
             "title": null,
             "redir": null,
@@ -385,7 +385,7 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsLR_den-8k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "6d279d7887fc80c3ff12cc1c89ea1f13",
             "title": null,
             "redir": null,
@@ -400,7 +400,7 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsLR_den-8k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "dcab069e2b353db94899e3b65a7b3ddf",
             "title": null,
             "redir": null,
@@ -415,7 +415,7 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsLR_den-8k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
+            "rel_path": "googledrive/",
             "checksum": "4e8a91bcf1a6b391a8a92a14a6912d11",
             "title": null,
             "redir": null,
@@ -430,13 +430,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsLR_den-32k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "c6d0b329011d368a911f27ba7ff4df6a",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "656928cc02fa96017e7d2a14"
+                "668ded7cc727f8001c5b863a"
             ]
         },
         {
@@ -445,13 +445,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsLR_den-32k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "8260ab841726bbc1d456b185a87b1665",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "6569284a5022f6018f88ea99"
+                "6684c5b36f01f301812cf018"
             ]
         },
         {
@@ -460,13 +460,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsLR_den-32k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "ffaddb605918978cda7194d1a9153597",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "656928db02fa96017e7d2a1e"
+                "668ded7cc727f8001c5b8638"
             ]
         },
         {
@@ -475,13 +475,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsLR_den-32k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "b5c74a9127636ecdfb2119750d19708b",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "6569285f02fa9601827d2e2b"
+                "6684c5b36f01f301812cf016"
             ]
         },
         {
@@ -490,13 +490,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-fsLR_den-164k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "6f2c37cbd2ae979c4570fd662ec58d4b",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f1257ce5e51c0f94bc5508"
+                "668ded7cc727f8001c5b8635"
             ]
         },
         {
@@ -505,13 +505,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-fsLR_den-164k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "78b8d4c3ace9334abcba39b42ca8ce9a",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f12446719c060f8bd49aeb"
+                "6684c5b36f01f301812cf014"
             ]
         },
         {
@@ -520,13 +520,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-fsLR_den-164k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "884ac3d2700af219cb1f0d42de984159",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f1257ee5e51c0f94bc550a"
+                "668ded7cc727f8001c5b8631"
             ]
         },
         {
@@ -535,13 +535,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-fsLR_den-164k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "e07c3f1dbf5dadcc5bbaf1feaf1bd160",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f124554dfd8c0f3727f75c"
+                "6684c5b36f01f301812cf012"
             ]
         },
         {
@@ -550,13 +550,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-civet_den-41k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "50d2d9f2bec51067da1393d868d553c6",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f125d14dfd8c0f4627f613"
+                "668ded7cc727f8001c5b8628"
             ]
         },
         {
@@ -565,13 +565,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-civet_den-41k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "69b2aef1b7c5234545c496cae1fde3a2",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f125a2e5e51c0f82bc5872"
+                "6684c5b36f01f301812cf00c"
             ]
         },
         {
@@ -580,13 +580,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-civet_den-41k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "b2ca361884de06cc9737e4c9e0294647",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f125d28992ec0fa5788af9"
+                "668ded7cc727f8001c5b8625"
             ]
         },
         {
@@ -595,13 +595,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-civet_den-41k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "292f2678f838b61e1e8260c363ce2f69",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f125a18992ec0fa978865c"
+                "6684c5b36f01f301812cf00a"
             ]
         },
         {
@@ -610,13 +610,13 @@
             "hemi": "lh",
             "format": "emodes",
             "fname": "space-civet_den-164k_hemi-lh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "ccbeb4179cebba5dc9c11a0314b95a03",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f12a5a4dfd8c0f3727f99c"
+                "668ded7cc727f8001c5b862e"
             ]
         },
         {
@@ -625,13 +625,13 @@
             "hemi": "lh",
             "format": "evals",
             "fname": "space-civet_den-164k_hemi-lh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "1d7223906d2c83ca042a3299d44c66bb",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f129fd8520370f70880861"
+                "6684c5b36f01f301812cf010"
             ]
         },
         {
@@ -640,13 +640,13 @@
             "hemi": "rh",
             "format": "emodes",
             "fname": "space-civet_den-164k_hemi-rh_emodes.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "5a2f75f800fc4b7f04966d74b1694b71",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f12d514dfd8c0f4b27f76b"
+                "668ded7cc727f8001c5b862b"
             ]
         },
         {
@@ -655,13 +655,13 @@
             "hemi": "rh",
             "format": "evals",
             "fname": "space-civet_den-164k_hemi-rh_evals.txt",
-            "rel_path": "eigenmodes/",
-            "checksum": "f351cbf1a489834ef47f773e4f9ab702",
+            "rel_path": "googledrive/",
+            "checksum": null,
             "title": null,
             "redir": null,
             "url": [
                 "mabr9",
-                "65f12cf28520370f628807ea"
+                "6684c5b36f01f301812cf00e"
             ]
         }
     ],
