@@ -61,7 +61,7 @@ def _osfify_urls(data):
         Input data with all `url` dict keys formatted
     """
 
-    OSF_API = "https://files.osf.io/v1/resources/{}/providers/osfstorage/{}"
+    OSF_API = "https://files.osf.io/v1/resources/{}/providers/{}/{}"
 
     if isinstance(data, str) or data is None:
         return data
