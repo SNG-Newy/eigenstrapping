@@ -74,8 +74,8 @@ def _osfify_urls(data):
         elif not isinstance(data['url'], str):
             data['url'] = OSF_API.format(*data['url'])
         
-    if 'googledrive' in data['url']:
-        data['url'] = DRIVE_FORMAT.format(data['url'][-1])
+        if 'googledrive' in data['url']:
+            data['url'] = DRIVE_FORMAT.format(data['url'][-1])
 
     try:
         for key, value in data.items():
