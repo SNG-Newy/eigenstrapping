@@ -78,7 +78,7 @@ def _osfify_urls(data):
         for key, value in data.items():
             data[key] = _osfify_urls(value)
             if value is not None and 'googledrive' in value:
-                data[key] = DRIVE_FORMAT.format(data[n].split('/')[-1])
+                data[key] = DRIVE_FORMAT.format(data[key].split('/')[-1])
     except AttributeError:
         for n, value in enumerate(data):
             data[n] = _osfify_urls(value)
