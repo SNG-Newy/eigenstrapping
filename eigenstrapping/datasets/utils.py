@@ -62,6 +62,7 @@ def _osfify_urls(data):
     """
 
     OSF_API = "https://files.osf.io/v1/resources/{}/providers/{}/{}"
+    DRIVE_FORMAT = "https://osf.io/download/{}"
 
     if isinstance(data, str) or data is None:
         return data
@@ -72,6 +73,9 @@ def _osfify_urls(data):
         # if the url isn't a string assume we're supposed to format it
         elif not isinstance(data['url'], str):
             data['url'] = OSF_API.format(*data['url'])
+        
+    if 'googledrive' in data['url']:
+        data['url'] = DRIVE_FORMAT.format(data['url'][-1])
 
     try:
         for key, value in data.items():
@@ -81,7 +85,7 @@ def _osfify_urls(data):
             data[n] = _osfify_urls(value)
         # drop the invalid entries
         data = [d for d in data if d is not None]
-
+        
     return data
 
 def get_data_dir(data_dir=None):
