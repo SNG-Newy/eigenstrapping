@@ -73,18 +73,15 @@ def _osfify_urls(data):
         # if the url isn't a string assume we're supposed to format it
         elif not isinstance(data['url'], str):
             data['url'] = OSF_API.format(*data['url'])
+            if 'googledrive' in data['url']:
+                data['url'] = DRIVE_FORMAT.format(data['url'].split('/')[-1])
 
     try:
         for key, value in data.items():
             data[key] = _osfify_urls(value)
-            print(data[key])
-            if data[key] is not None and 'googledrive' in data[key]['url']:
-                data[key]['url'] = DRIVE_FORMAT.format(data[key]['url'].split('/')[-1])
     except AttributeError:
         for n, value in enumerate(data):
             data[n] = _osfify_urls(value)
-            if data[n] is not None and 'googledrive' in data[n]['url']:
-                data[n]['url'] = DRIVE_FORMAT.format(data[n]['url'].split('/')[-1])
         # drop the invalid entries
         data = [d for d in data if d is not None]
         
