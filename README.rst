@@ -18,7 +18,7 @@
 The ``eigenstrapping`` toolbox is designed to help researchers generate
 statistically-rigorous models for null hypothesis testing between brain maps using
 non-local spectral shape descriptors - or geometric eigenmodes.
-Documentation can be found `here <https://eigenstrapping.readthedocs.io/en/latest/>`_. Read our preprint `here <https://dx.doi.org/10.1101/2024.02.07.579070>`_!
+Documentation can be found `here <https://eigenstrapping.readthedocs.io/en/latest/>`_. Read our preprint `<https://dx.doi.org/10.1101/2024.02.07.579070>`_
 
 .. image:: ./docs/_static/main_figure.jpg
   :scale: 20%
@@ -62,7 +62,7 @@ To run eigenstrapping, the following Python packages are required (these should 
 * `netneurotools <https://github.com/netneurolab/netneurotools>`_
 
 ``nibabel`` and ``nilearn`` are required for surfaces and volumes. ``matplotlib``
-is only required for fitting plots in :mod:`eigenstrapping.fit` and some of the surface
+is only required for fitting plots in `eigenstrapping.fit` and some of the surface
 plotting functions. Future improvements will reduce the number of dependencies
 needed.
 
@@ -81,10 +81,9 @@ Optional dependencies
 In order to speed up calculation of eigenmodes, you can utilize ``scikit-sparse`` libraries
 to use Cholesky decomposition rather than LU decomposition. If these libraries are already
 installed, the functions in ``eigenstrapping`` will automagically recognize this and use these
-libraries, without the user specifying (as default behavior, this can be turned off. Refer to
-:ref:`Deriving eigenmodes <usage_geometry_eigenmodes>`).
+libraries, without the user specifying (as default behavior, this can be turned off.
 
-You can install these libraries by following the instructions `here <https://github.com/scikit-sparse/scikit-sparse>`_.
+You can install these libraries by following the instructions: `scikit-sparse <https://github.com/scikit-sparse/scikit-sparse>`_.
 
 Citing
 ------
@@ -103,7 +102,7 @@ Please also cite the papers for the method that we use to calculate eigenmodes o
 
 * BrainPrint: a discriminative characterization of brain morphology. Wachinger C, Golland P, Kremen W, Fischl B, Reuter M. Neuroimage. 2015;109:232-48. `<http://dx.doi.org/10.1016/j.neuroimage.2015.01.032>`_ `<http://www.ncbi.nlm.nih.gov/pubmed/25613439>`_
 
-And if you use the Heat Kernel for Geodesics method in :func:`eigenstrapping.geometry.geodesic_distmat`:
+And if you use the Heat Kernel for Geodesics method in `eigenstrapping.geometry.geodesic_distmat`:
 
 * Crane, K., Weischedel, C., & Wardetzky, M. (2013). Geodesics in heat: A new approach to computing distance based on heat flow. ACM Transactions on Graphics (TOG), 32(5), 1-11. `<https://arxiv.org/pdf/1204.6216>`_
 

@@ -90,6 +90,14 @@ def msle(y_true, y_pred):
     """Compute the Mean Squared Logarithmic Error."""
     return np.mean((np.log1p(y_true) - np.log1p(y_pred)) ** 2)
 
+def fdr_bh(pvals):
+    """Compute the Benjamini-Hochberg procedure for false discovery rate correction"""
+    ranked_pvals = sstats.rankdata(pvals)
+    fdr = pvals * len(pvals) / ranked_pvals
+    fdr[fdr > 1] = 1
+    return fdr
+
+
 def joint_differential_entropy(x, y, b=0.5):
     """ Compute the joint differential entropy of x and y """
     data = np.vstack([x, y]).T

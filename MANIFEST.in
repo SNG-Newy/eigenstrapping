@@ -1,3 +1,4 @@
 include README.rst LICENSE
 recursive-include eigenstrapping/datasets *
 include eigenstrapping/datasets/osf.json
+exclude *egg-info* dist __pycache__ 
