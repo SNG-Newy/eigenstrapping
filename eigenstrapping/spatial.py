@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Functions for calculating and manipulating spatial autocorrelation
-Author: Ross Markello, netneurolab
+Some functions: Ross Markello, netneurolab
+the rest: Nikitas Koussis, SNGNewy
 """
 
 import os
@@ -15,11 +16,16 @@ from scipy import fftpack, stats as sstats
 from scipy.spatial import cKDTree
 from scipy.optimize import minimize
 from scipy.special import erfc
+from sklearn.utils.validation import check_random_state
 
 from netneurotools.datasets import make_correlated_xy
 from netneurotools.freesurfer import check_fs_subjid
 from netneurotools.utils import run
-from neuromaps import transforms, datasets
+from neuromaps import transforms, datasets, images
+
+from parspin import utils as putils
+
+from joblib import Parallel, delayed, dump, load
 
 from brainspace import mesh
 
@@ -718,20 +724,16 @@ def create_surface_grf(noise=None, alpha=3.0, normalize=True, seed=None,
     """
 
     affine = np.eye(4) * 2
-    affine[:, -1] = [-90, -90, -72, 1]
+    affine[:, -1] = [90, -126, -72, 1]
+    affine[0, 0] *= -1
 
     gfield = gaussian_random_field(91, 109, 91, noise=noise, alpha=alpha,
                                    normalize=normalize, seed=seed)
     fn = make_tmpname(suffix='.nii.gz')
-    nib.save(nib.nifti1.Nifti1Image(gfield, affine), fn)
+    nib.save(nib.nifti1.Nifti1Image(gfield.astype(np.float32), affine), fn)
 
-    data = np.zeros((20484,))
-    for n, hemi in enumerate(('lh', 'rh')):
-        outname = make_tmpname(suffix='.mgh')
-        run(VOL2SURF.format(fn, outname, hemi), quiet=True)
-        sl = slice(len(data) // 2 * n, len(data) // 2 * (n + 1))
-        data[sl] = nib.load(outname).get_fdata().squeeze()
-        os.remove(outname)
+    #data = np.zeros((20484,))
+    data = images.load_data(transforms.mni152_to_fsaverage(fn, fsavg_density='10k', method='nearest'))
 
     os.remove(fn)
 
@@ -739,6 +741,57 @@ def create_surface_grf(noise=None, alpha=3.0, normalize=True, seed=None,
         data = _mod_medial(_mod_medial(data, True), False, medial_val)
 
     return data
+
+def calc_moran(dist, nulls, local=False, normalize=False, n_jobs=1, return_mask=False):
+    """
+    Calculates Moran's I for every column of `nulls`
+
+    Parameters
+    ----------
+    dist : (N, N) array_like
+        Full distance matrix (inter-hemispheric distance should be np.inf)
+    nulls : (N, P) array_like
+        Null brain maps for which to compute Moran's I
+    n_jobs : int, optional
+        Number of parallel workers to use for calculating Moran's I. Default: 1
+
+    Returns
+    -------
+    moran : (P,) np.ndarray
+        Moran's I for `P` null maps
+    """
+
+    def _moran(dist, sim, medmask, local=False, normalize=False, invert_dist=False):
+        mask = np.logical_and(medmask, np.logical_not(np.isnan(sim)))
+        return morans_i(dist[np.ix_(mask, mask)], sim[mask], local=local,
+                                normalize=normalize, invert_dist=invert_dist)
+
+    # do some pre-calculation on our distance matrix to reduce computation time
+    with np.errstate(divide='ignore', invalid='ignore'):
+        dist = 1 / dist
+        np.fill_diagonal(dist, 0)
+        dist /= dist.sum(axis=-1, keepdims=True)
+    # NaNs in the `dist` array are the "original" medial wall; mask these
+    medmask = np.logical_not(np.isnan(dist[:, 0]))
+
+    # calculate moran's I, masking out NaN values for each null (i.e., the
+    # rotated medial wall)
+    fn = dump(dist, make_tmpname('.mmap'))[0]
+    dist = load(fn, mmap_mode='r')
+    moran = np.array(
+        Parallel(n_jobs=n_jobs)(
+            delayed(_moran)(dist, nulls[:, n], medmask, local, normalize)
+            for n in putils.trange(nulls.shape[-1], desc="Running Moran's I")
+        )
+    )
+
+    mask = np.logical_and(medmask, np.logical_not(np.isnan(nulls[:, 0])))
+    Path(fn).unlink()
+
+    if return_mask:
+        return moran, mask
+    
+    return moran
 
 def create_decimated_grf(surface, hemi='L', noise=None, alpha=3.0, normalize=True, seed=None,
                          medial=None):
@@ -1001,6 +1054,51 @@ def matching_multinorm_grfs(corr, tol=0.005, *, alpha=3.0, normalize=True,
         xs, ys = sstats.zscore(xs), sstats.zscore(ys)
 
     return _mod_medial(xs, remove=False), _mod_medial(ys, remove=False)
+
+def grfs(alpha=3.0, normalize=True, seed=None, debug=False):
+    """
+    Generates two surface GRFs (fsaverage5)
+
+    Starts by generating two random variables from a multivariate normal
+    distribution, adds spatial autocorrelation with specified `alpha`, and 
+    projects to the surface.
+
+    Parameters
+    ----------
+    alpha : float (positive), optional
+        Exponent of the power-law distribution. Only used if `use_gstools` is
+        set to False. Default: 3.0
+    normalize : bool, optional
+        Whether to normalize the returned field to unit variance. Default: True
+    seed : None, int, default_rng, optional
+        Random state to seed GRF generation. Default: None
+    debug : bool, optional
+        Whether to print debug info
+
+    Return
+    ------
+    x, y : (20484,) np.ndarray
+        Generated surface GRFs
+    """
+
+    rs = np.random.default_rng(seed)
+
+    if alpha > 0:
+        # smooth correlated noise vectors + project to surface
+        xs = create_surface_grf(alpha=alpha, normalize=normalize)
+        ys = create_surface_grf(alpha=alpha, normalize=normalize)
+    else:
+        xs = rs.normal(size=20484)
+        ys = rs.normal(size=20484)
+
+        # remove medial wall to ensure data are still sufficiently correlated.
+        # this is important for parcellations that will ignore the medial wall
+        #xs, ys = _mod_medial(xs, remove=True), _mod_medial(ys, remove=True)
+
+    if normalize:
+        xs, ys = sstats.zscore(xs), sstats.zscore(ys)
+
+    return xs, ys #_mod_medial(xs, remove=False), _mod_medial(ys, remove=False)
 
 def matching_multinorm_exgrfs(corr, tol=0.005, alpha=3.0, params=[0., 1., 1.], normalize=True, seed=None, debug=False):
     """

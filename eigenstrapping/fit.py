@@ -19,7 +19,7 @@ eigen_args = ['surface', 'evals', 'emodes',
                'distribution', 'shuffle', 'gen_rotations',
                'add_res']
 
-var_args = ['ns', 'pv', 'nh', 'knn', 'pv', 'nh', 'knn', 'n_jobs', 'seed']
+var_args = ['ns', 'pv', 'nh', 'knn', 'pv', 'nh', 'knn']
 
 def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=False, 
                 extra_diags=False, surrs=None, **params):
@@ -93,7 +93,8 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
         # surrogates
         surrs = eigen(n=nsurrs)
     else:
-        surrs = dataio(surrs)
+        surrs = surrs
+        nsurrs = len(surrs)
     
     # plot variogram
     # Instantiate surrogate map generator
@@ -175,7 +176,7 @@ def surface_fit(x, D=None, index=None, nsurrs=10, num_modes=100, return_data=Fal
     # Pairwise correlation plot
     ax = axes[1]
     correlations = efficient_pearsonr(x, surrs.T, nan_policy='omit')[0]
-    ax.hist(correlations, bins=np.linspace(-1, 1, num=nsurrs//5), color='#377eb8', alpha=0.7)
+    ax.hist(correlations, bins=np.linspace(-1, 1, num=nsurrs//10), color='#377eb8', alpha=0.7)
     ax.axvline(x=np.mean(correlations), color='r', linestyle='dashed', linewidth=3)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
