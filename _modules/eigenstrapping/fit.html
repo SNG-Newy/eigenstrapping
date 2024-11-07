@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
@@ -5,23 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.fit &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=ccc4b35e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -99,7 +97,7 @@
                <span class="s1">&#39;distribution&#39;</span><span class="p">,</span> <span class="s1">&#39;shuffle&#39;</span><span class="p">,</span> <span class="s1">&#39;gen_rotations&#39;</span><span class="p">,</span>
                <span class="s1">&#39;add_res&#39;</span><span class="p">]</span>
 
-<span class="n">var_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ns&#39;</span><span class="p">,</span> <span class="s1">&#39;pv&#39;</span><span class="p">,</span> <span class="s1">&#39;nh&#39;</span><span class="p">,</span> <span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="s1">&#39;pv&#39;</span><span class="p">,</span> <span class="s1">&#39;nh&#39;</span><span class="p">,</span> <span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">]</span>
+<span class="n">var_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ns&#39;</span><span class="p">,</span> <span class="s1">&#39;pv&#39;</span><span class="p">,</span> <span class="s1">&#39;nh&#39;</span><span class="p">,</span> <span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="s1">&#39;pv&#39;</span><span class="p">,</span> <span class="s1">&#39;nh&#39;</span><span class="p">,</span> <span class="s1">&#39;knn&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="surface_fit"><a class="viewcode-back" href="../../generated/eigenstrapping.fit.surface_fit.html#eigenstrapping.fit.surface_fit">[docs]</a><span class="k">def</span> <span class="nf">surface_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nsurrs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                 <span class="n">extra_diags</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">surrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
@@ -173,7 +171,8 @@
         <span class="c1"># surrogates</span>
         <span class="n">surrs</span> <span class="o">=</span> <span class="n">eigen</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">nsurrs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">surrs</span> <span class="o">=</span> <span class="n">dataio</span><span class="p">(</span><span class="n">surrs</span><span class="p">)</span>
+        <span class="n">surrs</span> <span class="o">=</span> <span class="n">surrs</span>
+        <span class="n">nsurrs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">surrs</span><span class="p">)</span>
     
     <span class="c1"># plot variogram</span>
     <span class="c1"># Instantiate surrogate map generator</span>
@@ -255,7 +254,7 @@
     <span class="c1"># Pairwise correlation plot</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">correlations</span> <span class="o">=</span> <span class="n">efficient_pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">surrs</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">nsurrs</span><span class="o">//</span><span class="mi">5</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#377eb8&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">nsurrs</span><span class="o">//</span><span class="mi">10</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#377eb8&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">correlations</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
@@ -5,23 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.geometry &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=ccc4b35e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -99,8 +97,18 @@
 <span class="kn">from</span> <span class="nn">vtk</span> <span class="kn">import</span> <span class="p">(</span><span class="n">vtkThreshold</span><span class="p">,</span> <span class="n">vtkDataObject</span><span class="p">,</span> <span class="n">vtkGeometryFilter</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">brainspace.utils.parcellation</span> <span class="kn">import</span> <span class="n">relabel_consecutive</span>
 <span class="kn">from</span> <span class="nn">brainspace.mesh.mesh_creation</span> <span class="kn">import</span> <span class="n">build_polydata</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_suppress</span><span class="p">,</span> <span class="n">_print</span><span class="p">,</span> <span class="n">is_string_like</span><span class="p">,</span>
-                    <span class="n">enablePrint</span><span class="p">,</span> <span class="n">blockPrint</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">eigenstrapping.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_suppress</span><span class="p">,</span> <span class="n">_print</span><span class="p">,</span> <span class="n">is_string_like</span><span class="p">,</span>
+                    <span class="n">enablePrint</span><span class="p">,</span> <span class="n">blockPrint</span><span class="p">,</span> <span class="n">eigen_decomposition</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">eigenstrapping.dataio</span> <span class="kn">import</span> <span class="n">dataio</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span> <span class="nn">eigenstrapping.rotations</span> <span class="kn">import</span> <span class="n">indirect_method</span>
+<span class="kn">from</span> <span class="nn">eigenstrapping.utils</span> <span class="kn">import</span> <span class="n">_get_eigengroups</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">BallTree</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">linear_sum_assignment</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">parspin</span> <span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">putils</span>
 
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
@@ -1021,6 +1029,372 @@
             <span class="n">s</span><span class="o">.</span><span class="n">append_array</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">at</span><span class="o">=</span><span class="n">at</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span>
 
+<span class="k">def</span> <span class="nf">find_wavelength</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">roi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the characteristic wavelength of the data in `data` based</span>
+<span class="sd">    on the full-width half-maximum (FWHM). This is equal to 2*FWHM.</span>
+<span class="sd">    This function simply wraps ``wb_command -metric-estimate-fwhm``,</span>
+<span class="sd">    converting stdout to a Python float.</span>
+
+<span class="sd">    Can be used to estimate the number of eigengroups to include</span>
+<span class="sd">    in the reconstruction of surrogates in </span>
+<span class="sd">    :class:`eigenstrapping.SurfaceEigenstrapping.generate()`</span>
+<span class="sd">    based on the relationship of eigenvalue to spatial scale.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surface : str to filepath</span>
+<span class="sd">        Surface for `data`.</span>
+<span class="sd">    data : np.ndarray or str to filepath (N,)</span>
+<span class="sd">        Data on `surface` to find FWHM</span>
+<span class="sd">    roi : str to filepath, optional</span>
+<span class="sd">        Region-of-interest mask. Default None</span>
+<span class="sd">    column</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cost : float</span>
+<span class="sd">        If `return_cost`, returns maximum cost of kde fit.</span>
+<span class="sd">    wavelength : float</span>
+<span class="sd">        Value for full-width half-maximum of `data`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function uses Euclidean distance to measure nearest</span>
+<span class="sd">    neighbors as an approximation, and assumes a Gaussianity </span>
+<span class="sd">    to the smoothness in `data`. It may have unpredictable </span>
+<span class="sd">    effects if the data is highly non-Gaussian. Use with caution. </span>
+<span class="sd">    If the fit is bad (cost is high) then we recommend the </span>
+<span class="sd">    variogram calculation in :func:`eigenstrapping.fit.surface_fit()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">dataio</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">tmpf</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.func.gii&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">metric</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">GiftiImage</span><span class="p">()</span>
+    <span class="n">metric</span><span class="o">.</span><span class="n">add_gifti_data_array</span><span class="p">(</span><span class="n">nib</span><span class="o">.</span><span class="n">gifti</span><span class="o">.</span><span class="n">gifti</span><span class="o">.</span><span class="n">GiftiDataArray</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)))</span>
+    <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">roi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">roistr</span> <span class="o">=</span> <span class="s1">&#39;-roi </span><span class="si">{roi}</span><span class="s1">&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">roistr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">colstr</span> <span class="o">=</span> <span class="s1">&#39;-column </span><span class="si">{column}</span><span class="s1">&#39;</span>
+        <span class="n">wholestr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">colstr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">wholestr</span> <span class="o">=</span> <span class="s1">&#39;-whole-file&#39;</span>
+    
+    <span class="k">if</span> <span class="n">demean</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">destr</span> <span class="o">=</span> <span class="s1">&#39;-demean&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">destr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;wb_command -metric-estimate-fwhm </span><span class="si">{</span><span class="n">surface</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">tmpf</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">roistr</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">colstr</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">wholestr</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">destr</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">tmpf</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">truncate_emodes</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> 
+                    <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ret_fwhm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">find_group_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">per_spectrum</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the estimation of full-width half-maximum to truncate the</span>
+<span class="sd">    number of eigenmodes to use for surrogate generation. Provides a</span>
+<span class="sd">    heuristic to assist the end-user with number of mode selection.</span>
+<span class="sd">    How it works is it finds the first eigenvalue such that:</span>
+
+<span class="sd">                2 * pi</span>
+<span class="sd">        argmin(--------) &lt;=  2*fwhm</span>
+<span class="sd">                 lam</span>
+<span class="sd">    </span>
+<span class="sd">    Actually truncates at the number of *whole* groups that include</span>
+<span class="sd">    this eigenvalue or smaller, corresponding to larger wavelengths.</span>
+<span class="sd">    Either &quot;rounds&quot; up or down, depending on whether the eigenvalue</span>
+<span class="sd">    index of `lam` is greater or lesser than the total number of</span>
+<span class="sd">    eigenvalues in the group G, where G is the group number.</span>
+<span class="sd">    </span>
+<span class="sd">    In other words,</span>
+
+<span class="sd">        floor(G(lam)) if ||lam|| &lt; np.sum(||lam_G||),</span>
+<span class="sd">            ceil(G(lam)) if ||lam|| &gt;= np.sum(||lam_G||)</span>
+
+<span class="sd">    Also has the ability to truncate modes that account for `per_spectrum` </span>
+<span class="sd">    percentage of the power spectra in `data`, which is quicker</span>
+<span class="sd">    and may suit your end-goals better, particularly if small-scale</span>
+<span class="sd">    spatial structure doesn&#39;t matter to your map. For example,</span>
+<span class="sd">    per_spectra=0.9 would truncate the eigenmodes and eigenvalues</span>
+<span class="sd">    to the total number of groups that contain 90% or more of the</span>
+<span class="sd">    modal power spectrum in `data`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.ndarray or str to filepath (N,)</span>
+<span class="sd">        Surface data to find FWHM</span>
+<span class="sd">    surface : nib.GiftiImage like or filepath</span>
+<span class="sd">        Surface for `data`. Must have coordinates of shape (N, 3)</span>
+<span class="sd">    mask : np.ndarray or str to filepath (N,), optional</span>
+<span class="sd">        Mask for values in `data` to include e.g. non-medial wall</span>
+<span class="sd">        vertices. Default None</span>
+<span class="sd">    ns : int, optional</span>
+<span class="sd">        Number of samples for random sampling. Default 100</span>
+<span class="sd">    knn : int, optional</span>
+<span class="sd">        Number of neighbors to calculate FWHM. Default 100</span>
+<span class="sd">    seed : None or int or np.random.RandomState, optional</span>
+<span class="sd">        Seed for random number generation. Default None</span>
+<span class="sd">    ret_fwhm : bool, optional</span>
+<span class="sd">        If True, returns estimated `fwhm`.</span>
+<span class="sd">        Default False</span>
+<span class="sd">    find_group_only : bool, optional</span>
+<span class="sd">        If True, this function does not truncate `emodes` and `evals`,</span>
+<span class="sd">        and only returns the group number that contains the eigenvalue</span>
+<span class="sd">        where the above equation is true.</span>
+<span class="sd">    per_spectra : None or float, optional</span>
+<span class="sd">        If True, truncates `emodes` and `evals` at whole number of groups</span>
+<span class="sd">        with `per_spectrum`</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    emodes_truncated, evals_truncated : np.ndarrays</span>
+<span class="sd">        Eigenmodes and corresponding eigenvalues as whole groups</span>
+<span class="sd">        with higher or equal wavelengths to the smallest `fwhm` in `data`.</span>
+<span class="sd">        Group number to truncate `emodes` and `evals` at is rounded to nearest</span>
+<span class="sd">        group with full membership.</span>
+<span class="sd">    fwhm : float</span>
+<span class="sd">        Value for full-width half-maximum of `data`. Only returned</span>
+<span class="sd">        if `ret_fwhm` is True. Exclusive with `per_spectra`.</span>
+<span class="sd">    group : int</span>
+<span class="sd">        Eigengroup number (zero-indexed)</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function assumes a Gaussianity to the smoothness in</span>
+<span class="sd">    `data`. It may have unpredictable effects if the data is highly</span>
+<span class="sd">    non-Gaussian. Use with caution. If the data is highly non-Gaussian</span>
+<span class="sd">    then we recommend the variogram calculation in </span>
+<span class="sd">    :func:`eigenstrapping.fit.surface_fit()`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">_get_eigengroups</span><span class="p">(</span><span class="n">emodes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">per_spectrum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">eigen_decomposition</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+        <span class="n">power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">normed_power</span> <span class="o">=</span> <span class="n">power</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">power</span><span class="p">)</span>
+        <span class="n">total_power</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">total_power</span> <span class="o">&lt;=</span> <span class="n">per_spectrum</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">normed_power</span><span class="p">):</span>
+            <span class="n">total_power</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">normed_power</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]])</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">find_group_only</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">j</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">emodes_truncated</span><span class="p">,</span> <span class="n">evals_truncated</span> <span class="o">=</span> <span class="p">(</span><span class="n">emodes</span><span class="p">[:,</span> <span class="p">:</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">evals</span><span class="p">[:</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">evals_truncated</span><span class="p">,</span> <span class="n">emodes_truncated</span>
+        
+
+    <span class="n">fwhm</span> <span class="o">=</span> <span class="n">find_wavelength</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">evals</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]][</span><span class="n">k</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;=</span> <span class="n">fwhm</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">find_group_only</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ret_fwhm</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">fwhm</span><span class="p">,</span> <span class="n">j</span> <span class="k">if</span> <span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">else</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span>
+                    <span class="k">return</span> <span class="n">j</span> <span class="k">if</span> <span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">else</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span>
+                <span class="n">emodes_truncated</span><span class="p">,</span> <span class="n">evals_truncated</span> <span class="o">=</span> <span class="p">(</span><span class="n">emodes</span><span class="p">[:,</span> <span class="p">:</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">evals</span><span class="p">[:</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">else</span> <span class="p">(</span><span class="n">emodes</span><span class="p">[:,</span> <span class="p">:</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">evals</span><span class="p">[:</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">ret_fwhm</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">fwhm</span><span class="p">,</span> <span class="n">evals_truncated</span><span class="p">,</span> <span class="n">emodes_truncated</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">evals_truncated</span><span class="p">,</span> <span class="n">emodes_truncated</span>
+        <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Could not find eigenvalue for fwhm</span><span class="se">\n</span><span class="s1">&#39;</span>
+                       <span class="s1">&#39;consider using more modes.&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">gen_eigensamples</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">check_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">method</span><span class="o">=</span><span class="s1">&#39;original&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    compute a permutation matrix for a set of eigenmodes, based on the concept</span>
+<span class="sd">    of rotating the eigenmodes in the eigenspace per group. Produces a sparse</span>
+<span class="sd">    permutation matrix of (`n_rotate`, N, M).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    emodes : np.ndarray of shape (N, M)</span>
+<span class="sd">        eigenmodes to resample</span>
+<span class="sd">    evals : np.ndarray of shape (M,)</span>
+<span class="sd">        eigenvalues corresponding to `emodes`</span>
+<span class="sd">    n_rotate : int, optional</span>
+<span class="sd">        number of permutations to compute. Default 1000</span>
+<span class="sd">    check_duplicates: bool, optional</span>
+<span class="sd">        Whether to check for and attempt to avoid duplicate resamplings. A</span>
+<span class="sd">        warnings will be raised if duplicates cannot be avoided. Setting to</span>
+<span class="sd">        True may increase the runtime of this function! Default: True    </span>
+<span class="sd">    seed : None or int or np.random.RandomState, optional</span>
+<span class="sd">        seed for random number generation. Default None</span>
+<span class="sd">    method : {&#39;original&#39;, &#39;vasa&#39;, &#39;hungarian&#39;}, optional</span>
+<span class="sd">        Method by which to match non- and rotated coordinates. Default: &#39;original&#39;</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Whether to print occasional status messages. Default: False</span>
+<span class="sd">    return_cost : bool, optional</span>
+<span class="sd">        Whether to return cost array (specified as Euclidean distance) for each</span>
+<span class="sd">        coordinate for each rotation Default: True</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    samples : np.ndarray of ints of shape (`n_rotate`, N, M)</span>
+<span class="sd">        nearest neighbor remapping matrix</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1"># mask emodes</span>
+    <span class="n">emodes_masked</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">emodes</span><span class="p">[:,</span> <span class="p">:</span><span class="n">num_modes</span><span class="p">])</span>
+    <span class="n">emodes_masked</span> <span class="o">=</span> <span class="n">emodes_masked</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">evals</span><span class="p">)</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="n">evals</span><span class="p">[:</span><span class="n">num_modes</span><span class="p">]</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">_get_eigengroups</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">)</span>
+
+    <span class="c1"># TODO implement costs</span>
+    <span class="c1">#cost = np.zeros((n_rotate, len(emodes_masked), len(groups)))</span>
+    <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+
+    <span class="c1"># empty array to store resampling indices</span>
+    <span class="c1">#eigen_spins = np.zeros((n_rotate, len(emodes_masked), len(evals)), dtype=&#39;int32&#39;)</span>
+
+    <span class="c1"># generate resampled modes and fill indexing array</span>
+    <span class="k">def</span> <span class="nf">_gen_method</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;original&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">resampled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)):</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">emodes_masked</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">evals</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]])</span>
+            <span class="n">rot</span> <span class="o">=</span> <span class="n">indirect_method</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">new_group</span> <span class="o">=</span> <span class="n">group</span> <span class="o">@</span> <span class="n">rot</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">evals</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;original&#39;</span><span class="p">:</span>
+                <span class="n">dist</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">BallTree</span><span class="p">(</span><span class="n">new_group</span><span class="p">)</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]],</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">col</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,)</span>
+                <span class="c1">#cols = np.stack(cols, axis=-1)</span>
+                <span class="c1">#cost[:, j] = dist</span>
+            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;hungarian&#39;</span><span class="p">:</span>
+                <span class="n">dist</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">new_group</span><span class="p">)</span>
+                <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">linear_sum_assignment</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+                <span class="c1">#cost[hinds, n] = dist[row, col]</span>
+            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;vasa&#39;</span><span class="p">:</span>
+                <span class="n">dist</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">new_group</span><span class="p">)</span>
+                <span class="c1"># min of max a la Vasa et al., 2018</span>
+                <span class="n">col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)):</span>
+                    <span class="c1"># find parcel whose closest neighbor is farthest away</span>
+                    <span class="c1"># overall; assign to that</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+                    <span class="n">col</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+                    <span class="c1">#cost[inds[hinds][row], n] = dist[row, col[row]]</span>
+                    <span class="c1"># set to -inf and inf so they can&#39;t be assigned again</span>
+                    <span class="n">dist</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                    <span class="n">dist</span><span class="p">[:,</span> <span class="n">col</span><span class="p">[</span><span class="n">row</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unrecognized method </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                                 <span class="s1">&#39;choose from &quot;original&quot;, &quot;hungarian&quot; or &quot;vasa&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
+
+            <span class="n">resampled</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">inds</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">resampled</span>
+
+    <span class="n">eigen_spins</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)(</span>
+        <span class="n">delayed</span><span class="p">(</span><span class="n">_gen_method</span><span class="p">)(</span>
+            <span class="n">emodes_masked</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">putils</span><span class="o">.</span><span class="n">trange</span><span class="p">(</span><span class="n">n_rotate</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eigen_spins</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">spin_modes</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">eigen_spins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    compute a permutation matrix for a set of eigenmodes, based on the concept</span>
+<span class="sd">    of rotating the eigenmodes in the eigenspace per group. Produces a sparse</span>
+<span class="sd">    permutation matrix of (`n_rotate`, N, M).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    emodes : np.ndarray of shape (N, M)</span>
+<span class="sd">        eigenmodes to resample</span>
+<span class="sd">    evals : np.ndarray of shape (M,)</span>
+<span class="sd">        eigenvalues corresponding to `emodes`</span>
+<span class="sd">    n_rotate : int, optional</span>
+<span class="sd">        number of permutations to compute. Default 1000</span>
+<span class="sd">    check_duplicates: bool, optional</span>
+<span class="sd">        Whether to check for and attempt to avoid duplicate resamplings. A</span>
+<span class="sd">        warnings will be raised if duplicates cannot be avoided. Setting to</span>
+<span class="sd">        True may increase the runtime of this function! Default: True    </span>
+<span class="sd">    seed : None or int or np.random.RandomState, optional</span>
+<span class="sd">        seed for random number generation. Default None</span>
+<span class="sd">    method : {&#39;original&#39;, &#39;vasa&#39;, &#39;hungarian&#39;}, optional</span>
+<span class="sd">        Method by which to match non- and rotated coordinates. Default: &#39;original&#39;</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Whether to print occasional status messages. Default: False</span>
+<span class="sd">    return_cost : bool, optional</span>
+<span class="sd">        Whether to return cost array (specified as Euclidean distance) for each</span>
+<span class="sd">        coordinate for each rotation Default: True</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    resampled_emodes : np.ndarray of shape (`n_rotate`, N, M)</span>
+<span class="sd">        new eigenmodes matrix after resampling procedure</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    While applicable in most circumstances, resampled modes, especially with</span>
+<span class="sd">    ``method=&#39;original&#39;`` set, may result in some inaccuracies of reconstructions</span>
+<span class="sd">    of surrogates, particularly in the presence of near-white maps or </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">eigen_spins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">eigen_spins</span> <span class="o">=</span> <span class="n">gen_eigensamples</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="n">n_rotate</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="n">num_modes</span><span class="p">,</span>
+                                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">emodes_masked</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">emodes</span><span class="p">[:,</span> <span class="p">:</span><span class="n">num_modes</span><span class="p">])</span>
+    <span class="n">emodes_masked</span> <span class="o">=</span> <span class="n">emodes_masked</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">evals</span><span class="p">[:</span><span class="n">num_modes</span><span class="p">])</span>
+    <span class="n">resampled_emodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_rotate</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">emodes</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">evals</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">emodes</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">_get_eigengroups</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rotate</span><span class="p">):</span>
+        <span class="n">resampled_masked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">evals</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">emodes</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)):</span>
+            <span class="n">resampled_masked</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">emodes_masked</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]][</span><span class="n">eigen_spins</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="p">:,</span> <span class="n">j</span><span class="p">]]</span>
+        
+        <span class="n">resampled_emodes</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">resampled_masked</span>
+    
+    <span class="k">return</span> <span class="n">resampled_emodes</span>
+
+<span class="k">def</span> <span class="nf">spin_single</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eigen_spins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_masked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">eigen_spins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">eigen_spins</span> <span class="o">=</span> <span class="n">gen_eigensamples</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="n">num_modes</span><span class="p">,</span>
+                                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        
+    <span class="n">emodes_masked</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">emodes</span><span class="p">[:,</span> <span class="p">:</span><span class="n">num_modes</span><span class="p">])</span>
+    <span class="n">emodes_masked</span> <span class="o">=</span> <span class="n">emodes_masked</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">evals</span><span class="p">[:</span><span class="n">num_modes</span><span class="p">])</span>
+    <span class="n">resampled_emodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">emodes</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">evals</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">emodes</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">_get_eigengroups</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">)</span>
+    <span class="n">resampled_masked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">evals</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">emodes</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)):</span>
+        <span class="n">resampled_masked</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">emodes_masked</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]][</span><span class="n">eigen_spins</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]]</span>
+    
+    <span class="k">if</span> <span class="n">return_masked</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">resampled_masked</span>
+    
+    <span class="n">resampled_emodes</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">resampled_masked</span>
+    
+    <span class="k">return</span> <span class="n">resampled_emodes</span>
 
 <div class="viewcode-block" id="compute_normals"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.compute_normals.html#eigenstrapping.geometry.compute_normals">[docs]</a><span class="k">def</span> <span class="nf">compute_normals</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>

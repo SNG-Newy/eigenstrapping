@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
@@ -6,23 +8,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.VolumetricEigenstrapping &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
       <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -323,8 +321,8 @@ empirical spatial autocorrelation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nifti_volume</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Filename of input volume in nifti format</p></li>
-<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Label value for input ROI in <code class="docutils literal notranslate"><span class="pre">nifti_volume</span></code></p></li>
+<li><p><strong>nifti_volume</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Filename of input volume in nifti format</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Label value for input ROI in <code class="docutils literal notranslate"><span class="pre">nifti_volume</span></code></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -345,8 +343,8 @@ empirical spatial autocorrelation.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tetra</strong> (<em>lapy compatible object</em>) – Loaded lapy object corresponding to tetrahedral surface of ROI in vtk format</p></li>
-<li><p><strong>num_modes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of eigenmodes to compute. The default is 200</p></li>
-<li><p><strong>use_cholmod</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Specify whether to use <code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code> libraries to compute eigenmodes.
+<li><p><strong>num_modes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Number of eigenmodes to compute. The default is 200</p></li>
+<li><p><strong>use_cholmod</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Specify whether to use <code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code> libraries to compute eigenmodes.
 Much faster but requires libraries to be installed.</p></li>
 </ul>
 </dd>
@@ -367,7 +365,7 @@ Much faster but requires libraries to be installed.</p></li>
 also returns data masked by ROI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>outdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Output directory of distance and index np.memmap files.</p>
+<dd class="field-odd"><p><strong>outdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Output directory of distance and index np.memmap files.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -387,7 +385,7 @@ also returns data masked by ROI.</p>
 Returns fig and ax handles from matplotlib.pyplot for further use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag whether to show plot, default True</p>
+<dd class="field-odd"><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag whether to show plot, default True</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -405,7 +403,7 @@ Returns fig and ax handles from matplotlib.pyplot for further use.</p>
 <dd><p>Generate eigensphere resampled surrogate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>output_modes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Output resampled modes for debugging. The default is False</p>
+<dd class="field-odd"><p><strong>output_modes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Output resampled modes for debugging. The default is False</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>(n,)</strong> – Surrogate data in tetrahedral space</p>
@@ -424,11 +422,11 @@ specify label value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Filename of input volume where the relevant ROI has voxel
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Filename of input volume where the relevant ROI has voxel
 values = 1 or <code class="docutils literal notranslate"><span class="pre">label</span></code></p></li>
-<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>ints</em><em>, </em><em>optional</em>) – Label value(s) of input volume. Extracts surface from voxels that have
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>ints</em><em>, </em><em>optional</em>) – Label value(s) of input volume. Extracts surface from voxels that have
 this(ese) intensity value(s). If None, defaults to 1</p></li>
-<li><p><strong>aseg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Specify whether input volume and label is from FreeSurfer
+<li><p><strong>aseg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Specify whether input volume and label is from FreeSurfer
 aseg.nii.gz (post-FS preprocessing).</p></li>
 </ul>
 </dd>
@@ -436,10 +434,10 @@ aseg.nii.gz (post-FS preprocessing).</p></li>
 <dd class="field-even"><p><strong>tetra_file</strong> – Filename of output tetrahedral vtk file</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><strong>RuntimeError</strong></a> – Multiple labels given but aseg not passed.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><strong>RuntimeError</strong></a> – Multiple labels given but aseg not passed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -452,8 +450,8 @@ aseg.nii.gz (post-FS preprocessing).</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tetra</strong> (<em>lapy compatible object</em>) – Loaded vtk object corresponding to a surface tetrahedral mesh</p></li>
-<li><p><strong>normalization_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – Type of normalization. The default is None.</p></li>
-<li><p><strong>normalization_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – Factor to be used in “constant” normalization. The default is None.</p></li>
+<li><p><strong>normalization_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – Type of normalization. The default is None.</p></li>
+<li><p><strong>normalization_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – Factor to be used in “constant” normalization. The default is None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -474,7 +472,7 @@ aseg.nii.gz (post-FS preprocessing).</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tetra</strong> (<em>lapy compatible object</em>) – Loaded object corresponding to tetrahedral surface.</p></li>
 <li><p><strong>data</strong> (<em>np.ndarray</em><em> of </em><em>shape</em><em> (</em><em>xx</em><em>, </em><em>yy</em><em>, </em><em>zz</em><em>)</em>) – Data to project to tetrahedral surface with values inside ROI.</p></li>
-<li><p><strong>interpolation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Interpolation kind. Default is ‘linear’</p></li>
+<li><p><strong>interpolation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Interpolation kind. Default is ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -494,9 +492,9 @@ aseg.nii.gz (post-FS preprocessing).</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>np.ndarray</em><em> of </em><em>shape</em><em> (</em><em>n_tetra_points</em><em>, </em><em>N</em><em>)</em>) – Data to resample</p></li>
-<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Interpolation method for <code class="docutils literal notranslate"><span class="pre">scipy.interpolate.griddata</span></code>.
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Interpolation method for <code class="docutils literal notranslate"><span class="pre">scipy.interpolate.griddata</span></code>.
 The default is ‘linear’.</p></li>
-<li><p><strong>vector</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Resample data to masked vector (values inside ROI only). Default False</p></li>
+<li><p><strong>vector</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Resample data to masked vector (values inside ROI only). Default False</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -534,14 +532,14 @@ surfaces.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>np.ndarray</em><em> of </em><em>shape</em><em> (</em><em>n_vertices</em><em>,</em><em>)</em>) – Volumetric data projected to tetrahedral mesh. See self.project_to_tetra().</p></li>
-<li><p><strong>view</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>pair</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Specify which direction to place camera and view from. See
+<li><p><strong>view</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>pair</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Specify which direction to place camera and view from. See
 <code class="docutils literal notranslate"><span class="pre">nilearn.plotting.plot_surf()</span></code> for accepted strings. If pair of
 float, must be a list or tuple of (elevation, azimuthal) of angles
 in degrees. The default is ‘dorsal’.</p></li>
-<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap for values in <code class="docutils literal notranslate"><span class="pre">data</span></code>. Must be in matplotlib colormaps.
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap for values in <code class="docutils literal notranslate"><span class="pre">data</span></code>. Must be in matplotlib colormaps.
 The default is ‘viridis’</p></li>
-<li><p><strong>vrange</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em> of </em><em>two floats</em><em>, </em><em>optional</em>) – Range to truncate minimum and maximum values. The default is [-4, 4].</p></li>
-<li><p><strong>annotations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Specify whether to add annotation labels for direction etc</p></li>
+<li><p><strong>vrange</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em> of </em><em>two floats</em><em>, </em><em>optional</em>) – Range to truncate minimum and maximum values. The default is [-4, 4].</p></li>
+<li><p><strong>annotations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Specify whether to add annotation labels for direction etc</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

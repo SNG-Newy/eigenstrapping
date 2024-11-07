@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
@@ -6,23 +8,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.stats.compare_maps &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
       <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -120,14 +118,14 @@ concatenated across hemispheres prior to comparison</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>src</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.12)"><em>os.PathLike</em></a><em> or </em><em>img_like</em><em> or </em><em>array-like</em>) – Images (nib.Nifti1Image or nib.GiftiImage) or parcellated data
+<li><p><strong>src</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.13)"><em>os.PathLike</em></a><em> or </em><em>img_like</em><em> or </em><em>array-like</em>) – Images (nib.Nifti1Image or nib.GiftiImage) or parcellated data
 to be compared.</p></li>
-<li><p><strong>trg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.12)"><em>os.PathLike</em></a><em> or </em><em>img_like</em><em> or </em><em>array-like</em>) – Images (nib.Nifti1Image or nib.GiftiImage) or parcellated data
+<li><p><strong>trg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.13)"><em>os.PathLike</em></a><em> or </em><em>img_like</em><em> or </em><em>array-like</em>) – Images (nib.Nifti1Image or nib.GiftiImage) or parcellated data
 to be compared.</p></li>
 <li><p><strong>metric</strong> (<em>{'pearsonr'</em><em>, </em><em>'spearmanr'</em><em>, </em><em>callable}</em><em>, </em><em>optional</em>) – Type of similarity metric to use to compare <cite>src</cite> and <cite>trg</cite> images. If
 a callable function is provided it must accept two inputs and return a
 single value (the similarity metric). Default: ‘pearsonr’</p></li>
-<li><p><strong>ignore_zero</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to perform comparisons ignoring all zero values in <cite>src</cite> and
+<li><p><strong>ignore_zero</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to perform comparisons ignoring all zero values in <cite>src</cite> and
 <cite>trg</cite> data. Default: True</p></li>
 <li><p><strong>nulls</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Null data for <cite>src</cite> to use in generating a non-parametric p-value.
 If not specified a parameteric p-value is generated. Default: None</p></li>
@@ -135,7 +133,7 @@ If not specified a parameteric p-value is generated. Default: None</p></li>
 the nan values to the callable metric (will return nan if the metric
 is <cite>spearmanr</cite> <cite>or pearsonr</cite>), ‘raise’ throws an error, ‘omit’ performs
 the calculations ignoring nan values. Default: ‘omit’</p></li>
-<li><p><strong>return_nulls</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return the null distribution of comparisons. Can only be set
+<li><p><strong>return_nulls</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return the null distribution of comparisons. Can only be set
 to <cite>True</cite> if <cite>nulls</cite> is not None. Default: False</p></li>
 </ul>
 </dd>

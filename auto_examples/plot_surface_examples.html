@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
@@ -6,23 +8,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Getting Started &mdash; eigenstrapping 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
       <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=ccc4b35e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -144,37 +142,37 @@ IMPORTANT: EIGENMODES MUST BE TRUNCATED AT FIRST NON-ZERO MODE FOR THIS FUNCTION
 <span class="c1"># from Margulies&#39; 2015 paper (see :ref:`References &lt;references&gt;`). Let&#39;s start by importing the data (this may take</span>
 <span class="c1"># a few moments):</span>
 
-<span class="kn">from</span> <span class="nn">eigenstrapping.datasets</span> <span class="kn">import</span> <a href="../generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples" title="eigenstrapping.datasets.load_surface_examples" class="sphx-glr-backref-module-eigenstrapping-datasets sphx-glr-backref-type-py-function"><span class="n">load_surface_examples</span></a>
+<span class="kn">from</span> <span class="nn">eigenstrapping.datasets</span> <span class="kn">import</span> <span class="n">load_surface_examples</span>
 
-<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surf_lh</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surf_rh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_rh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_lh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_rh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_lh</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_rh</span></a> <span class="o">=</span> <a href="../generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples" title="eigenstrapping.datasets.load_surface_examples" class="sphx-glr-backref-module-eigenstrapping-datasets sphx-glr-backref-type-py-function"><span class="n">load_surface_examples</span></a><span class="p">(</span><span class="n">with_surface</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surf_lh</span></a><span class="p">)</span>
+<span class="n">surf_lh</span><span class="p">,</span> <span class="n">surf_rh</span><span class="p">,</span> <span class="n">data_lh</span><span class="p">,</span> <span class="n">data_rh</span><span class="p">,</span> <span class="n">emodes_lh</span><span class="p">,</span> <span class="n">emodes_rh</span><span class="p">,</span> <span class="n">evals_lh</span><span class="p">,</span> <span class="n">evals_rh</span> <span class="o">=</span> <span class="n">load_surface_examples</span><span class="p">(</span><span class="n">with_surface</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">surf_lh</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_lh</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_lh</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">emodes_lh</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_lh</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">evals_lh</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="c1">#Now let&#39;s plot the data on the surface.</span>
 
-<span class="kn">from</span> <span class="nn">eigenstrapping.plotting</span> <span class="kn">import</span> <a href="../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot" title="eigenstrapping.plotting.csplot" class="sphx-glr-backref-module-eigenstrapping-plotting sphx-glr-backref-type-py-function"><span class="n">csplot</span></a>
+<span class="kn">from</span> <span class="nn">eigenstrapping.plotting</span> <span class="kn">import</span> <span class="n">csplot</span>
 
-<a href="../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot" title="eigenstrapping.plotting.csplot" class="sphx-glr-backref-module-eigenstrapping-plotting sphx-glr-backref-type-py-function"><span class="n">csplot</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span></a><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
+<span class="n">csplot</span><span class="p">(</span><span class="n">data_lh</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
 
 <span class="c1">#Now let&#39;s make a surrogate brain map and plot it on the surface.</span>
 
-<span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-class"><span class="n">SurfaceEigenstrapping</span></a>
+<span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">SurfaceEigenstrapping</span>
 
-<a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eigen</span></a> <span class="o">=</span> <a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-class"><span class="n">SurfaceEigenstrapping</span></a><span class="p">(</span>
-                    <span class="n">data</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_lh</span></a><span class="p">,</span>
-                    <span class="n">emodes</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">emodes_lh</span></a><span class="p">,</span>
-                    <span class="n">evals</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evals_lh</span></a><span class="p">,</span>
+<span class="n">eigen</span> <span class="o">=</span> <span class="n">SurfaceEigenstrapping</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data_lh</span><span class="p">,</span>
+                    <span class="n">emodes</span><span class="o">=</span><span class="n">emodes_lh</span><span class="p">,</span>
+                    <span class="n">evals</span><span class="o">=</span><span class="n">evals_lh</span><span class="p">,</span>
                     <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                     <span class="n">resample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surr</span></a> <span class="o">=</span> <a href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping.generate" title="eigenstrapping.SurfaceEigenstrapping.generate" class="sphx-glr-backref-module-eigenstrapping sphx-glr-backref-type-py-method"><span class="n">eigen</span><span class="o">.</span><span class="n">generate</span></a><span class="p">()</span>
+<span class="n">surr</span> <span class="o">=</span> <span class="n">eigen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 
-<a href="../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot" title="eigenstrapping.plotting.csplot" class="sphx-glr-backref-module-eigenstrapping-plotting sphx-glr-backref-type-py-function"><span class="n">csplot</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surr</span></a><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
+<span class="n">csplot</span><span class="p">(</span><span class="n">surr</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 13.102 seconds)</p>
