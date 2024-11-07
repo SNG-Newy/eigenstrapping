@@ -1019,7 +1019,7 @@ def find_wavelength(surface, data, roi=None, column=None, demean=True):
 
     os.unlink(tmpf)
 
-    return 2*float(output[0].decode('ascii').split(' ')[1])
+    return 2*np.pi*float(output[0].decode('ascii').split(' ')[1])
 
 def truncate_emodes(surface, data, emodes, evals, 
                     mask=None, ret_fwhm=False, find_group_only=False,
