@@ -5,6 +5,10 @@
   :target: https://zenodo.org/doi/10.5281/zenodo.10583040
   :alt: Zenodo DOI
 
+.. image:: https://img.shields.io/pypi/v/eigenstrapping
+   :target: https://pypi.python.org/pypi/eigenstrapping/
+   :alt: Latest PyPI version
+
 .. image:: https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml/badge.svg
   :target: https://github.com/SNG-newy/eigenstrapping/actions/workflows/tests.yml
   :alt: run-tests status
