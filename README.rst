@@ -43,11 +43,9 @@ Eigenstrapping is available in Python 3.7+. MATLAB version coming soon!
 Installation
 ============
 
-eigenstrapping can be installed by downloading the package from the Github repository: ::
+eigenstrapping can be installed by downloading the package from ``pip``: ::
 
-    git clone https://github.com/SNG-newy/eigenstrapping.git
-    cd eigenstrapping
-    python3 -m pip install .
+    pip install eigenstrapping
 
 Dependencies
 ============
