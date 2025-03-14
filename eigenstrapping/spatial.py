@@ -952,16 +952,21 @@ def _mod_medial(data, remove=True, val=0):
     out : np.ndarray
         Provided surface `data` with medial wall removed/inserted
     """
+    atlas = getattr(
+        datasets.fetch_fsaverage(density='10k'),
+        'medial',
+    )
     if len(data) <= 10242:
-        subj, path = check_fs_subjid('fsaverage5')
-        lh = [
-            nib.freesurfer.read_label(
-                os.path.join(path, subj, 'label', f'{h}.Medial_wall.label')
-            )
-            for h in (['lh'])
-        ]
+        # subj, path = check_fs_subjid('fsaverage5')
+        # lh = [
+        #     nib.freesurfer.read_label(
+        #         os.path.join(path, subj, 'label', f'{h}.Medial_wall.label')
+        #     )
+        #     for h in (['lh'])
+        # ]
+        lh = nib.load(getattr(atlas, 'L')).agg_data()
         lhm = np.ones(10242, dtype=bool)
-        lhm[lh] = False
+        lhm[np.logical_not(lh)] = False
     
         if remove:
             return data[lhm]
@@ -970,15 +975,14 @@ def _mod_medial(data, remove=True, val=0):
             xd[lhm] = data
             return xd
     else:
-        subj, path = check_fs_subjid('fsaverage5')
         lh, rh = [
-            nib.freesurfer.read_label(
-                os.path.join(path, subj, 'label', f'{h}.Medial_wall.label')
-            )
-            for h in ('lh', 'rh')
+            nib.load(
+                getattr(atlas, h)
+            ).agg_data()
+            for h in ('L', 'R')
         ]
         lhm, rhm = np.ones(10242, dtype=bool), np.ones(10242, dtype=bool)
-        lhm[lh], rhm[rh] = False, False
+        lhm[np.logical_not(lh)], rhm[np.logical_not(rh)] = False, False
     
         if remove:
             x, y = np.split(data, 2)
