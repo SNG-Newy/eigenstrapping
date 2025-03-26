@@ -57,8 +57,8 @@ def eigengroup_wavelength(mode, radius=60.0, group=False):
     operator on a sphere in [1]:
         
                         2 * pi * radius
-        wavelength ~= -------------------
-                      [ l ( l + 1 ) ] ^ 2
+        wavelength ~= ---------------------
+                      [ l ( l + 1 ) ] ^ 1/2
 
     Parameters
     ----------
@@ -91,7 +91,7 @@ def eigengroup_wavelength(mode, radius=60.0, group=False):
         l += 1
         total += 2 * l + 1
     
-    wavelength = 2 * np.pi * radius / (l * (l + 1) ** 2)  
+    wavelength = 2 * np.pi * radius / np.sqrt(l * (l + 1))  
     if group:
         return l, wavelength
     
