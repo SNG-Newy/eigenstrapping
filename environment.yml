@@ -10,3 +10,4 @@ dependencies:
         - "git+https://github.com/SNG-Newy/eigenstrapping"
         - neurosynth
         - pysurfer
+        - gdown

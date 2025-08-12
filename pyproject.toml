@@ -11,7 +11,7 @@ install_requires = [
 
 [project]
 name = "eigenstrapping"
-version = "0.1"
+version = "0.1.1"
 description = "For generating surrogate brain maps with spatial autocorrelation using geometric eigenmodes."
 authors = [
     {name = "Nikitas C. Koussis", email = "nikitas.koussis@gmail.com"},
@@ -30,7 +30,8 @@ dependencies = [
   "seaborn",
   "netneurotools>=0.2.4",
   "tqdm",
-  "parspin"
+  "parspin",
+  "gdown"
 ]
 maintainers = [
   {name = "Systems Neuroscience Group Newcastle", email = "nikitas.koussis@gmail.com"},

@@ -8,6 +8,9 @@ import os.path as op
 from pathlib import Path
 import shutil
 
+import gdown
+import requests
+
 import numpy as np
 from neuromaps import datasets, images
 import nibabel as nib
@@ -16,6 +19,27 @@ from .utils import (get_data_dir, _groupby_match,
 from eigenstrapping import dataio
 
 from nilearn.datasets.utils import _fetch_file
+
+from requests.adapters import HTTPAdapter
+
+class TimeoutHTTPAdapter(HTTPAdapter):
+    def __init__(self, *args, **kwargs):
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+            del kwargs["timeout"]
+        if "chunk_size" in kwargs:
+            self.chunk_size = kwargs["chunk_size"]
+            del kwargs["chunk_size"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None and hasattr(self, 'timeout'):
+            kwargs["timeout"] = self.timeout
+        chunk_size = kwargs.get("chunk_size")
+        if chunk_size is None and hasattr(request, 'chunk_size'):
+            kwargs["chunk_size"] = request.chunk_size
+        return super().send(request, **kwargs)
 
 def load_surface_examples(data_dir=None, with_surface=False):
     """
@@ -252,11 +276,22 @@ def fetch_data(*, name=None, space=None, den=None, res=None, hemi=None,
     # session instances. hopefully a future version will and we can just use
     # that function to handle this instead of calling _fetch_file() directly
     data = []
+    session = requests.Session()
+    session.mount('http://', TimeoutHTTPAdapter(timeout=20, chunk_size=None)) # 20 seconds
+    session.mount('https://', TimeoutHTTPAdapter(timeout=20, chunk_size=None))
     for dset in info:
         fn = Path(data_dir) / dset['rel_path'] / dset['fname']
         if not fn.exists():
+            i = 0
+            #if 'eigenmodes' in dset['rel_path'] or 'eigenperms' in dset['rel_path']:
+                # dl_file = gdown.download(url=dset['url'], 
+                #                          output=str(fn), 
+                #                          quiet=False if verbose == 1 else True,
+                #                          )                
+            #else:
             dl_file = _fetch_file(dset['url'], str(fn.parent), verbose=verbose,
-                                  md5sum=dset['checksum'])
+                                md5sum=dset['checksum'], session=session)
+            
             shutil.move(dl_file, fn)
         data.append(str(fn))
     
