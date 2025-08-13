@@ -22,7 +22,9 @@
 The ``eigenstrapping`` toolbox is designed to help researchers generate
 statistically-rigorous models for null hypothesis testing between brain maps using
 non-local spectral shape descriptors - or geometric eigenmodes.
-Documentation can be found `here <https://eigenstrapping.readthedocs.io/en/latest/>`_. Read our preprint `<https://dx.doi.org/10.1101/2024.02.07.579070>`_
+Documentation can be found `here <https://eigenstrapping.readthedocs.io/en/latest/>`_.
+
+Now in Imaging Neuroscience! `<https://doi.org/10.1162/IMAG.a.71>`_
 
 .. image:: ./docs/_static/main_figure.jpg
   :scale: 20%
@@ -92,7 +94,7 @@ Citing
 
 When using ``eigenstrapping``, please cite the following manuscript:
 
-* Generation of surrogate brain maps preserving spatial autocorrelation through random rotation of geometric eigenmodes. Koussis, N.C., Pang, J.C., Jeganathan, J., Paton, B., Fornito, A., Robinson, P.A., Misic, B., Breakspear, M. (2024). bioRxiv 2024.02.07.579070 [Preprint]. `<https://dx.doi.org/10.1101/2024.02.07.579070>`_
+* Nikitas C. Koussis, James C. Pang, Richa Phogat, Jayson Jeganathan, Bryan Paton, Alex Fornito, P.A. Robinson, Bratislav Misic, Michael Breakspear; Generation of surrogate brain maps preserving spatial autocorrelation through random rotation of geometric eigenmodes. Imaging Neuroscience 2025; 3 IMAG.a.71. doi: `<https://doi.org/10.1162/IMAG.a.71>`_
 
 The core functions expand on code from `BrainEigenmodes <https://github.com/NSBLab/BrainEigenmodes>`_, please cite their work if you use our code:
 
@@ -104,7 +106,7 @@ Please also cite the papers for the method that we use to calculate eigenmodes o
 
 * BrainPrint: a discriminative characterization of brain morphology. Wachinger C, Golland P, Kremen W, Fischl B, Reuter M. Neuroimage. 2015;109:232-48. `<http://dx.doi.org/10.1016/j.neuroimage.2015.01.032>`_ `<http://www.ncbi.nlm.nih.gov/pubmed/25613439>`_
 
-And if you use the Heat Kernel for Geodesics method in `eigenstrapping.geometry.geodesic_distmat`:
+And if you use the Heat Kernel for Geodesics method in ``eigenstrapping.geometry.geodesic_distmat``:
 
 * Crane, K., Weischedel, C., & Wardetzky, M. (2013). Geodesics in heat: A new approach to computing distance based on heat flow. ACM Transactions on Graphics (TOG), 32(5), 1-11. `<https://arxiv.org/pdf/1204.6216>`_
 
