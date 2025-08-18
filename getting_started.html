@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Getting Started &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -18,9 +18,9 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="_static/doctools.js?v=888ff710"></script>
-      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -82,9 +82,9 @@
            <div itemprop="articleBody">
              
   <section id="getting-started">
-<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
+<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
 <section id="quick-introduction-to-brain-maps-and-eigenmodes">
-<h2>Quick introduction to brain maps and eigenmodes<a class="headerlink" href="#quick-introduction-to-brain-maps-and-eigenmodes" title="Permalink to this heading"></a></h2>
+<h2>Quick introduction to brain maps and eigenmodes<a class="headerlink" href="#quick-introduction-to-brain-maps-and-eigenmodes" title="Link to this heading"></a></h2>
 <p>Patterns on the cortical surface or in the subcortex (“brain maps”) more often
 than not express with smoothness - spatial autocorrelation. Accounting
 for this in statistical testing of the associations between or the influence
@@ -101,11 +101,11 @@ create new brain maps with the same smoothness but randomized topology. The step
 below will help you get started and build your own surrogate maps.</p>
 </section>
 <section id="first-run">
-<h2>First run<a class="headerlink" href="#first-run" title="Permalink to this heading"></a></h2>
+<h2>First run<a class="headerlink" href="#first-run" title="Link to this heading"></a></h2>
 <p>The package comes with example surfaces (and their eigenmodes) and cortical gradient data
 from Margulies’ 2015 paper (see <a class="reference internal" href="references.html#references"><span class="std std-ref">References</span></a>). Let’s start by importing the data (this may take
 a few moments):</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping.datasets</span> <span class="kn">import</span> <span class="n">load_surface_examples</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_surface_examples</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load left and right hemispheres</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">surf_lh</span><span class="p">,</span> <span class="n">surf_rh</span><span class="p">,</span> <span class="n">data_lh</span><span class="p">,</span> <span class="n">data_rh</span><span class="p">,</span> <span class="n">emodes_lh</span><span class="p">,</span> <span class="n">emodes_rh</span><span class="p">,</span> <span class="n">evals_lh</span><span class="p">,</span> <span class="n">evals_rh</span> <span class="o">=</span> <span class="n">load_surface_examples</span><span class="p">(</span><span class="n">with_surface</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -123,14 +123,15 @@ a few moments):</p>
 </pre></div>
 </div>
 <p>Now let’s plot the data on the surface.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping.plotting</span> <span class="kn">import</span> <span class="n">csplot</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">csplot</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">csplot</span><span class="p">(</span><span class="n">data_lh</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/getting_started1.png"><img alt="_images/getting_started1.png" class="align-center" src="_images/getting_started1.png" style="width: 433.29999999999995px; height: 186.89999999999998px;" /></a>
+<a class="reference internal image-reference" href="_images/getting_started1.png"><img alt="_images/getting_started1.png" class="align-center" src="_images/getting_started1.png" style="width: 433.29999999999995px; height: 186.89999999999998px;" />
+</a>
 <p>Now let’s make a surrogate brain map and plot it on the surface.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">SurfaceEigenstrapping</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceEigenstrapping</span>
 
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">eigen</span> <span class="o">=</span> <span class="n">SurfaceEigenstrapping</span><span class="p">(</span>
@@ -147,7 +148,8 @@ a few moments):</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">csplot</span><span class="p">(</span><span class="n">surr</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/getting_started2.png"><img alt="_images/getting_started2.png" class="align-center" src="_images/getting_started2.png" style="width: 433.29999999999995px; height: 186.89999999999998px;" /></a>
+<a class="reference internal image-reference" href="_images/getting_started2.png"><img alt="_images/getting_started2.png" class="align-center" src="_images/getting_started2.png" style="width: 433.29999999999995px; height: 186.89999999999998px;" />
+</a>
 </section>
 </section>
 

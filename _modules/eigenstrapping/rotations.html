@@ -1,12 +1,12 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.rotations &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -17,9 +17,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -79,12 +79,14 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Generate random rotation matrices of arbitrary size and rotate matrices</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">qr</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">special_ortho_group</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">qr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">special_ortho_group</span>
 
-<div class="viewcode-block" id="direct_method"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.direct_method.html#eigenstrapping.rotations.direct_method">[docs]</a><span class="k">def</span> <span class="nf">direct_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="direct_method">
+<a class="viewcode-back" href="../../generated/eigenstrapping.rotations.direct_method.html#eigenstrapping.rotations.direct_method">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">direct_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">rs</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="c1"># 1. Draw n independent random normal N(0, 1) variates</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
@@ -100,7 +102,10 @@
     
     <span class="k">return</span> <span class="n">Q</span></div>
 
-<div class="viewcode-block" id="indirect_method"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.indirect_method.html#eigenstrapping.rotations.indirect_method">[docs]</a><span class="k">def</span> <span class="nf">indirect_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="indirect_method">
+<a class="viewcode-back" href="../../generated/eigenstrapping.rotations.indirect_method.html#eigenstrapping.rotations.indirect_method">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">indirect_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     
     <span class="n">rs</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     
@@ -112,7 +117,10 @@
     
     <span class="k">return</span> <span class="n">rotate</span></div>
 
-<div class="viewcode-block" id="rotate_matrix"><a class="viewcode-back" href="../../generated/eigenstrapping.rotations.rotate_matrix.html#eigenstrapping.rotations.rotate_matrix">[docs]</a><span class="k">def</span> <span class="nf">rotate_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;indirect&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="rotate_matrix">
+<a class="viewcode-back" href="../../generated/eigenstrapping.rotations.rotate_matrix.html#eigenstrapping.rotations.rotate_matrix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotate_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;indirect&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rotate an (n/m)-by-n matrix of arbitrary length n by the two methods </span>
 <span class="sd">    as outlined in [1].</span>
@@ -156,16 +164,17 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Method must be one of &#39;indirect&#39; or &#39;direct&#39;&quot;</span><span class="p">)</span>
         
     <span class="k">return</span> <span class="n">M_rotated</span></div>
+
     
-<span class="k">class</span> <span class="nc">RotationMatrix</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RotationMatrix</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Support class for saving, loading and generating random rotation matrices</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
         
-    <span class="k">def</span> <span class="nf">load_single_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_single_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a single matrix for a given group and index</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -183,19 +192,19 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix_data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
     
     
-    <span class="k">def</span> <span class="nf">generate_rotation_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">num_matrices</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_rotation_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">num_matrices</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">indirect_method</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_matrices</span><span class="p">)])</span>
     
-    <span class="k">def</span> <span class="nf">generate_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_l</span><span class="p">,</span> <span class="n">num_matrices</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_l</span><span class="p">,</span> <span class="n">num_matrices</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_rotation_matrices</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_matrices</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
 
-    <span class="k">def</span> <span class="nf">save_structured_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_rotations_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_structured_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_rotations_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="n">flat</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrices</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">matrices</span> <span class="ow">in</span> <span class="n">all_rotations_list</span><span class="p">]</span>
         <span class="n">con</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">flat</span><span class="p">)</span>
         
         <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">con</span><span class="p">)</span>
     
-    <span class="k">def</span> <span class="nf">get_random_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_random_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get random rotation matrix from large array.</span>
 

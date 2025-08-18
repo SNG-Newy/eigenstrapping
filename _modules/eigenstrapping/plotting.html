@@ -1,12 +1,12 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.plotting &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -17,9 +17,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -82,27 +82,32 @@
 <span class="sd">Plotting subroutines</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">plotting</span>
-<span class="kn">from</span> <span class="nn">nilearn.plotting.displays</span> <span class="kn">import</span> <span class="n">BaseAxes</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">gridspec</span><span class="p">,</span> <span class="n">cm</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">neuromaps.datasets</span> <span class="kn">import</span> <span class="n">fetch_atlas</span>
-<span class="kn">from</span> <span class="nn">brainspace</span> <span class="kn">import</span> <span class="n">mesh</span> <span class="k">as</span> <span class="n">me</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">is_string_like</span>
-<span class="kn">from</span> <span class="nn">.geometry</span> <span class="kn">import</span> <span class="n">remesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nilearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">plotting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nilearn.plotting.displays</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAxes</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">gridspec</span><span class="p">,</span> <span class="n">cm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuromaps.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_atlas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">brainspace</span><span class="w"> </span><span class="kn">import</span> <span class="n">mesh</span> <span class="k">as</span> <span class="n">me</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_string_like</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">remesh</span>
 
 <span class="n">surfaces</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="s1">&#39;fsLR&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="vrange"><a class="viewcode-back" href="../../generated/eigenstrapping.plotting.vrange.html#eigenstrapping.plotting.vrange">[docs]</a><span class="k">def</span> <span class="nf">vrange</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">pv</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
+<div class="viewcode-block" id="vrange">
+<a class="viewcode-back" href="../../generated/eigenstrapping.plotting.vrange.html#eigenstrapping.plotting.vrange">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">vrange</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">pv</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
     <span class="c1"># check if nans</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">scalars</span><span class="p">)</span>
     
     <span class="c1"># get visual range</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">scalars</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">],</span> <span class="n">pv</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">scalars</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">],</span> <span class="mi">100</span><span class="o">-</span><span class="n">pv</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="csplot"><a class="viewcode-back" href="../../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot">[docs]</a><span class="k">def</span> <span class="nf">csplot</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">surface</span><span class="o">=</span><span class="s1">&#39;fsLR&#39;</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;landscape&#39;</span><span class="p">,</span> 
+
+<div class="viewcode-block" id="csplot">
+<a class="viewcode-back" href="../../generated/eigenstrapping.plotting.csplot.html#eigenstrapping.plotting.csplot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">csplot</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">surface</span><span class="o">=</span><span class="s1">&#39;fsLR&#39;</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;landscape&#39;</span><span class="p">,</span> 
            <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Automated plotting of cortical surfaces. Generates a figure of</span>
@@ -190,8 +195,11 @@
     <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vmin</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fontsize&#39;</span><span class="p">:</span><span class="mi">20</span><span class="p">},</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
     
-<div class="viewcode-block" id="flatplot"><a class="viewcode-back" href="../../generated/eigenstrapping.plotting.flatplot.html#eigenstrapping.plotting.flatplot">[docs]</a><span class="k">def</span> <span class="nf">flatplot</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="flatplot">
+<a class="viewcode-back" href="../../generated/eigenstrapping.plotting.flatplot.html#eigenstrapping.plotting.flatplot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flatplot</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Automated plotting of cortical surfaces. Generates a figure of</span>
 <span class="sd">    a scalar brainmap `y` and returns `fig` and `ax` handles for</span>
@@ -254,7 +262,10 @@
     
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
 
-<div class="viewcode-block" id="meshplot"><a class="viewcode-back" href="../../generated/eigenstrapping.plotting.meshplot.html#eigenstrapping.plotting.meshplot">[docs]</a><span class="k">def</span> <span class="nf">meshplot</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cam</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
+
+<div class="viewcode-block" id="meshplot">
+<a class="viewcode-back" href="../../generated/eigenstrapping.plotting.meshplot.html#eigenstrapping.plotting.meshplot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">meshplot</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cam</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Automated plotting of surface in `mesh`. `mesh` must be a `*.vtk`-like file</span>
 <span class="sd">    or a list-like of arrays (`vertices`, `faces`). If given, `scalars` must be a 1D vector</span>
@@ -338,6 +349,7 @@
         <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vmin</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fontsize&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">},</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
         
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
 
 
 

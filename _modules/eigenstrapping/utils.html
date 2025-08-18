@@ -1,12 +1,12 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.utils &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -17,9 +17,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -76,17 +76,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for eigenstrapping.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">netneurotools</span> <span class="kn">import</span> <span class="n">datasets</span> <span class="k">as</span> <span class="n">nndata</span>
-<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
-<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">image</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netneurotools</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span> <span class="k">as</span> <span class="n">nndata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">op</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nilearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Utility functions (C) Systems Neuroscience Newcastle &amp;</span>
@@ -108,23 +108,25 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># Disable</span>
-<span class="k">def</span> <span class="nf">blockPrint</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">blockPrint</span><span class="p">():</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
     
 <span class="c1"># Restore</span>
-<span class="k">def</span> <span class="nf">enablePrint</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">enablePrint</span><span class="p">():</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span>
 
-<span class="k">def</span> <span class="nf">_suppress</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_suppress</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">,</span>
                            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
                            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_print</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_print</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
-<div class="viewcode-block" id="is_string_like"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.is_string_like.html#eigenstrapping.utils.is_string_like">[docs]</a><span class="k">def</span> <span class="nf">is_string_like</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="is_string_like">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.is_string_like.html#eigenstrapping.utils.is_string_like">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_string_like</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Check whether `obj` behaves like a string. &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">obj</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span>
@@ -132,7 +134,10 @@
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="get_schaefer"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.get_schaefer.html#eigenstrapping.utils.get_schaefer">[docs]</a><span class="k">def</span> <span class="nf">get_schaefer</span><span class="p">(</span><span class="n">vers</span><span class="o">=</span><span class="s1">&#39;fsaverage5&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">networks</span><span class="o">=</span><span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_schaefer">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.get_schaefer.html#eigenstrapping.utils.get_schaefer">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_schaefer</span><span class="p">(</span><span class="n">vers</span><span class="o">=</span><span class="s1">&#39;fsaverage5&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">networks</span><span class="o">=</span><span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns CSchaefer 2018 atlases as dictionary</span>
 
@@ -157,7 +162,10 @@
 
     <span class="k">return</span> <span class="n">schaefer</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">scale</span><span class="si">}</span><span class="s1">Parcels7Networks&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="parcify"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.parcify.html#eigenstrapping.utils.parcify">[docs]</a><span class="k">def</span> <span class="nf">parcify</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parcify">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.parcify.html#eigenstrapping.utils.parcify">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parcify</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns an array of parcel labels for every vertex in the surface</span>
 <span class="sd">    of `annotation`</span>
@@ -186,7 +194,8 @@
     <span class="k">return</span> <span class="n">parc</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_eigengroups</span><span class="p">(</span><span class="n">eigs</span><span class="p">,</span> <span class="n">suppress_message</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_eigengroups</span><span class="p">(</span><span class="n">eigs</span><span class="p">,</span> <span class="n">suppress_message</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function to find eigengroups</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -214,7 +223,9 @@
         <span class="n">i</span> <span class="o">=</span> <span class="n">ii</span>
     
 
-<div class="viewcode-block" id="reconstruct_data"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.reconstruct_data.html#eigenstrapping.utils.reconstruct_data">[docs]</a><span class="k">def</span> <span class="nf">reconstruct_data</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">):</span>
+<div class="viewcode-block" id="reconstruct_data">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.reconstruct_data.html#eigenstrapping.utils.reconstruct_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reconstruct_data</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reconstruct a dataset of `n_vertices` given a set of eigenmodes and coeffs</span>
 <span class="sd">    conditioned on data using ordinary least squares (OLS)</span>
@@ -240,8 +251,11 @@
     <span class="n">new_data</span> <span class="o">=</span> <span class="n">eigenmodes</span> <span class="o">@</span> <span class="n">coeffs</span>
     
     <span class="k">return</span> <span class="n">new_data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="eigen_decomposition"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.eigen_decomposition.html#eigenstrapping.utils.eigen_decomposition">[docs]</a><span class="k">def</span> <span class="nf">eigen_decomposition</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;matrix&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="eigen_decomposition">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.eigen_decomposition.html#eigenstrapping.utils.eigen_decomposition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eigen_decomposition</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;matrix&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decompose data using eigenmodes and calculate the coefficient of </span>
 <span class="sd">    contribution of each vector</span>
@@ -292,7 +306,10 @@
                 
     <span class="k">return</span> <span class="n">coeffs</span></div>
 
-<div class="viewcode-block" id="calc_surface_connectivity"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.calc_surface_connectivity.html#eigenstrapping.utils.calc_surface_connectivity">[docs]</a><span class="k">def</span> <span class="nf">calc_surface_connectivity</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">parc</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calc_surface_connectivity">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.calc_surface_connectivity.html#eigenstrapping.utils.calc_surface_connectivity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_surface_connectivity</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">parc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate surface-based connectivity matrix.    </span>
 
@@ -314,16 +331,22 @@
     <span class="n">matrix</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pairwise_r</span><span class="p">(</span><span class="n">parc_data</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">matrix</span></div>
+
     
     
-<div class="viewcode-block" id="compute_axes_ellipsoid"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.compute_axes_ellipsoid.html#eigenstrapping.utils.compute_axes_ellipsoid">[docs]</a><span class="k">def</span> <span class="nf">compute_axes_ellipsoid</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_axes_ellipsoid">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.compute_axes_ellipsoid.html#eigenstrapping.utils.compute_axes_ellipsoid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_axes_ellipsoid</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the axes of an ellipsoid given the eigenmodes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span></div>
+
     
 
-<div class="viewcode-block" id="transform_to_spheroid"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.transform_to_spheroid.html#eigenstrapping.utils.transform_to_spheroid">[docs]</a><span class="k">def</span> <span class="nf">transform_to_spheroid</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">):</span>
+<div class="viewcode-block" id="transform_to_spheroid">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.transform_to_spheroid.html#eigenstrapping.utils.transform_to_spheroid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">transform_to_spheroid</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform the eigenmodes to a spheroid space</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -333,9 +356,12 @@
     <span class="n">spheroid_eigenmodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">eigenmodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">))</span>
     
     <span class="k">return</span> <span class="n">spheroid_eigenmodes</span></div>
+
     
     
-<div class="viewcode-block" id="transform_to_ellipsoid"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.transform_to_ellipsoid.html#eigenstrapping.utils.transform_to_ellipsoid">[docs]</a><span class="k">def</span> <span class="nf">transform_to_ellipsoid</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">):</span>
+<div class="viewcode-block" id="transform_to_ellipsoid">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.transform_to_ellipsoid.html#eigenstrapping.utils.transform_to_ellipsoid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">transform_to_ellipsoid</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenmodes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform the eigenmodes in spheroid space back to ellipsoid by stretching</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -346,7 +372,10 @@
     
     <span class="k">return</span> <span class="n">ellipsoid_eigenmodes</span></div>
 
-<div class="viewcode-block" id="calc_parcellate"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.calc_parcellate.html#eigenstrapping.utils.calc_parcellate">[docs]</a><span class="k">def</span> <span class="nf">calc_parcellate</span><span class="p">(</span><span class="n">parc</span><span class="p">,</span> <span class="n">data_input</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calc_parcellate">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.calc_parcellate.html#eigenstrapping.utils.calc_parcellate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_parcellate</span><span class="p">(</span><span class="n">parc</span><span class="p">,</span> <span class="n">data_input</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate parcellated data given (N,) parcellation for every vertex of shape </span>
 <span class="sd">    (N,)</span>
@@ -397,7 +426,10 @@
 
     <span class="k">return</span> <span class="n">data_parcellated</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="parcellate_distmat"><a class="viewcode-back" href="../../generated/eigenstrapping.utils.parcellate_distmat.html#eigenstrapping.utils.parcellate_distmat">[docs]</a><span class="k">def</span> <span class="nf">parcellate_distmat</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">parc</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parcellate_distmat">
+<a class="viewcode-back" href="../../generated/eigenstrapping.utils.parcellate_distmat.html#eigenstrapping.utils.parcellate_distmat">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parcellate_distmat</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">parc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parcellate a dense distance matrix</span>
 
@@ -424,13 +456,14 @@
     
     <span class="k">return</span> <span class="n">D</span></div>
 
-<span class="k">def</span> <span class="nf">normalize_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="n">data_normalized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
     <span class="n">data_normalized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">data_normalized</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">data_normalized</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
     
     <span class="k">return</span> <span class="n">data_normalized</span>
 
-<span class="k">def</span> <span class="nf">read_annot</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">orig_ids</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_annot</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">orig_ids</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read in a Freesurfer annotation from a ``.annot`` file.</span>
 
 <span class="sd">    An ``.annot`` file contains a sequence of vertices with a label (also known</span>
@@ -504,7 +537,7 @@
         <span class="n">labels</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">ctab</span><span class="p">[</span><span class="nb">ord</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="n">mask</span><span class="p">])]</span>
     <span class="k">return</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span>
 
-<span class="k">def</span> <span class="nf">_pack_rgb</span><span class="p">(</span><span class="n">rgb</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_pack_rgb</span><span class="p">(</span><span class="n">rgb</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pack an RGB sequence into a single integer.</span>
 
 <span class="sd">    Used by :func:`read_annot` and :func:`write_annot` to generate</span>
@@ -523,7 +556,7 @@
     <span class="n">bitshifts</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">16</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">rgb</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rgb</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">bitshifts</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_read_annot_ctab_old_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">n_entries</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_annot_ctab_old_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">n_entries</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read in an old-style Freesurfer color table from `fobj`.</span>
 
 <span class="sd">    Note that the output color table ``ctab`` is in RGBT form, where T</span>
@@ -568,7 +601,7 @@
     <span class="k">return</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span>
 
 
-<span class="k">def</span> <span class="nf">_read_annot_ctab_new_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">ctab_version</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_annot_ctab_new_format</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">ctab_version</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read in a new-style Freesurfer color table from `fobj`.</span>
 
 <span class="sd">    Note that the output color table ``ctab`` is in RGBT form, where T</span>
@@ -620,7 +653,7 @@
 
     <span class="k">return</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">names</span>
     
-<span class="k">def</span> <span class="nf">_fread3</span><span class="p">(</span><span class="n">fobj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fread3</span><span class="p">(</span><span class="n">fobj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a 3-byte int from an open binary file object</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -635,7 +668,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">b1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">b2</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="n">b3</span>
 
 
-<span class="k">def</span> <span class="nf">_read_volume_info</span><span class="p">(</span><span class="n">fobj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_volume_info</span><span class="p">(</span><span class="n">fobj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper for reading the footer from a surface file.&quot;&quot;&quot;</span>
     <span class="n">volume_info</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
     <span class="n">head</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s2">&quot;&gt;i4&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -671,7 +704,7 @@
     <span class="c1"># Ignore the rest</span>
     <span class="k">return</span> <span class="n">volume_info</span>    
     
-<span class="k">def</span> <span class="nf">read_geometry</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">read_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_stamp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_geometry</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">read_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_stamp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a triangular format Freesurfer surface mesh.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -740,7 +773,7 @@
 
     <span class="k">return</span> <span class="n">ret</span>
 
-<span class="k">def</span> <span class="nf">read_label</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">read_scalars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_label</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">read_scalars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load in a Freesurfer .label file.</span>
 
 <span class="sd">    Parameters</span>
@@ -764,7 +797,7 @@
         <span class="k">return</span> <span class="n">label_array</span><span class="p">,</span> <span class="n">scalar_array</span>
     <span class="k">return</span> <span class="n">label_array</span>
 
-<span class="k">def</span> <span class="nf">write_label</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_label</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write Freesurfer label data `values` to filepath `filepath`</span>
 
@@ -798,7 +831,7 @@
         <span class="n">label_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">vnum</span><span class="p">)),</span> <span class="n">vertices</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">T</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;&gt;f4&#39;</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="n">label_array</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">])</span>
         
-<span class="k">def</span> <span class="nf">read_morph_data</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_morph_data</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a Freesurfer morphometry data file.</span>
 
 <span class="sd">    This function reads in what Freesurfer internally calls &quot;curv&quot; file types,</span>

@@ -1,12 +1,12 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.fit &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -17,9 +17,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -81,13 +81,13 @@
 <span class="sd">modes to use to capture the empirical variogram.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SurfaceEigenstrapping</span><span class="p">,</span> <span class="n">VolumetricEigenstrapping</span><span class="p">,</span> <span class="n">compute_psd</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span>
     <span class="p">)</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">netneurotools.stats</span> <span class="kn">import</span> <span class="n">efficient_pearsonr</span>
-<span class="kn">from</span> <span class="nn">brainspace.null_models.variogram</span> <span class="kn">import</span> <span class="n">SampledSurrogateMaps</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netneurotools.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">efficient_pearsonr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">brainspace.null_models.variogram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SampledSurrogateMaps</span>
 
 <span class="n">eigen_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;surface&#39;</span><span class="p">,</span> <span class="s1">&#39;evals&#39;</span><span class="p">,</span> <span class="s1">&#39;emodes&#39;</span><span class="p">,</span>
                <span class="s1">&#39;num_modes&#39;</span><span class="p">,</span> <span class="s1">&#39;save_surface&#39;</span><span class="p">,</span>
@@ -99,7 +99,9 @@
 
 <span class="n">var_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ns&#39;</span><span class="p">,</span> <span class="s1">&#39;pv&#39;</span><span class="p">,</span> <span class="s1">&#39;nh&#39;</span><span class="p">,</span> <span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="s1">&#39;pv&#39;</span><span class="p">,</span> <span class="s1">&#39;nh&#39;</span><span class="p">,</span> <span class="s1">&#39;knn&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="surface_fit"><a class="viewcode-back" href="../../generated/eigenstrapping.fit.surface_fit.html#eigenstrapping.fit.surface_fit">[docs]</a><span class="k">def</span> <span class="nf">surface_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nsurrs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+<div class="viewcode-block" id="surface_fit">
+<a class="viewcode-back" href="../../generated/eigenstrapping.fit.surface_fit.html#eigenstrapping.fit.surface_fit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">surface_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nsurrs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                 <span class="n">extra_diags</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">surrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Evaluate variogram fits for :class: `eigenstrapping.SurfaceEigenstrapping` </span>
@@ -280,8 +282,11 @@
         
     <span class="k">if</span> <span class="n">return_data</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">surrs</span></div>
+
     
-<div class="viewcode-block" id="volumetric_fit"><a class="viewcode-back" href="../../generated/eigenstrapping.fit.volumetric_fit.html#eigenstrapping.fit.volumetric_fit">[docs]</a><span class="k">def</span> <span class="nf">volumetric_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">nsurrs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+<div class="viewcode-block" id="volumetric_fit">
+<a class="viewcode-back" href="../../generated/eigenstrapping.fit.volumetric_fit.html#eigenstrapping.fit.volumetric_fit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">volumetric_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">nsurrs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
                    <span class="n">return_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extra_diags</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Evaluate variogram fits for :class: `eigenstrapping.VolumetricEigenstrapping` </span>
@@ -413,6 +418,7 @@
     
     <span class="k">if</span> <span class="n">return_data</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">surrs</span></div>
+
 </pre></div>
 
            </div>

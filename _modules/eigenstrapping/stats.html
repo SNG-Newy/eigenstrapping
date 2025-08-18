@@ -1,12 +1,12 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.stats &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -17,9 +17,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -76,15 +76,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for eigenstrapping.stats</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">special</span><span class="p">,</span> <span class="n">stats</span> <span class="k">as</span> <span class="n">sstats</span>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KernelDensity</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">correlation</span>
-<span class="kn">from</span> <span class="nn">netneurotools</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">neuromaps.stats</span> <span class="kn">import</span> <span class="n">compare_images</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">special</span><span class="p">,</span> <span class="n">stats</span> <span class="k">as</span> <span class="n">sstats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KernelDensity</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">correlation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netneurotools</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuromaps.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_images</span>
 
-<div class="viewcode-block" id="compare_maps"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.compare_maps.html#eigenstrapping.stats.compare_maps">[docs]</a><span class="k">def</span> <span class="nf">compare_maps</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">trg</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;pearsonr&#39;</span><span class="p">,</span> <span class="n">ignore_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="compare_maps">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.compare_maps.html#eigenstrapping.stats.compare_maps">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_maps</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">trg</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;pearsonr&#39;</span><span class="p">,</span> <span class="n">ignore_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">,</span> <span class="n">return_nulls</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compares images `src` and `trg`. Wrapper for `neuromaps.compare_images()`</span>
@@ -130,7 +132,10 @@
     <span class="k">return</span> <span class="n">compare_images</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">trg</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">ignore_zero</span><span class="o">=</span><span class="n">ignore_zero</span><span class="p">,</span> 
                     <span class="n">nulls</span><span class="o">=</span><span class="n">nulls</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">,</span> <span class="n">return_nulls</span><span class="o">=</span><span class="n">return_nulls</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="gpd_inference"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.gpd_inference.html#eigenstrapping.stats.gpd_inference">[docs]</a><span class="k">def</span> <span class="nf">gpd_inference</span><span class="p">(</span><span class="n">perms</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">per</span><span class="o">=</span><span class="mf">0.10</span><span class="p">):</span>
+
+<div class="viewcode-block" id="gpd_inference">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.gpd_inference.html#eigenstrapping.stats.gpd_inference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gpd_inference</span><span class="p">(</span><span class="n">perms</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">per</span><span class="o">=</span><span class="mf">0.10</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Report the tail-estimated p-value for faster inference using a</span>
 <span class="sd">    Generalized Pareto distribution.</span>
@@ -143,7 +148,8 @@
 <span class="sd">        Empirical stat (e.g. Pearson correlation) of original brain map</span>
 <span class="sd">        and target brain map. Default is 0.15.</span>
 <span class="sd">    per : float, optional</span>
-<span class="sd">        Percentage of highest correlation values to keep. Default is 0.10.</span>
+<span class="sd">        Fraction of highest correlation values to keep (0 &lt; per &lt;= 1).</span>
+<span class="sd">        Default is 0.10.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -154,21 +160,26 @@
     <span class="k">if</span> <span class="n">per</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">per</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Percentage of correlation values to keep from null distribution must be between 0 and 1&quot;</span><span class="p">)</span>
     
-    <span class="c1"># Extract the tail values above the threshold</span>
-    <span class="n">tail_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">per</span><span class="p">]</span>
+    <span class="c1"># Extract the tail values above the (1 - per) quantile threshold</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">perms</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">per</span><span class="p">)</span>
+    <span class="n">tail_values</span> <span class="o">=</span> <span class="n">perms</span><span class="p">[</span><span class="n">perms</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span>
     
     <span class="c1"># Fit the Generalized Pareto Distribution to the tail values</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">sstats</span><span class="o">.</span><span class="n">genpareto</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tail_values</span><span class="p">)</span>
     
     <span class="c1"># Calculate the p-value using the CDF of the fitted GPD</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">sstats</span><span class="o">.</span><span class="n">genpareto</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="o">*</span><span class="n">params</span><span class="p">)</span></div>
+
     
 
-<div class="viewcode-block" id="msle"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.msle.html#eigenstrapping.stats.msle">[docs]</a><span class="k">def</span> <span class="nf">msle</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="msle">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.msle.html#eigenstrapping.stats.msle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">msle</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the Mean Squared Logarithmic Error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">y_pred</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">fdr_bh</span><span class="p">(</span><span class="n">pvals</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fdr_bh</span><span class="p">(</span><span class="n">pvals</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the Benjamini-Hochberg procedure for false discovery rate correction&quot;&quot;&quot;</span>
     <span class="n">ranked_pvals</span> <span class="o">=</span> <span class="n">sstats</span><span class="o">.</span><span class="n">rankdata</span><span class="p">(</span><span class="n">pvals</span><span class="p">)</span>
     <span class="n">fdr</span> <span class="o">=</span> <span class="n">pvals</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">pvals</span><span class="p">)</span> <span class="o">/</span> <span class="n">ranked_pvals</span>
@@ -176,7 +187,9 @@
     <span class="k">return</span> <span class="n">fdr</span>
 
 
-<div class="viewcode-block" id="joint_differential_entropy"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.joint_differential_entropy.html#eigenstrapping.stats.joint_differential_entropy">[docs]</a><span class="k">def</span> <span class="nf">joint_differential_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<div class="viewcode-block" id="joint_differential_entropy">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.joint_differential_entropy.html#eigenstrapping.stats.joint_differential_entropy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">joint_differential_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Compute the joint differential entropy of x and y &quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
     
@@ -189,7 +202,10 @@
     <span class="c1"># compute the joint differential entropy</span>
     <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">log_density</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="conditional_entropy"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.conditional_entropy.html#eigenstrapping.stats.conditional_entropy">[docs]</a><span class="k">def</span> <span class="nf">conditional_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="conditional_entropy">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.conditional_entropy.html#eigenstrapping.stats.conditional_entropy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">conditional_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculates conditional entropy of an empirical array given a set of surrogates &quot;&quot;&quot;</span>
     <span class="n">ent_x</span> <span class="o">=</span> <span class="n">sstats</span><span class="o">.</span><span class="n">differential_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">conds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">row_stack</span><span class="p">(</span>
@@ -201,14 +217,17 @@
         <span class="k">return</span> <span class="n">conds</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     
     <span class="k">return</span> <span class="n">conds</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
+
     
-<span class="k">def</span> <span class="nf">_cent</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ent_x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cent</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ent_x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">joint_ent</span> <span class="o">=</span> <span class="n">joint_differential_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="n">cond</span> <span class="o">=</span> <span class="n">joint_ent</span> <span class="o">-</span> <span class="n">ent_x</span>
     
     <span class="k">return</span> <span class="n">cond</span>
         
-<div class="viewcode-block" id="kl"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.kl.html#eigenstrapping.stats.kl">[docs]</a><span class="k">def</span> <span class="nf">kl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="kl">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.kl.html#eigenstrapping.stats.kl">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">kl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes KL divergence of surrs to empirical array &quot;&quot;&quot;</span>
     <span class="c1"># estimate using KDE</span>
     <span class="n">pdf_x</span> <span class="o">=</span> <span class="n">_kde</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
@@ -229,7 +248,8 @@
     
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">_kde</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_kde</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># Avoid division by zero and log(0)</span>
     <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-10</span>
     
@@ -239,7 +259,9 @@
     <span class="n">pdf_x</span> <span class="o">+=</span> <span class="n">epsilon</span>
     <span class="k">return</span> <span class="n">pdf_x</span>
 
-<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.normalize.html#eigenstrapping.stats.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="normalize">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.normalize.html#eigenstrapping.stats.normalize">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Normalize a vector to [0, 1] range.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -247,7 +269,10 @@
     <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="distance_correlation"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.distance_correlation.html#eigenstrapping.stats.distance_correlation">[docs]</a><span class="k">def</span> <span class="nf">distance_correlation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nulls</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="distance_correlation">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.distance_correlation.html#eigenstrapping.stats.distance_correlation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">distance_correlation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nulls</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">    Distance correlation between empirical and nulls.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -265,8 +290,11 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Is</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Is</span><span class="p">)</span></div>
+
         
-<div class="viewcode-block" id="ks"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.ks.html#eigenstrapping.stats.ks">[docs]</a><span class="k">def</span> <span class="nf">ks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nulls</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ks">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.ks.html#eigenstrapping.stats.ks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nulls</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Measures difference in underlying distribution (or non-Gaussianity) of a </span>
 <span class="sd">    surrogate dataset using the Kolmogorov-Smirnov test</span>
@@ -281,16 +309,19 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ks_nulls</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ks_nulls</span><span class="p">)</span></div>
+
 <span class="w">    </span>
 <span class="sd">&quot;&quot;&quot; Functions for performing statistical inference using surrogate maps. &quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rankdata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">rankdata</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spearmanr&#39;</span><span class="p">,</span> <span class="s1">&#39;pearsonr&#39;</span><span class="p">,</span> <span class="s1">&#39;pairwise_r&#39;</span><span class="p">,</span> <span class="s1">&#39;nonparp&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="spearmanr"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.spearmanr.html#eigenstrapping.stats.spearmanr">[docs]</a><span class="k">def</span> <span class="nf">spearmanr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+<div class="viewcode-block" id="spearmanr">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.spearmanr.html#eigenstrapping.stats.spearmanr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spearmanr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multi-dimensional Spearman rank correlation between rows of `X` and `Y`.</span>
 
@@ -324,7 +355,10 @@
     <span class="k">return</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">rankdata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">rankdata</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="pearsonr"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.pearsonr.html#eigenstrapping.stats.pearsonr">[docs]</a><span class="k">def</span> <span class="nf">pearsonr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pearsonr">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.pearsonr.html#eigenstrapping.stats.pearsonr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pearsonr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multi-dimensional Pearson correlation between rows of `X` and `Y`.</span>
 
@@ -379,7 +413,10 @@
         <span class="n">mu_x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">mu_y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:])</span>
     <span class="k">return</span> <span class="n">cov</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">s_x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">s_y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:])</span></div>
 
-<div class="viewcode-block" id="pairwise_r"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.pairwise_r.html#eigenstrapping.stats.pairwise_r">[docs]</a><span class="k">def</span> <span class="nf">pairwise_r</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pairwise_r">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.pairwise_r.html#eigenstrapping.stats.pairwise_r">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pairwise_r</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute pairwise Pearson correlations between rows of `X`.</span>
 
@@ -419,7 +456,10 @@
     <span class="k">return</span> <span class="n">rp</span><span class="p">[</span><span class="n">triu_inds</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="nonparp"><a class="viewcode-back" href="../../generated/eigenstrapping.stats.nonparp.html#eigenstrapping.stats.nonparp">[docs]</a><span class="k">def</span> <span class="nf">nonparp</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
+
+<div class="viewcode-block" id="nonparp">
+<a class="viewcode-back" href="../../generated/eigenstrapping.stats.nonparp.html#eigenstrapping.stats.nonparp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nonparp</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute two-sided non-parametric p-value.</span>
 
@@ -441,6 +481,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">stat</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span></div>
+
 </pre></div>
 
            </div>

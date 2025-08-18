@@ -1,12 +1,12 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.datasets.base &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -17,9 +17,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -82,20 +82,34 @@
 <span class="sd">Data fetchers</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">op</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">neuromaps</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">images</span>
-<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_data_dir</span><span class="p">,</span> <span class="n">_groupby_match</span><span class="p">,</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuromaps</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">images</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">get_data_dir</span><span class="p">,</span> <span class="n">_groupby_match</span><span class="p">,</span>
                     <span class="n">get_dataset_info</span><span class="p">,</span> <span class="n">_match_files</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">dataio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataio</span>
 
-<span class="kn">from</span> <span class="nn">nilearn.datasets.utils</span> <span class="kn">import</span> <span class="n">_fetch_file</span>
+<span class="k">try</span><span class="p">:</span>  <span class="c1"># Nilearn &lt;=0.10 exposed a private ``fetch_single_file`` helper in</span>
+    <span class="c1"># ``nilearn.datasets._utils``. This was removed in newer versions in</span>
+    <span class="c1"># favour of ``_fetch_file`` in ``nilearn.datasets.utils``. Import from the</span>
+    <span class="c1"># new location and fallback for older releases if needed.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">nilearn.datasets.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_fetch_file</span>
+    <span class="n">fetch_single_file</span> <span class="o">=</span> <span class="n">_fetch_file</span>  <span class="c1"># backwards compat alias</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover - maintain previous import path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">nilearn.datasets._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_single_file</span>  <span class="c1"># type: ignore</span>
 
-<div class="viewcode-block" id="load_surface_examples"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples">[docs]</a><span class="k">def</span> <span class="nf">load_surface_examples</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_surface</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">try</span><span class="p">:</span>  <span class="c1"># pragma: no cover - optional dependency</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">gdown</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="n">gdown</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="load_surface_examples">
+<a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_surface_examples.html#eigenstrapping.datasets.load_surface_examples">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_surface_examples</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_surface</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Downloads all surface files for fsaverage5 space</span>
 
@@ -147,7 +161,10 @@
     
     <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">evals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">evals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="load_genepc"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_genepc.html#eigenstrapping.datasets.load_genepc">[docs]</a><span class="k">def</span> <span class="nf">load_genepc</span><span class="p">(</span><span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="load_genepc">
+<a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_genepc.html#eigenstrapping.datasets.load_genepc">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_genepc</span><span class="p">(</span><span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download and return the Allen Human Brain Atlas gene PC1 in</span>
 <span class="sd">    fsaverage5 space.</span>
@@ -174,7 +191,10 @@
     
     <span class="k">return</span> <span class="n">data_lh</span><span class="p">,</span> <span class="n">data_rh</span></div>
 
-<div class="viewcode-block" id="load_distmat"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat">[docs]</a><span class="k">def</span> <span class="nf">load_distmat</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="load_distmat">
+<a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_distmat.html#eigenstrapping.datasets.load_distmat">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_distmat</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="s1">&#39;10k&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Downloads geodesic distance matrices. If the dense distance matrix is retrieved, </span>
 <span class="sd">    there is an option to return the sorted distance matrix and index memmapped, ala</span>
@@ -232,7 +252,10 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">distmat</span></div>
 
-<div class="viewcode-block" id="load_subcort"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort">[docs]</a><span class="k">def</span> <span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;tha&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="load_subcort">
+<a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_subcort.html#eigenstrapping.datasets.load_subcort">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;tha&#39;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads all the files for the subcortical structures used in the paper -</span>
 <span class="sd">    cortical-subcortical gradients and the subcortical ROIs from the 25% </span>
@@ -260,7 +283,8 @@
 
     <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">mask</span></div>
 
-<span class="k">def</span> <span class="nf">load_native_tutorial</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_native_tutorial</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download HCP native surface and data for demonstration purposes.</span>
 
@@ -282,7 +306,9 @@
     
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;surface&#39;</span> <span class="p">:</span> <span class="n">native_surface</span><span class="p">,</span> <span class="s1">&#39;thickness&#39;</span> <span class="p">:</span> <span class="n">native_thickness</span><span class="p">,</span> <span class="s1">&#39;myelin&#39;</span><span class="p">:</span> <span class="n">native_myelin</span><span class="p">}</span>
 
-<div class="viewcode-block" id="fetch_data"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data">[docs]</a><span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="fetch_data">
+<a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.fetch_data.html#eigenstrapping.datasets.fetch_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">den</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Downloads files for brain surfaces and eigenmodes matching requested variables</span>
@@ -333,9 +359,16 @@
     <span class="k">for</span> <span class="n">dset</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
         <span class="n">fn</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">dset</span><span class="p">[</span><span class="s1">&#39;rel_path&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">dset</span><span class="p">[</span><span class="s1">&#39;fname&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">dl_file</span> <span class="o">=</span> <span class="n">_fetch_file</span><span class="p">(</span><span class="n">dset</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                                  <span class="n">md5sum</span><span class="o">=</span><span class="n">dset</span><span class="p">[</span><span class="s1">&#39;checksum&#39;</span><span class="p">])</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">dl_file</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+            <span class="n">fn</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">dset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;redir&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">dset</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;drive.google.com&#39;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">gdown</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;Downloading from Google Drive requires `gdown`&#39;</span><span class="p">)</span>
+                <span class="n">gdown</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span> <span class="n">quiet</span><span class="o">=</span><span class="n">verbose</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fuzzy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dl_file</span> <span class="o">=</span> <span class="n">fetch_single_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">fn</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                           <span class="n">md5sum</span><span class="o">=</span><span class="n">dset</span><span class="p">[</span><span class="s1">&#39;checksum&#39;</span><span class="p">])</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">dl_file</span><span class="p">),</span> <span class="n">fn</span><span class="p">)</span>
         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
     
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -343,7 +376,10 @@
     
     <span class="k">return</span> <span class="n">_groupby_match</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="txt2memmap"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap">[docs]</a><span class="k">def</span> <span class="nf">txt2memmap</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maskfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="txt2memmap">
+<a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.txt2memmap.html#eigenstrapping.datasets.txt2memmap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">txt2memmap</span><span class="p">(</span><span class="n">dist_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maskfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Export distance matrix to memory-mapped array.</span>
 
@@ -442,7 +478,10 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;distmat&#39;</span><span class="p">:</span> <span class="n">npydfile</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">npyifile</span><span class="p">}</span>  <span class="c1"># Return filenames</span></div>
 
 
-<div class="viewcode-block" id="load_memmap"><a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_memmap.html#eigenstrapping.datasets.load_memmap">[docs]</a><span class="k">def</span> <span class="nf">load_memmap</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="load_memmap">
+<a class="viewcode-back" href="../../../generated/eigenstrapping.datasets.load_memmap.html#eigenstrapping.datasets.load_memmap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_memmap</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a memory-mapped array.</span>
 
@@ -458,7 +497,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mmap_mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">_count_lines</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_count_lines</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Count number of lines in a file.</span>
 

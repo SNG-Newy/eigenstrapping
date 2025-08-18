@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tutorial 1: Generating surrogate maps on the cortex &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -18,9 +18,9 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -89,17 +89,17 @@
            <div itemprop="articleBody">
              
   <section id="tutorial-1-generating-surrogate-maps-on-the-cortex">
-<span id="tutorial-cortex"></span><h1>Tutorial 1: Generating surrogate maps on the cortex<a class="headerlink" href="#tutorial-1-generating-surrogate-maps-on-the-cortex" title="Permalink to this heading"></a></h1>
+<span id="tutorial-cortex"></span><h1>Tutorial 1: Generating surrogate maps on the cortex<a class="headerlink" href="#tutorial-1-generating-surrogate-maps-on-the-cortex" title="Link to this heading"></a></h1>
 <p>In this first example, we will derive a set of surrogates for the gradient data
 we covered in the <a class="reference internal" href="../getting_started.html#getting-started"><span class="std std-ref">Getting Started</span></a> section. We will
 use this set of surrogate data to statistically compare two brain maps. This
 process will give us a correlation metric and a means by which to test the
 significance of the association between them.</p>
 <section id="nulls-with-surface-data">
-<span id="tutorial-nonparc"></span><span id="tutorial-surface"></span><h2>Nulls with surface data<a class="headerlink" href="#nulls-with-surface-data" title="Permalink to this heading"></a></h2>
+<span id="tutorial-nonparc"></span><span id="tutorial-surface"></span><h2>Nulls with surface data<a class="headerlink" href="#nulls-with-surface-data" title="Link to this heading"></a></h2>
 <p>We’ll first start by loading the Allen Human Brain Atlas gene PC1 and
 everything we need to compute the surrogates:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">fit</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">fit</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">genepc_lh</span><span class="p">,</span> <span class="n">genepc_rh</span><span class="p">,</span> <span class="n">emodes_lh</span><span class="p">,</span> <span class="n">emodes_rh</span><span class="p">,</span> <span class="n">evals_lh</span><span class="p">,</span> <span class="n">evals_rh</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_surface_examples</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">distmat</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_distmat</span><span class="p">(</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># note: this download may take a while</span>
@@ -127,7 +127,8 @@ notice that we’re not using the <a class="reference internal" href="../generat
 anymore, but the <a class="reference internal" href="../api.html#module-eigenstrapping.fit" title="eigenstrapping.fit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eigenstrapping.fit</span></code></a> module now. This module allows us the same
 control over the parameters as before, but it also gives us an output variogram
 and other helpful info. The above code will give you a figure:</p>
-<a class="reference internal image-reference" href="../_images/tutorial_cortex1.png"><img alt="../_images/tutorial_cortex1.png" class="align-center" src="../_images/tutorial_cortex1.png" style="width: 744.5px; height: 245.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/tutorial_cortex1.png"><img alt="../_images/tutorial_cortex1.png" class="align-center" src="../_images/tutorial_cortex1.png" style="width: 744.5px; height: 245.0px;" />
+</a>
 <p>We can see that the variogram of the surrogates doesn’t match up with the empirical
 data (they’re too smooth, hence a lower variogram curve). The residuals in the third plot
 also don’t form a low amplitude Gaussian, meaning they have some information in them. It is
@@ -152,12 +153,13 @@ need to increase the number of modes that we use:</p>
 <span class="go">Surrogates computed, computing stats...</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/tutorial_cortex2.png"><img alt="../_images/tutorial_cortex2.png" class="align-center" src="../_images/tutorial_cortex2.png" style="width: 744.5px; height: 245.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/tutorial_cortex2.png"><img alt="../_images/tutorial_cortex2.png" class="align-center" src="../_images/tutorial_cortex2.png" style="width: 744.5px; height: 245.0px;" />
+</a>
 <p>250 modes seems to be a better fit for the gene PC1 data. You may notice that
 the surrogate distribution is now wider, better reflecting the underlying null.</p>
 <p>Let’s compare the gene PC1 map to another brain map, now that we’ve generated the null distribution:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neuromaps</span> <span class="kn">import</span> <span class="n">datasets</span> <span class="k">as</span> <span class="n">ndatasets</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">images</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">neuromaps</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span> <span class="k">as</span> <span class="n">ndatasets</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">images</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">neurosynth_lh</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span>
 <span class="go">    transforms.mni152_to_fsaverage(</span>
 <span class="go">        ndatasets.fetch_annotation(source=&#39;neurosynth&#39;, return_single=True),</span>
@@ -171,7 +173,7 @@ the surrogate distribution is now wider, better reflecting the underlying null.<
 </div>
 <p>We can also plot the histogram of null correlations to the target map to make sure it is what we expect
 (the mean value of correlations should be ~0), while the distribution should follow a roughly-Gaussian shape</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">perms</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">101</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">perms</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean correlation&#39;</span><span class="p">)</span>
@@ -181,7 +183,8 @@ the surrogate distribution is now wider, better reflecting the underlying null.<
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/tutorial_cortex3.png"><img alt="../_images/tutorial_cortex3.png" class="align-center" src="../_images/tutorial_cortex3.png" style="width: 443.25px; height: 324.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/tutorial_cortex3.png"><img alt="../_images/tutorial_cortex3.png" class="align-center" src="../_images/tutorial_cortex3.png" style="width: 443.25px; height: 324.0px;" />
+</a>
 <p>Make sure that the first argument of the <code class="docutils literal notranslate"><span class="pre">stats.compare_maps</span></code> function is the
 map that the surrogate array was computed on, otherwise you can
 get strange behavior.</p>

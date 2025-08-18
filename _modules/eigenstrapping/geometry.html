@@ -1,12 +1,12 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eigenstrapping.geometry &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -17,9 +17,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -76,41 +76,41 @@
            <div itemprop="articleBody">
              
   <h1>Source code for eigenstrapping.geometry</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">lapy</span> <span class="kn">import</span> <span class="n">TetMesh</span><span class="p">,</span> <span class="n">TriaMesh</span><span class="p">,</span> <span class="n">Solver</span>
-<span class="kn">from</span> <span class="nn">lapy.diffgeo</span> <span class="kn">import</span> <span class="n">compute_geodesic_f</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lapy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TetMesh</span><span class="p">,</span> <span class="n">TriaMesh</span><span class="p">,</span> <span class="n">Solver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lapy.diffgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_geodesic_f</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Delaunay</span><span class="p">,</span> <span class="n">KDTree</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">squareform</span><span class="p">,</span> <span class="n">pdist</span>
-<span class="kn">from</span> <span class="nn">brainspace</span> <span class="kn">import</span> <span class="n">mesh</span> <span class="k">as</span> <span class="n">me</span>
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">splu</span>
-<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">optimize</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">Delaunay</span><span class="p">,</span> <span class="n">KDTree</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">squareform</span><span class="p">,</span> <span class="n">pdist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">brainspace</span><span class="w"> </span><span class="kn">import</span> <span class="n">mesh</span> <span class="k">as</span> <span class="n">me</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">splu</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optimize</span>
 
-<span class="kn">from</span> <span class="nn">brainspace.vtk_interface</span> <span class="kn">import</span> <span class="n">wrap_vtk</span><span class="p">,</span> <span class="n">serial_connect</span>
-<span class="kn">from</span> <span class="nn">vtk</span> <span class="kn">import</span> <span class="p">(</span><span class="n">vtkThreshold</span><span class="p">,</span> <span class="n">vtkDataObject</span><span class="p">,</span> <span class="n">vtkGeometryFilter</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">brainspace.utils.parcellation</span> <span class="kn">import</span> <span class="n">relabel_consecutive</span>
-<span class="kn">from</span> <span class="nn">brainspace.mesh.mesh_creation</span> <span class="kn">import</span> <span class="n">build_polydata</span>
-<span class="kn">from</span> <span class="nn">eigenstrapping.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_suppress</span><span class="p">,</span> <span class="n">_print</span><span class="p">,</span> <span class="n">is_string_like</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">brainspace.vtk_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap_vtk</span><span class="p">,</span> <span class="n">serial_connect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtk</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">vtkThreshold</span><span class="p">,</span> <span class="n">vtkDataObject</span><span class="p">,</span> <span class="n">vtkGeometryFilter</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">brainspace.utils.parcellation</span><span class="w"> </span><span class="kn">import</span> <span class="n">relabel_consecutive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">brainspace.mesh.mesh_creation</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_polydata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">_suppress</span><span class="p">,</span> <span class="n">_print</span><span class="p">,</span> <span class="n">is_string_like</span><span class="p">,</span>
                     <span class="n">enablePrint</span><span class="p">,</span> <span class="n">blockPrint</span><span class="p">,</span> <span class="n">eigen_decomposition</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">eigenstrapping.dataio</span> <span class="kn">import</span> <span class="n">dataio</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-<span class="kn">from</span> <span class="nn">eigenstrapping.rotations</span> <span class="kn">import</span> <span class="n">indirect_method</span>
-<span class="kn">from</span> <span class="nn">eigenstrapping.utils</span> <span class="kn">import</span> <span class="n">_get_eigengroups</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance_matrix</span>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">BallTree</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">linear_sum_assignment</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">parspin</span> <span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">putils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping.dataio</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping.rotations</span><span class="w"> </span><span class="kn">import</span> <span class="n">indirect_method</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_eigengroups</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">BallTree</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_sum_assignment</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">parspin</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">putils</span>
 
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="n">ASSOC_CELLS</span> <span class="o">=</span> <span class="n">vtkDataObject</span><span class="o">.</span><span class="n">FIELD_ASSOCIATION_CELLS</span>
 <span class="n">ASSOC_POINTS</span> <span class="o">=</span> <span class="n">vtkDataObject</span><span class="o">.</span><span class="n">FIELD_ASSOCIATION_POINTS</span>
@@ -190,7 +190,9 @@
     
 <span class="c1">#     return transformed_image</span>
 
-<div class="viewcode-block" id="geodesic_distmat"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat">[docs]</a><span class="k">def</span> <span class="nf">geodesic_distmat</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">mask_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="geodesic_distmat">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.geodesic_distmat.html#eigenstrapping.geometry.geodesic_distmat">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">geodesic_distmat</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">mask_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute geodesic distance using the heat diffusion method built into LaPy</span>
 <span class="sd">        Based on: doi/10.1145/2516971.2516977</span>
@@ -262,7 +264,8 @@
     
     <span class="k">return</span> <span class="n">D</span></div>
 
-<span class="k">def</span> <span class="nf">__distance__</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">__distance__</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
         <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">prefer</span><span class="o">=</span><span class="s1">&#39;processes&#39;</span><span class="p">)(</span>
             <span class="n">delayed</span><span class="p">(</span><span class="n">_distance_method</span><span class="p">)(</span><span class="n">tria</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="n">use_cholmod</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">tria</span><span class="o">.</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -271,7 +274,7 @@
     
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
 
-<span class="k">def</span> <span class="nf">_distance_method</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_distance_method</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="n">b0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">tria</span><span class="o">.</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     <span class="n">b0</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.0</span>
 
@@ -283,7 +286,7 @@
         <span class="n">u</span> <span class="o">=</span> <span class="n">factor</span><span class="p">(</span><span class="n">b0</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sksparse</span><span class="o">=</span><span class="kc">None</span>
-        <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">splu</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">splu</span>
         <span class="c1">#print(&quot;Solver: spsolve (LU decomposition) ...&quot;)</span>
         <span class="n">factor</span> <span class="o">=</span> <span class="n">splu</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">factor</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b0</span><span class="p">)</span>
@@ -291,10 +294,10 @@
 
     <span class="k">return</span> <span class="n">d</span>
 
-<span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stddev</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stddev</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">stddev</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
 
-<span class="k">def</span> <span class="nf">estimate_fwhm</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">estimate_fwhm</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
     <span class="c1"># Find the maximum value and its position in the image</span>
     <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="n">max_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -323,11 +326,13 @@
     
     <span class="k">return</span> <span class="n">fwhm</span>
     
-<span class="k">def</span> <span class="nf">resel_count</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">fwhm</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resel_count</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">fwhm</span><span class="p">):</span>
     <span class="c1"># returns resel count of image given FWHM</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">/</span> <span class="n">fwhm</span><span class="p">)</span>
         
-<div class="viewcode-block" id="get_tkrvox2ras"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.get_tkrvox2ras.html#eigenstrapping.geometry.get_tkrvox2ras">[docs]</a><span class="k">def</span> <span class="nf">get_tkrvox2ras</span><span class="p">(</span><span class="n">voldim</span><span class="p">,</span> <span class="n">voxres</span><span class="p">):</span>
+<div class="viewcode-block" id="get_tkrvox2ras">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.get_tkrvox2ras.html#eigenstrapping.geometry.get_tkrvox2ras">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tkrvox2ras</span><span class="p">(</span><span class="n">voldim</span><span class="p">,</span> <span class="n">voxres</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate transformation matrix to switch between tetrahedral and volume space.</span>
 
 <span class="sd">    Parameters</span>
@@ -358,7 +363,8 @@
 
     <span class="k">return</span> <span class="n">T</span></div>
 
-<span class="k">def</span> <span class="nf">make_tetra</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aseg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_tetra</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aseg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate tetrahedral version of the ROI in the nifti file. Can</span>
 <span class="sd">    specify label value.</span>
@@ -463,7 +469,7 @@
     
     <span class="k">return</span> <span class="n">tetra_file</span>
 
-<span class="k">def</span> <span class="nf">remesh</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remesh</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate (re)meshed version of the volume/mesh in `m`. Goes from volume to </span>
 <span class="sd">    triangular mesh, or goes from triangular to tetrahedral mesh (and vice-versa).</span>
@@ -500,7 +506,7 @@
     
     <span class="k">return</span> <span class="n">file</span>
 
-<span class="k">def</span> <span class="nf">vol_to_tria</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vol_to_tria</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the volume in `volume` to a triangular surface using</span>
 <span class="sd">    FreeSurfer `mri_mc` and other libraries.</span>
@@ -553,7 +559,7 @@
     
     <span class="k">return</span> <span class="n">outfile</span>
 
-<span class="k">def</span> <span class="nf">to_tetra</span><span class="p">(</span><span class="n">tria_file</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_tetra</span><span class="p">(</span><span class="n">tria_file</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the triangular surface contained in `tria_file` into</span>
 <span class="sd">    a tetrahedral mesh by using `gmsh` routines.</span>
@@ -609,7 +615,7 @@
 
     <span class="k">return</span> <span class="n">outfile</span>
 
-<span class="k">def</span> <span class="nf">to_tria</span><span class="p">(</span><span class="n">tetra_file</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_tria</span><span class="p">(</span><span class="n">tetra_file</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oformat</span><span class="o">=</span><span class="s1">&#39;vtk&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the tetrahedral mesh contained in `tetra_file` into</span>
 <span class="sd">    a triangular surface by bounding the convex hull of the tetrahedra.</span>
@@ -665,7 +671,9 @@
     
     <span class="k">return</span> <span class="n">outfile</span>
 
-<div class="viewcode-block" id="make_tria_file"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.make_tria_file.html#eigenstrapping.geometry.make_tria_file">[docs]</a><span class="k">def</span> <span class="nf">make_tria_file</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">):</span>
+<div class="viewcode-block" id="make_tria_file">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.make_tria_file.html#eigenstrapping.geometry.make_tria_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_tria_file</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate triangular mesh of the ROI in the nifti file.</span>
 
@@ -711,7 +719,10 @@
     
     <span class="k">return</span> <span class="n">tria_file</span></div>
 
-<div class="viewcode-block" id="load_mesh"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.load_mesh.html#eigenstrapping.geometry.load_mesh">[docs]</a><span class="k">def</span> <span class="nf">load_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+
+<div class="viewcode-block" id="load_mesh">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.load_mesh.html#eigenstrapping.geometry.load_mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mesh loader function.</span>
 
@@ -743,9 +754,12 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown file structure, check input&#39;</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">GetPoints</span><span class="p">(),</span> <span class="n">m</span><span class="o">.</span><span class="n">GetCells2D</span><span class="p">())</span></div>
+
     
 
-<div class="viewcode-block" id="create_temp_surface"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.create_temp_surface.html#eigenstrapping.geometry.create_temp_surface">[docs]</a><span class="k">def</span> <span class="nf">create_temp_surface</span><span class="p">(</span><span class="n">surface_input</span><span class="p">,</span> <span class="n">surface_output_filename</span><span class="p">):</span>
+<div class="viewcode-block" id="create_temp_surface">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.create_temp_surface.html#eigenstrapping.geometry.create_temp_surface">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_temp_surface</span><span class="p">(</span><span class="n">surface_input</span><span class="p">,</span> <span class="n">surface_output_filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write surface to a new vtk file.</span>
 
 <span class="sd">    Parameters</span>
@@ -772,7 +786,8 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<span class="k">def</span> <span class="nf">get_indices</span><span class="p">(</span><span class="n">surface_original</span><span class="p">,</span> <span class="n">surface_new</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_indices</span><span class="p">(</span><span class="n">surface_original</span><span class="p">,</span> <span class="n">surface_new</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract indices of vertices of the two surfaces that match.</span>
 
 <span class="sd">    Parameters</span>
@@ -798,7 +813,9 @@
     
     <span class="k">return</span> <span class="n">indices</span>
 
-<div class="viewcode-block" id="calc_eig"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig">[docs]</a><span class="k">def</span> <span class="nf">calc_eig</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">num_modes</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remove_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="calc_eig">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_eig.html#eigenstrapping.geometry.calc_eig">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_eig</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">num_modes</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remove_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the eigenvalues and eigenmodes of a surface.</span>
 
 <span class="sd">    Parameters</span>
@@ -823,8 +840,11 @@
         <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">emodes</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
     
     <span class="k">return</span> <span class="n">evals</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">emodes</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
     
-<div class="viewcode-block" id="calc_surface_eigenmodes"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_surface_eigenmodes.html#eigenstrapping.geometry.calc_surface_eigenmodes">[docs]</a><span class="k">def</span> <span class="nf">calc_surface_eigenmodes</span><span class="p">(</span><span class="n">surface_input_filename</span><span class="p">,</span> <span class="n">mask_input</span><span class="p">,</span> <span class="n">save_cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remove_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="calc_surface_eigenmodes">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_surface_eigenmodes.html#eigenstrapping.geometry.calc_surface_eigenmodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_surface_eigenmodes</span><span class="p">(</span><span class="n">surface_input_filename</span><span class="p">,</span> <span class="n">mask_input</span><span class="p">,</span> <span class="n">save_cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">use_cholmod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remove_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function to calculate the eigenmodes of a cortical surface with </span>
 <span class="sd">    application of a mask (e.g., to remove the medial wall).</span>
 
@@ -890,7 +910,8 @@
         
     <span class="k">return</span> <span class="n">evals</span><span class="p">,</span> <span class="n">emodes_reshaped</span></div>
 
-<span class="k">def</span> <span class="nf">_surface_mask</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">use_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_surface_mask</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">use_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Selection fo points or cells meeting some criteria.</span>
 
 <span class="sd">    Parameters</span>
@@ -922,7 +943,7 @@
 
     <span class="k">return</span> <span class="n">_surface_selection</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">upp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cell</span><span class="o">=</span><span class="n">use_cell</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_surface_selection</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">upp</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">use_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_surface_selection</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">upp</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">use_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Selection of points or cells meeting some thresholding criteria.</span>
 
 <span class="sd">    Parameters</span>
@@ -1001,7 +1022,7 @@
 
     <span class="k">return</span> <span class="n">surf_sel</span>
 
-<span class="k">def</span> <span class="nf">_sort_polydata_points</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">labeling</span><span class="p">,</span> <span class="n">append_data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sort_polydata_points</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">labeling</span><span class="p">,</span> <span class="n">append_data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labeling</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">labeling</span> <span class="o">=</span> <span class="n">surf</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="n">labeling</span><span class="p">,</span> <span class="n">at</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
@@ -1029,7 +1050,7 @@
             <span class="n">s</span><span class="o">.</span><span class="n">append_array</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">at</span><span class="o">=</span><span class="n">at</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span>
 
-<span class="k">def</span> <span class="nf">find_wavelength</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">roi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_wavelength</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">roi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the characteristic wavelength of the data in `data` based</span>
 <span class="sd">    on the full-width half-maximum (FWHM). This is equal to 2*FWHM.</span>
@@ -1099,7 +1120,7 @@
 
     <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
 
-<span class="k">def</span> <span class="nf">truncate_emodes</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">truncate_emodes</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> 
                     <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ret_fwhm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">find_group_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">per_spectrum</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1219,7 +1240,7 @@
                        <span class="s1">&#39;consider using more modes.&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">gen_eigensamples</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">check_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_eigensamples</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">check_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                      <span class="n">method</span><span class="o">=</span><span class="s1">&#39;original&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    compute a permutation matrix for a set of eigenmodes, based on the concept</span>
@@ -1254,7 +1275,7 @@
 <span class="sd">        nearest neighbor remapping matrix</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
 
     <span class="n">seed</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
@@ -1273,7 +1294,7 @@
     <span class="c1">#eigen_spins = np.zeros((n_rotate, len(emodes_masked), len(evals)), dtype=&#39;int32&#39;)</span>
 
     <span class="c1"># generate resampled modes and fill indexing array</span>
-    <span class="k">def</span> <span class="nf">_gen_method</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;original&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gen_method</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;original&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">resampled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">emodes_masked</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)):</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">emodes_masked</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">evals</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="n">j</span><span class="p">]])</span>
@@ -1316,7 +1337,7 @@
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eigen_spins</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">spin_modes</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">eigen_spins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spin_modes</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">eigen_spins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    compute a permutation matrix for a set of eigenmodes, based on the concept</span>
 <span class="sd">    of rotating the eigenmodes in the eigenspace per group. Produces a sparse</span>
@@ -1375,7 +1396,7 @@
     
     <span class="k">return</span> <span class="n">resampled_emodes</span>
 
-<span class="k">def</span> <span class="nf">spin_single</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eigen_spins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_masked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spin_single</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eigen_spins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_masked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">eigen_spins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">eigen_spins</span> <span class="o">=</span> <span class="n">gen_eigensamples</span><span class="p">(</span><span class="n">emodes</span><span class="p">,</span> <span class="n">evals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">n_rotate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="n">num_modes</span><span class="p">,</span>
                                        <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -1396,7 +1417,9 @@
     
     <span class="k">return</span> <span class="n">resampled_emodes</span>
 
-<div class="viewcode-block" id="compute_normals"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.compute_normals.html#eigenstrapping.geometry.compute_normals">[docs]</a><span class="k">def</span> <span class="nf">compute_normals</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_normals">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.compute_normals.html#eigenstrapping.geometry.compute_normals">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_normals</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the normal for each vertex in the mesh.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1413,7 +1436,10 @@
 
     <span class="k">return</span> <span class="n">normals</span></div>
 
-<div class="viewcode-block" id="inflate_mesh"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.inflate_mesh.html#eigenstrapping.geometry.inflate_mesh">[docs]</a><span class="k">def</span> <span class="nf">inflate_mesh</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">smoothing_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+
+<div class="viewcode-block" id="inflate_mesh">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.inflate_mesh.html#eigenstrapping.geometry.inflate_mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">inflate_mesh</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">smoothing_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                  <span class="n">inflation_factor</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Inflate the mesh using Connectome Workbench `surface-inflation`</span>
@@ -1445,7 +1471,10 @@
 
     <span class="k">return</span> <span class="n">new_vertices</span>   </div>
 
-<div class="viewcode-block" id="nearest_neighbor"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.nearest_neighbor.html#eigenstrapping.geometry.nearest_neighbor">[docs]</a><span class="k">def</span> <span class="nf">nearest_neighbor</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="nearest_neighbor">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.nearest_neighbor.html#eigenstrapping.geometry.nearest_neighbor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nearest_neighbor</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Find the one-nearest neighbors of vertices in points `P` on another </span>
 <span class="sd">    surface `X` using Delaunay triangulation and KDTree query.</span>
@@ -1496,14 +1525,17 @@
     <span class="k">return</span> <span class="n">indices</span></div>
 
 
-<span class="k">def</span> <span class="nf">_is_point_within_radius</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_point_within_radius</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if a point is within a given radius of any vertex in a set of vertices.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vertices</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="calc_volume"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_volume.html#eigenstrapping.geometry.calc_volume">[docs]</a><span class="k">def</span> <span class="nf">calc_volume</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">):</span>
+<div class="viewcode-block" id="calc_volume">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.calc_volume.html#eigenstrapping.geometry.calc_volume">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_volume</span><span class="p">(</span><span class="n">nifti_input_filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the physical volume of the ROI in the nifti file.</span>
 
 <span class="sd">    Parameters</span>
@@ -1536,7 +1568,10 @@
 
     <span class="k">return</span> <span class="n">ROI_number</span><span class="p">,</span> <span class="n">ROI_volume</span></div>
 
-<div class="viewcode-block" id="normalize_vtk"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.normalize_vtk.html#eigenstrapping.geometry.normalize_vtk">[docs]</a><span class="k">def</span> <span class="nf">normalize_vtk</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="n">nifti_input_filename</span><span class="p">,</span> <span class="n">normalization_type</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">normalization_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="normalize_vtk">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.normalize_vtk.html#eigenstrapping.geometry.normalize_vtk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_vtk</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="n">nifti_input_filename</span><span class="p">,</span> <span class="n">normalization_type</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">normalization_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize tetrahedral surface.</span>
 
 <span class="sd">    Parameters</span>
@@ -1598,7 +1633,10 @@
 
     <span class="k">return</span> <span class="n">tet_norm</span></div>
 
-<div class="viewcode-block" id="euclidean_distmat"><a class="viewcode-back" href="../../generated/eigenstrapping.geometry.euclidean_distmat.html#eigenstrapping.geometry.euclidean_distmat">[docs]</a><span class="k">def</span> <span class="nf">euclidean_distmat</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+
+<div class="viewcode-block" id="euclidean_distmat">
+<a class="viewcode-back" href="../../generated/eigenstrapping.geometry.euclidean_distmat.html#eigenstrapping.geometry.euclidean_distmat">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">euclidean_distmat</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates Euclidean distance matrix of the mesh in `mesh`</span>
 
@@ -1617,12 +1655,13 @@
     
     <span class="k">return</span> <span class="n">squareform</span><span class="p">(</span><span class="n">pdist</span><span class="p">(</span><span class="n">verts</span><span class="p">))</span></div>
 
+
 <span class="sd">&quot;&quot;&quot;Handle optional dependency imports.</span>
 
 <span class="sd">Inspired from pandas: https://pandas.pydata.org/</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
 
 <span class="c1"># A mapping from import name to package name (on PyPI) when the package name</span>
 <span class="c1"># is different.</span>
@@ -1631,7 +1670,7 @@
 <span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">import_optional_dependency</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_optional_dependency</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">extra</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>

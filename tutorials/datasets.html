@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Eigenmodes and eigenvalues &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -18,9 +18,9 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -76,7 +76,7 @@
            <div itemprop="articleBody">
              
   <section id="eigenmodes-and-eigenvalues">
-<span id="usage-datasets"></span><h1>Eigenmodes and eigenvalues<a class="headerlink" href="#eigenmodes-and-eigenvalues" title="Permalink to this heading"></a></h1>
+<span id="usage-datasets"></span><h1>Eigenmodes and eigenvalues<a class="headerlink" href="#eigenmodes-and-eigenvalues" title="Link to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> offers a selection of standard surfaces and their
 eigenmodes and eigenvalues for use with the core functions. This way,
 the and its base classes <a class="reference internal" href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">eigenstrapping.SurfaceEigenstrapping</span></code></a>
@@ -85,7 +85,7 @@ for working with surface and volume data. This guide will address the general
 use of these classes, as well as information on the types of surfaces and volumes
 that can be imported.</p>
 <section id="surface-file-formats">
-<span id="usage-formats-supported"></span><h2>Surface file formats<a class="headerlink" href="#surface-file-formats" title="Permalink to this heading"></a></h2>
+<span id="usage-formats-supported"></span><h2>Surface file formats<a class="headerlink" href="#surface-file-formats" title="Link to this heading"></a></h2>
 <p>The class <a class="reference internal" href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">eigenstrapping.SurfaceEigenstrapping</span></code></a> supports data in the
 following file formats:</p>
 <blockquote>
@@ -120,7 +120,7 @@ as long as they’re produced by the standard <code class="docutils literal notr
 but we are currently working on implementing them.</p>
 </section>
 <section id="volumetric-file-formats">
-<h2>Volumetric file formats<a class="headerlink" href="#volumetric-file-formats" title="Permalink to this heading"></a></h2>
+<h2>Volumetric file formats<a class="headerlink" href="#volumetric-file-formats" title="Link to this heading"></a></h2>
 <p>Unlike the class <a class="reference internal" href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">eigenstrapping.SurfaceEigenstrapping</span></code></a>,
 <a class="reference internal" href="../generated/eigenstrapping.VolumetricEigenstrapping.html#eigenstrapping.VolumetricEigenstrapping" title="eigenstrapping.VolumetricEigenstrapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">eigenstrapping.VolumetricEigenstrapping</span></code></a> supports slightly different data in the
 following formats:</p>
@@ -145,10 +145,10 @@ can or should be combined into a composite tetrahedral mesh to calculate eigenmo
 on.</p>
 </section>
 <section id="general-usage">
-<h2>General usage<a class="headerlink" href="#general-usage" title="Permalink to this heading"></a></h2>
+<h2>General usage<a class="headerlink" href="#general-usage" title="Link to this heading"></a></h2>
 <p>Both <a class="reference internal" href="../generated/eigenstrapping.SurfaceEigenstrapping.html#eigenstrapping.SurfaceEigenstrapping" title="eigenstrapping.SurfaceEigenstrapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">eigenstrapping.SurfaceEigenstrapping</span></code></a> and <a class="reference internal" href="../generated/eigenstrapping.VolumetricEigenstrapping.html#eigenstrapping.VolumetricEigenstrapping" title="eigenstrapping.VolumetricEigenstrapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">eigenstrapping.VolumetricEigenstrapping</span></code></a>
 can be called in similar ways, but accept slightly different inputs:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">SurfaceEigenstrapping</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceEigenstrapping</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">surf_eigen</span> <span class="o">=</span> <span class="n">SurfaceEigenstrapping</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;path/to/your/data/file&#39;</span><span class="p">,</span>
 <span class="go">                                       surface=&#39;path/to/your/surface.surf.gii&#39;)</span>

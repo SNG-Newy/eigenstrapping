@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tutorial 2: Generating surrogate subcortical maps &mdash; eigenstrapping 0.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
       <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -18,9 +18,9 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c1dcd045"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -86,7 +86,7 @@
            <div itemprop="articleBody">
              
   <section id="tutorial-2-generating-surrogate-subcortical-maps">
-<span id="tutorial-subcortex"></span><h1>Tutorial 2: Generating surrogate subcortical maps<a class="headerlink" href="#tutorial-2-generating-surrogate-subcortical-maps" title="Permalink to this heading"></a></h1>
+<span id="tutorial-subcortex"></span><h1>Tutorial 2: Generating surrogate subcortical maps<a class="headerlink" href="#tutorial-2-generating-surrogate-subcortical-maps" title="Link to this heading"></a></h1>
 <p>While the majority of spatial nulls work best with cortical data in surface space,
 <code class="docutils literal notranslate"><span class="pre">eigenstrapping</span></code> can also generate nulls based on subcortical data in volumetric
 space. If you have these two things:</p>
@@ -96,7 +96,7 @@ space. If you have these two things:</p>
 </ul>
 <p>then generating subcortical nulls is simple.</p>
 <p>You would call the function in a similar manner as the cortical fit:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">eigenstrapping</span> <span class="kn">import</span> <span class="n">fit</span><span class="p">,</span> <span class="n">datasets</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eigenstrapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit</span><span class="p">,</span> <span class="n">datasets</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_data</span><span class="p">,</span> <span class="n">hipp_mask</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_subcort</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="s1">&#39;hippo&#39;</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hipp_surrs</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">volumetric_fit</span><span class="p">(</span>
@@ -139,7 +139,8 @@ space. If you have these two things:</p>
 <p>IMPORTANT: The above function uses external libraries (<code class="docutils literal notranslate"><span class="pre">gmsh</span></code> and FreeSurfer <code class="docutils literal notranslate"><span class="pre">mri_mc</span></code>)
 to generate the subcortical meshes based on the <cite>volume</cite>. The above code will
 output a few figures as with the <a class="reference internal" href="../generated/eigenstrapping.fit.surface_fit.html#eigenstrapping.fit.surface_fit" title="eigenstrapping.fit.surface_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">eigenstrapping.fit.surface_fit()</span></code></a> function:</p>
-<a class="reference internal image-reference" href="../_images/tutorial_subcortex1.png"><img alt="../_images/tutorial_subcortex1.png" class="align-center" src="../_images/tutorial_subcortex1.png" style="width: 744.5px; height: 245.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/tutorial_subcortex1.png"><img alt="../_images/tutorial_subcortex1.png" class="align-center" src="../_images/tutorial_subcortex1.png" style="width: 744.5px; height: 245.0px;" />
+</a>
 <p>In the above example, we loaded subcortical data where the data is a volume in
 MNI152 2mm space (based on cortico-subcortical gradients generated using the
 connectopic mapping approach, see <a class="reference internal" href="../references.html#references"><span class="std std-ref">References</span></a>), and the mask
