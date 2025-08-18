@@ -558,11 +558,6 @@ def make_correlated_exgaussian(corr=0.15, size=10000, seed=None, tol=0.005, mu=0
     x_exgaussian, y_exgaussian : numpy.ndarray
         Two random vectors of size `size` with exGaussian distributions and correlation specified by `corr`.
 
-    Examples
-    --------
-    >>> x, y = make_correlated_exgaussian(corr=0.2, seed=42)
-    >>> np.corrcoef(x, y)[0, 1]
-    0.2003...
     """
     
     # Generate two correlated vectors using make_correlated_xy
