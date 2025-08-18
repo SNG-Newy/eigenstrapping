@@ -60,12 +60,12 @@ jobs:
       - name: Run tests
         run: |
           pytest --doctest-modules --cov=eigenstrapping --cov-report=xml --junitxml=junit/test-results.xml --verbose eigenstrapping tests
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           files: ./coverage.xml
           verbose: true
       - name: Upload pytest test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
           path: junit/test-results.xml
