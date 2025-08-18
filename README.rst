@@ -58,6 +58,7 @@ To run eigenstrapping, the following Python packages are required (these should 
 * `nibabel <https://nipy.org/nibabel/index.html>`_
 * `nilearn <https://nilearn.github.io/>`_
 * `pandas <https://pandas.pydata.org/>`_
+* `gdown <https://pypi.org/project/gdown/>`_ (optional, required for Google Drive downloads)
 * `brainspace <https://github.com/MICA-MNI/BrainSpace/tree/master/>`_
 * `netneurotools <https://github.com/netneurolab/netneurotools>`_
 

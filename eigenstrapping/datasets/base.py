@@ -15,7 +15,12 @@ from .utils import (get_data_dir, _groupby_match,
                     get_dataset_info, _match_files)
 from eigenstrapping import dataio
 
-from nilearn.datasets.utils import _fetch_file
+from nilearn.datasets._utils import fetch_single_file
+
+try:  # pragma: no cover - optional dependency
+    import gdown
+except Exception:  # pragma: no cover
+    gdown = None
 
 def load_surface_examples(data_dir=None, with_surface=False):
     """
@@ -255,9 +260,16 @@ def fetch_data(*, name=None, space=None, den=None, res=None, hemi=None,
     for dset in info:
         fn = Path(data_dir) / dset['rel_path'] / dset['fname']
         if not fn.exists():
-            dl_file = _fetch_file(dset['url'], str(fn.parent), verbose=verbose,
-                                  md5sum=dset['checksum'])
-            shutil.move(dl_file, fn)
+            fn.parent.mkdir(parents=True, exist_ok=True)
+            url = dset.get('redir') or dset['url']
+            if isinstance(url, str) and 'drive.google.com' in url:
+                if gdown is None:
+                    raise ImportError('Downloading from Google Drive requires `gdown`')
+                gdown.download(url, str(fn), quiet=verbose == 0, fuzzy=True)
+            else:
+                dl_file = fetch_single_file(url, fn.parent, verbose=verbose,
+                                           md5sum=dset['checksum'])
+                shutil.move(str(dl_file), fn)
         data.append(str(fn))
     
     if len(data) == 1:
