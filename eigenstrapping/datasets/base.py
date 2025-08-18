@@ -15,7 +15,14 @@ from .utils import (get_data_dir, _groupby_match,
                     get_dataset_info, _match_files)
 from eigenstrapping import dataio
 
-from nilearn.datasets._utils import fetch_single_file
+try:  # Nilearn <=0.10 exposed a private ``fetch_single_file`` helper in
+    # ``nilearn.datasets._utils``. This was removed in newer versions in
+    # favour of ``_fetch_file`` in ``nilearn.datasets.utils``. Import from the
+    # new location and fallback for older releases if needed.
+    from nilearn.datasets.utils import _fetch_file
+    fetch_single_file = _fetch_file  # backwards compat alias
+except Exception:  # pragma: no cover - maintain previous import path
+    from nilearn.datasets._utils import fetch_single_file  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import gdown
