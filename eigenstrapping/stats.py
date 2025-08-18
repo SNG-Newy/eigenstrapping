@@ -65,7 +65,8 @@ def gpd_inference(perms, stat=0.15, per=0.10):
         Empirical stat (e.g. Pearson correlation) of original brain map
         and target brain map. Default is 0.15.
     per : float, optional
-        Percentage of highest correlation values to keep. Default is 0.10.
+        Fraction of highest correlation values to keep (0 < per <= 1).
+        Default is 0.10.
 
     Returns
     -------
@@ -76,8 +77,9 @@ def gpd_inference(perms, stat=0.15, per=0.10):
     if per <= 0.0 or per > 1:
         raise ValueError("Percentage of correlation values to keep from null distribution must be between 0 and 1")
     
-    # Extract the tail values above the threshold
-    tail_values = [value for value in perms if value > per]
+    # Extract the tail values above the (1 - per) quantile threshold
+    threshold = np.quantile(perms, 1 - per)
+    tail_values = perms[perms > threshold]
     
     # Fit the Generalized Pareto Distribution to the tail values
     params = sstats.genpareto.fit(tail_values)
