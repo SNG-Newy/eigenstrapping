@@ -199,7 +199,7 @@ class SurfaceEigenstrapping:
             the reconstructed data term, then adds the noise term back into the
             null data to produce a surrogate that replicates the original
             variance of the empirical data.
-            * Only performed if `resample` = True.
+            * True is default behavior. If you wish to turn off, pass `resample=False`
     
     References
     ----------
@@ -312,7 +312,7 @@ class SurfaceEigenstrapping:
     """
     def __init__(self, data, surface=None, evals=None, emodes=None, num_modes=200,
                  save_surface=False, seed=None, decomp_method='matrix',
-                 medial=None, randomize=False, resample=False, n_jobs=1, 
+                 medial=None, randomize=False, resample=True, n_jobs=1, 
                  use_cholmod=False, permute=False, add_res=False,
                  truncate_modes=False, ret_fwhm=False, truncate_args=None, 
                  save_rotations=False, parcellation=None, 
@@ -849,7 +849,7 @@ class VolumetricEigenstrapping:
             the reconstructed data term, then adds the noise term back into the
             null data to produce a surrogate that replicates the original
             variance of the empirical data.
-            * Only performed if `resample` = True.
+            * Default behavior. Set `resample=False` to not do it.
     
     References
     ----------
@@ -955,7 +955,7 @@ class VolumetricEigenstrapping:
     def __init__(self, data, volume, label=None, aseg=False, norm_file=None,
                  normalization=None, normalization_factor=None, evals=None,
                  emodes=None, num_modes=200, seed=None, decomp_method='matrix', 
-                 randomize=False, resample=False, n_jobs=1, permute=False,
+                 randomize=False, resample=True, n_jobs=1, permute=False,
                  verbose=True):
         
         # checks
